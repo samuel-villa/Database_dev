@@ -94,7 +94,7 @@ typedef struct Group {
     char tp_rec[8];     // rec type: GRP
     int  id_grp;        // primary key
     char nm_grp[52];
-    ccty g_cty;         /// to modify (see pdf)
+    int id_cty;
 } cgrp;
 
 

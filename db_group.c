@@ -53,7 +53,7 @@ void import_CSV_group(dbc *db) {
         ptr1 = ptr2;
         memset(fld, 0, BUF_LEN);
         strncpy(fld, ptr1, strlen(ptr1)-1);
-        grp.g_cty.id_cty = atoi(fld);
+        grp.id_cty = atoi(fld);
 
         fwrite(&grp, 1, sizeof(cgrp), fp_db);      // write into file 'fp_db'
 
@@ -106,7 +106,7 @@ void export_CSV_group(dbc *db) {
         fprintf(fpo,"%d;%s;%d\n",
                 grp.id_grp,
                 grp.nm_grp,
-                grp.g_cty.id_cty);
+                grp.id_cty);
     }
 
     fprintf(fp_lg, "Groups exported: %d\n", db->hdr.nr_grp);
@@ -174,5 +174,5 @@ void rec_group(dbc *db, int id_grp) {
     printf("%4d %52s %4d\n",
            db->grp[id_grp].id_grp,
            db->grp[id_grp].nm_grp,
-           db->grp[id_grp].g_cty.id_cty);
+           db->grp[id_grp].id_cty);
 }
