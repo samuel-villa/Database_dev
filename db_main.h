@@ -101,7 +101,7 @@ typedef struct Group {
 /***************************************************************************************
 * DB structure
 ****************************************************************************************/
-typedef struct db_company {
+typedef struct db_client {
 
     hder hdr;           // header
     ccty cty[SZ_CTY];   // buffer country
