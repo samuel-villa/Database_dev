@@ -3,4 +3,4 @@ project(DB_Clients_Data C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(DB_Clients_Data db_main.c db_main.h db_file.c db_country.c db_job.c db_industry.c db_group.c db_company.c db_person.c)
+add_executable(DB_Clients_Data db_main.c db_main.h db_file.c db_country.c db_job.c db_industry.c db_group.c db_company.c db_person.c db_menus.c)

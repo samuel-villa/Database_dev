@@ -50,6 +50,13 @@
 #define SZ_CPY 200
 #define SZ_PER 200
 
+enum Main_Menu {
+    OPEN_DB,
+    CREATE_DB,
+    SYSTEM_INFO,
+    EXIT = 9
+};
+
 typedef unsigned int uint;
 
 
