@@ -4,7 +4,9 @@
  *       Header file: definitions, structures and prototypes
  *
  *       Features:
- *          -
+ *          - Database creation
+ *          - Import data from .csv file
+ *          - Export data to .csv file
  *
  *       Remarques:
  *          -
@@ -16,11 +18,14 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define SZ_CTY 100
 #define SZ_JOB 200
 #define SZ_IND 100
 #define SZ_GRP 3000
+#define SZ_CPY 100000
+#define SZ_PER 500000
 
 typedef unsigned int uint;
 
@@ -36,15 +41,21 @@ typedef struct Header {
     uint sz_job;        // job bloc size
     uint sz_ind;        // industry bloc size
     uint sz_grp;        // group bloc size
+    uint sz_cpy;        // company bloc size
+    uint sz_per;        // person bloc size
     uint off_cty;       // country bloc position
     uint off_job;       // job bloc position
     uint off_ind;       // industry bloc position
     uint off_grp;       // group bloc position
-    uint nr_cty;        // Nr of countries
-    uint nr_job;        // Nr of jobs
-    uint nr_ind;        // Nr of industries
-    uint nr_grp;        // Nr of groups
-    char filler[16];
+    uint off_cpy;       // company bloc position
+    uint off_per;       // person bloc position
+    uint nr_cty;        // nr of countries
+    uint nr_job;        // nr of jobs
+    uint nr_ind;        // nr of industries
+    uint nr_grp;        // nr of groups
+    uint nr_cpy;        // nr of companies
+    uint nr_per;        // nr of persons
+    char filler[16];    /// rearrange
 } hder;
 
 
@@ -99,6 +110,51 @@ typedef struct Group {
 
 
 /***************************************************************************************
+* Company table
+****************************************************************************************/
+typedef struct Company {
+
+    char  tp_rec[8];    // rec type: CPY
+    int   id_cpy;       // primary key
+    int   id_grp;       // foreign key ref to Group
+    int   id_cty;       // foreign key ref to Country
+    int   id_ind;       // foreign key ref to Industry
+    char  nm_cpy[95];   // company name
+    char  nm_adr[95];   // company address
+    char  cd_pos[10];   // post code
+    char  nm_cit[40];   // city
+    char  nr_tel[20];   // tel
+    char  nm_www[50];   // website
+                        /// convert dt_cre to date (check on Macbook)
+    char  dt_cre[10];   // date of creation in the db
+    int   nr_emp;       // nr of employees
+    float am_val;       // value of single stock
+} ccpy;
+
+
+/***************************************************************************************
+* Person table
+****************************************************************************************/
+typedef struct Person {
+
+    char tp_rec[8];     // rec type: PER
+    int  id_per;        // primary key
+    int  id_cpy;        // foreign key ref to Company
+    int  id_job;        // foreign key ref to Job
+    char nm_civ[20];    // title (Mr. M.)
+    char nm_fst[52];    // firstname
+    char nm_lst[52];    // lastname
+    char cd_sex;        // sex
+                        /// convert dt_cre to date (check on Macbook)
+    char dt_cre[10];    // date of creation in the db
+    char nr_tel[16];    // tel
+    char nr_gsm[16];    // mobile
+    char nm_mail[64];   // email address
+    int  nr_val;        // nr of stocks owned
+} cper;
+
+
+/***************************************************************************************
 * DB structure
 ****************************************************************************************/
 typedef struct db_client {
@@ -108,6 +164,8 @@ typedef struct db_client {
     cjob job[SZ_JOB];   // buffer job
     cind ind[SZ_IND];   // buffer industry
     cgrp grp[SZ_GRP];   // buffer group
+    ccpy cpy[SZ_CPY];   // buffer company
+    cper per[SZ_PER];   // buffer person
 } dbc;
 
 
@@ -144,3 +202,17 @@ void export_CSV_group(dbc *db);
 void load_group(dbc *db);
 void print_group(dbc *db);
 void rec_group(dbc *db, int id_grp);
+
+/// Company ///
+void import_CSV_company(dbc *db);
+void export_CSV_company(dbc *db);
+void load_company(dbc *db);
+void print_company(dbc *db);
+void rec_company(dbc *db, int id_grp);
+
+/// Person ///
+void import_CSV_person(dbc *db);
+void export_CSV_person(dbc *db);
+void load_person(dbc *db);
+void print_person(dbc *db);
+void rec_person(dbc *db, int id_grp);
