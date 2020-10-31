@@ -41,8 +41,6 @@ void import_CSV_company(dbc *db) {
         memset(&cpy, 0, sizeof(ccpy));
         strcpy(cpy.tp_rec, "CPY");
 
-        // TODO rearrange fields
-
         ptr1 = strtok(line,";");
         ptr2 = strtok(NULL,";");
 
@@ -51,11 +49,61 @@ void import_CSV_company(dbc *db) {
         cpy.id_cpy = atoi(fld);
         ptr1 = ptr2;
         ptr2 = strtok(NULL,";");
+
+        memset(fld, 0, BUF_LEN);
+        strncpy(fld, ptr1, ptr2-ptr1-1);
+        cpy.id_grp = atoi(fld);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        memset(fld, 0, BUF_LEN);
+        strncpy(fld, ptr1, ptr2-ptr1-1);
+        cpy.id_cty = atoi(fld);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        memset(fld, 0, BUF_LEN);
+        strncpy(fld, ptr1, ptr2-ptr1-1);
+        cpy.id_ind = atoi(fld);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
         strncpy(cpy.nm_cpy, ptr1, ptr2-ptr1-1);
         ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(cpy.nm_adr, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(cpy.cd_pos, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(cpy.nm_cit, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(cpy.nr_tel, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(cpy.nm_www, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(cpy.dt_cre, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        memset(fld, 0, BUF_LEN);
+        strncpy(fld, ptr1, ptr2-ptr1-1);
+        cpy.nr_emp = atoi(fld);
+        ptr1 = ptr2;
+
         memset(fld, 0, BUF_LEN);
         strncpy(fld, ptr1, strlen(ptr1)-1);
-        cpy.id_cty = atoi(fld);
+        cpy.am_val = atof(fld);
 
         fwrite(&cpy, 1, sizeof(ccpy), fp_db);
 
@@ -105,11 +153,20 @@ void export_CSV_company(dbc *db) {
         memset(&cpy, 0, sizeof(ccpy));
         fread(&cpy, 1, sizeof(ccpy), fp_db);
 
-        // TODO rearrange fields
-        fprintf(fpo,"%d;%s;%d\n",
+        fprintf(fpo,"%d;%d;%d;%d;%s;%s;%s;%s;%s;%s;%s;%d;%.2f\n",
                 cpy.id_cpy,
+                cpy.id_grp,
+                cpy.id_cty,
+                cpy.id_ind,
                 cpy.nm_cpy,
-                cpy.id_cty);
+                cpy.nm_adr,
+                cpy.cd_pos,
+                cpy.nm_cit,
+                cpy.nr_tel,
+                cpy.nm_www,
+                cpy.dt_cre,
+                cpy.nr_emp,
+                cpy.am_val);
     }
 
     fprintf(fp_lg, "Companies exported: %d\n", db->hdr.nr_cpy);
@@ -171,12 +228,21 @@ void print_company(dbc *db) {
 
 /****************************************************************************************
 * Display one Company record from the buffer
-    TODO rearrange fields
 ****************************************************************************************/
 void rec_company(dbc *db, int id_cpy) {
 
-    printf("%4d %52s %4d\n",
+    printf("%4d %4d %4d %4d %95s %95s %10s %40s %20s %50s %11s %4d %.2f\n",
            db->cpy[id_cpy].id_cpy,
+           db->cpy[id_cpy].id_grp,
+           db->cpy[id_cpy].id_cty,
+           db->cpy[id_cpy].id_ind,
            db->cpy[id_cpy].nm_cpy,
-           db->cpy[id_cpy].id_cty);
+           db->cpy[id_cpy].nm_adr,
+           db->cpy[id_cpy].cd_pos,
+           db->cpy[id_cpy].nm_cit,
+           db->cpy[id_cpy].nr_tel,
+           db->cpy[id_cpy].nm_www,
+           db->cpy[id_cpy].dt_cre,
+           db->cpy[id_cpy].nr_emp,
+           db->cpy[id_cpy].am_val);
 }

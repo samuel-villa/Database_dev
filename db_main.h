@@ -128,7 +128,7 @@ typedef struct Company {
     char  nr_tel[20];   // tel
     char  nm_www[50];   // website
                         // TODO convert dt_cre to date (check on Macbook)
-    char  dt_cre[10];   // date of creation in the db
+    char  dt_cre[11];   // date of creation in the db
     int   nr_emp;       // nr of employees
     float am_val;       // value of single stock
 } ccpy;
