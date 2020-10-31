@@ -125,7 +125,7 @@ typedef struct Company {
     char  nm_cit[40];   // city
     char  nr_tel[20];   // tel
     char  nm_www[50];   // website
-                        /// convert dt_cre to date (check on Macbook)
+                        // TODO convert dt_cre to date (check on Macbook)
     char  dt_cre[10];   // date of creation in the db
     int   nr_emp;       // nr of employees
     float am_val;       // value of single stock
@@ -145,11 +145,11 @@ typedef struct Person {
     char nm_fst[52];    // firstname
     char nm_lst[52];    // lastname
     char cd_sex;        // sex
-                        /// convert dt_cre to date (check on Macbook)
+                        // TODO convert dt_cre to date (check on Macbook)
     char dt_cre[10];    // date of creation in the db
     char nr_tel[16];    // tel
     char nr_gsm[16];    // mobile
-    char nm_mail[64];   // email address
+    char nm_mail[65];   // email address
     int  nr_val;        // nr of stocks owned
 } cper;
 
@@ -167,7 +167,6 @@ typedef struct db_client {
     ccpy cpy[SZ_CPY];   // buffer company
     cper per[SZ_PER];   // buffer person
 } dbc;
-
 
 
 /****************************************************************************************
