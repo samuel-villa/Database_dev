@@ -19,7 +19,6 @@
  *          • Les listes chainées pourront être triées ascendant ou descendant
  *          • Deux rapports répondants aux requêtes précisées ci-dessous
  *
- *
  *       Header file:
  *          - definitions
  *          - structures
