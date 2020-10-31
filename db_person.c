@@ -222,7 +222,7 @@ void print_person(dbc *db) {
 ****************************************************************************************/
 void rec_person(dbc *db, int id_per) {
 
-    printf("%4d %4d %4d %20s %52s %52s %2s %10s %16s %16s %65s %4d\n",
+    printf("%4d %4d %4d %20s %52s %52s %2s %11s %16s %16s %65s %4d\n",
            db->per[id_per].id_per,
            db->per[id_per].id_cpy,
            db->per[id_per].id_job,
