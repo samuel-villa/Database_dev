@@ -146,9 +146,9 @@ typedef struct Person {
     char nm_civ[20];    // title (Mr. M.)
     char nm_fst[52];    // firstname
     char nm_lst[52];    // lastname
-    char cd_sex;        // sex
+    char cd_sex[2];        // sex
                         // TODO convert dt_cre to date (check on Macbook)
-    char dt_cre[10];    // date of creation in the db
+    char dt_cre[11];    // date of creation in the db
     char nr_tel[16];    // tel
     char nr_gsm[16];    // mobile
     char nm_mail[65];   // email address

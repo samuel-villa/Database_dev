@@ -37,15 +37,15 @@ int main() {
 //    load_group(&db);
 //    print_group(&db);
 
-    import_CSV_company(&db);
-    export_CSV_company(&db);
-    load_company(&db);
-    print_company(&db);
+//    import_CSV_company(&db);
+//    export_CSV_company(&db);
+//    load_company(&db);
+//    print_company(&db);
 
-//    import_CSV_person(&db);
-//    export_CSV_person(&db);
-//    load_person(&db);
-//    print_person(&db);
+    import_CSV_person(&db);
+    export_CSV_person(&db);
+    load_person(&db);
+    print_person(&db);
 
     return 0;
 }

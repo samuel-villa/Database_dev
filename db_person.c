@@ -39,9 +39,7 @@ void import_CSV_person(dbc *db) {
     while (fgets(line, 200, fpi) != NULL) {
 
         memset(&per, 0, sizeof(cper));
-        strcpy(per.tp_rec, "per");
-
-        // TODO rearrange fields
+        strcpy(per.tp_rec, "PER");
 
         ptr1 = strtok(line,";");
         ptr2 = strtok(NULL,";");
@@ -51,11 +49,53 @@ void import_CSV_person(dbc *db) {
         per.id_per = atoi(fld);
         ptr1 = ptr2;
         ptr2 = strtok(NULL,";");
+
+        memset(fld, 0, BUF_LEN);
+        strncpy(fld, ptr1, ptr2-ptr1-1);
+        per.id_cpy = atoi(fld);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        memset(fld, 0, BUF_LEN);
+        strncpy(fld, ptr1, ptr2-ptr1-1);
+        per.id_job = atoi(fld);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
         strncpy(per.nm_civ, ptr1, ptr2-ptr1-1);
         ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(per.nm_fst, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(per.nm_lst, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(per.cd_sex, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(per.dt_cre, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(per.nr_tel, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(per.nr_gsm, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+        ptr2 = strtok(NULL,";");
+
+        strncpy(per.nm_mail, ptr1, ptr2-ptr1-1);
+        ptr1 = ptr2;
+
         memset(fld, 0, BUF_LEN);
         strncpy(fld, ptr1, strlen(ptr1)-1);
-        per.id_cpy = atoi(fld);
+        per.nr_val = atoi(fld);
 
         fwrite(&per, 1, sizeof(cper), fp_db);
 
@@ -96,7 +136,7 @@ void export_CSV_person(dbc *db) {
     printf("\nExporting persons...\n");
     fpo = fopen("data_export/exp_person.csv", "w");
 
-    fprintf(fpo,"id;id_grp;id_cty;id_ind;nm_per;nm_adr;cd_pos;nm_cit;nr_tel;nm_www;dt_cre;nr_emp;am_val\n");
+    fprintf(fpo,"id;id_cpy;id_job;nm_civ;nm_fst;nm_lst;cd_sex;dt_cre;nr_tel;nr_gsm;nm_mail;nr_val\n");
 
     fseek(fp_db, db->hdr.off_per, SEEK_SET);
 
@@ -105,11 +145,19 @@ void export_CSV_person(dbc *db) {
         memset(&per, 0, sizeof(cper));
         fread(&per, 1, sizeof(cper), fp_db);
 
-        // TODO rearrange fields
-        fprintf(fpo,"%d;%s;%d\n",
+        fprintf(fpo,"%d;%d;%d;%s;%s;%s;%s;%s;%s;%s;%s;%d\n",
                 per.id_per,
+                per.id_cpy,
+                per.id_job,
                 per.nm_civ,
-                per.id_cpy);
+                per.nm_fst,
+                per.nm_lst,
+                per.cd_sex,
+                per.dt_cre,
+                per.nr_tel,
+                per.nr_gsm,
+                per.nm_mail,
+                per.nr_val);
     }
 
     fprintf(fp_lg, "Persons exported: %d\n", db->hdr.nr_per);
@@ -171,12 +219,20 @@ void print_person(dbc *db) {
 
 /****************************************************************************************
 * Display one Person record from the buffer
-    TODO rearrange fields
 ****************************************************************************************/
 void rec_person(dbc *db, int id_per) {
 
-    printf("%4d %52s %4d\n",
+    printf("%4d %4d %4d %20s %52s %52s %2s %10s %16s %16s %65s %4d\n",
            db->per[id_per].id_per,
+           db->per[id_per].id_cpy,
+           db->per[id_per].id_job,
            db->per[id_per].nm_civ,
-           db->per[id_per].id_cpy);
+           db->per[id_per].nm_fst,
+           db->per[id_per].nm_lst,
+           db->per[id_per].cd_sex,
+           db->per[id_per].dt_cre,
+           db->per[id_per].nr_tel,
+           db->per[id_per].nr_gsm,
+           db->per[id_per].nm_mail,
+           db->per[id_per].nr_val);
 }
