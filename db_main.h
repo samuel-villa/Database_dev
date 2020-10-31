@@ -1,35 +1,36 @@
 /**********************************************************************************************************************
  * Programmation procedurale 2020 - Dossier: Database Clients V0
  *
- * REQUIREMENTS:
- *      • La création de la base de données
- *      • L’importation des 6 tables fournies sous forme de fichier .csv
- *      • L’exportation de ces 6 tables sous forme de fichier .csv
- *      • La création des index nécessaires aux requêtes précisées
- *      • Des écrans permettant de lister l’information par recherche séquentielle pour les tables de codes
- *      • Des écrans permettant d’afficher par recherche dichotomique
- *          • Une personne donnée par sa clé primaire
- *          • Une compagnie donnée par sa clé primaire
- *      • Au moins un écran permettant d’afficher via une liste chainée en mémoire
- *          • Les personnes travaillant pour une compagnie donnée par sa clé primaire
- *          • Les compagnies appartenant à un groupe donné
- *      • Au moins un écran utilisant un index binaire sur disque dans la recherche
- *          • Les personnes travaillant pour une compagnie donnée par sa clé primaire
- *          • Les personnes dont le nom commence par une chaine donnée
- *      • Les listes chainées pourront être triées ascendant ou descendant
- *      • Deux rapports répondants aux requêtes précisées ci-dessous
+ *      Requirements:
+ *          • La création de la base de données
+ *          • L’importation des 6 tables fournies sous forme de fichier .csv
+ *          • L’exportation de ces 6 tables sous forme de fichier .csv
+ *          • La création des index nécessaires aux requêtes précisées
+ *          • Des écrans permettant de lister l’information par recherche séquentielle pour les tables de codes
+ *          • Des écrans permettant d’afficher par recherche dichotomique
+ *              • Une personne donnée par sa clé primaire
+ *              • Une compagnie donnée par sa clé primaire
+ *          • Au moins un écran permettant d’afficher via une liste chainée en mémoire
+ *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
+ *              • Les compagnies appartenant à un groupe donné
+ *          • Au moins un écran utilisant un index binaire sur disque dans la recherche
+ *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
+ *              • Les personnes dont le nom commence par une chaine donnée
+ *          • Les listes chainées pourront être triées ascendant ou descendant
+ *          • Deux rapports répondants aux requêtes précisées ci-dessous
  *
  *
- *       Header file: definitions, structures and prototypes
+ *       Header file:
+ *          - definitions
+ *          - structures
+ *          - prototypes
  *
  *       Features:
- *
  *          - Database creation
  *          - Import data from .csv file
  *          - Export data to .csv file
  *
- *       Remarques:
- *
+ *       Notes:
  *          -
  *
  * Samuel CIULLA - MacOS 10.13
