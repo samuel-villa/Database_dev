@@ -18,6 +18,8 @@ void create_db(dbc *db) {
     cjob job;
     cind ind;
     cgrp grp;
+    ccpy cpy;
+    cper per;
     FILE *fp_db, *fp_lg;
 
     memset(&db->hdr, 0, sizeof(hder));
@@ -34,17 +36,27 @@ void create_db(dbc *db) {
     db->hdr.sz_job = SZ_JOB;
     db->hdr.sz_ind = SZ_IND;
     db->hdr.sz_grp = SZ_GRP;
+    /// test
+    db->hdr.sz_cpy = SZ_CPY;
+    db->hdr.sz_per = SZ_PER;
 
     db->hdr.off_cty = sizeof(hder);
     db->hdr.off_job = db->hdr.off_cty + SZ_CTY * sizeof(ccty);
     db->hdr.off_ind = db->hdr.off_job + SZ_JOB * sizeof(cjob);
     db->hdr.off_grp = db->hdr.off_ind + SZ_IND * sizeof(cind);
-    db->hdr.db_size = db->hdr.off_grp + SZ_GRP * sizeof(cgrp);
+    /// test
+    //db->hdr.db_size = db->hdr.off_grp + SZ_GRP * sizeof(cgrp);
+    db->hdr.off_cpy = db->hdr.off_grp + SZ_GRP * sizeof(cgrp);
+    db->hdr.off_per = db->hdr.off_cpy + SZ_CPY * sizeof(ccpy);
+    db->hdr.db_size = db->hdr.off_per + SZ_PER * sizeof(cper);
 
     db->hdr.nr_cty = 0;
     db->hdr.nr_job = 0;
     db->hdr.nr_ind = 0;
     db->hdr.nr_grp = 0;
+    /// test
+    db->hdr.nr_cpy = 0;
+    db->hdr.nr_per = 0;
 
     fwrite(&db->hdr, 1, sizeof(db->hdr), fp_db);
 
@@ -79,6 +91,22 @@ void create_db(dbc *db) {
 
     for (i=0; i<SZ_GRP; i++)
         fwrite(&grp, 1, sizeof(cgrp), fp_db);
+
+    // Creation of company table ----------------------------
+
+    memset(&cpy, 0, sizeof(ccpy));
+    strcpy(cpy.tp_rec, "CPY");
+
+    for (i=0; i<SZ_CPY; i++)
+        fwrite(&cpy, 1, sizeof(ccpy), fp_db);
+
+    // Creation of person table ----------------------------
+
+    memset(&per, 0, sizeof(cper));
+    strcpy(per.tp_rec, "PER");
+
+    for (i=0; i<SZ_PER; i++)
+        fwrite(&per, 1, sizeof(cper), fp_db);
 
     fprintf(fp_lg, "Database %s created\n", db->hdr.db_name);
 
