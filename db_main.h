@@ -25,9 +25,9 @@
 #define SZ_IND 100
 #define SZ_GRP 3000
 //#define SZ_CPY 100000
-#define SZ_CPY 50
 //#define SZ_PER 500000
-#define SZ_PER 50
+#define SZ_CPY 200
+#define SZ_PER 200
 
 typedef unsigned int uint;
 
