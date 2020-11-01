@@ -15,7 +15,7 @@ void main_menu(dbc *db) {
 
     int menu_sel = 0;
 
-    printf("\tDATABASE CLIENTS V0\n\n");
+    printf("\n\tDATABASE CLIENTS V0\n\n");
 
     while (menu_sel != EXIT) {
         printf("\t%d - Create Empty Database\n", CREATE_DB);

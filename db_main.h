@@ -57,6 +57,11 @@ enum Main_Menu {
     EXIT = 9
 };
 
+enum OS {
+    UNIX,
+    WINDOWS
+};
+
 typedef unsigned int uint;
 
 
@@ -248,3 +253,8 @@ void rec_person(dbc *db, int id_grp);
 
 /// Menus ///
 void main_menu(dbc *db);
+
+/// System Administration ///
+int user_os();
+void pause(int os);
+void clear(int os);
