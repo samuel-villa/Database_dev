@@ -70,7 +70,6 @@ void main_menu(dbc *db, int os) {
 void open_db_menu(dbc *db, int os) {
 
     int menu_sel = 0;
-    FILE *fp_db;
     db->status = DB_OPEN;
 
     while (menu_sel != BACK_TO_MAIN) {
