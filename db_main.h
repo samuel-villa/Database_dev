@@ -57,6 +57,15 @@ enum Main_Menu {
     EXIT = 9
 };
 
+enum Open_DB_Menu {
+    IMPORT,
+    EXPORT,
+    SEARCH,
+    REPORT,
+    SYSTEM_INFO_2,
+    CLOSE_DB
+};
+
 typedef unsigned int uint;
 
 
@@ -248,6 +257,7 @@ void rec_person(dbc *db, int id_grp);
 
 /// Menus ///
 void main_menu(dbc *db, int os);
+void open_db_menu(dbc *db, int os);
 
 /// System Administration ///
 int user_os();
