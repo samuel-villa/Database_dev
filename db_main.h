@@ -63,7 +63,7 @@ enum Open_DB_Menu {
     SEARCH,
     REPORT,
     SYSTEM_INFO_2,
-    CLOSE_DB = 9
+    BACK_TO_MAIN = 9
 };
 
 enum File_Status {

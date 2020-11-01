@@ -122,7 +122,7 @@ void import_CSV_company(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("Companies imported: %d", db->hdr.nr_cpy);
+    printf("DONE => Companies imported: %d", db->hdr.nr_cpy);
 
     return ;
 }
@@ -139,7 +139,7 @@ void export_CSV_company(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    printf("\nExporting companies...\n");
+    printf("\n\tExporting companies... ");
     fpo = fopen("data_export/exp_company.csv", "w");
 
     fprintf(fpo,"id;id_grp;id_cty;id_ind;nm_cpy;nm_adr;cd_pos;nm_cit;nr_tel;nm_www;dt_cre;nr_emp;am_val\n");
@@ -173,7 +173,7 @@ void export_CSV_company(dbc *db) {
     fclose(fp_lg);
     fclose(fpo);
 
-    printf("\nCompanies exported: %d\n\n", db->hdr.nr_cpy);
+    printf("DONE => Companies exported: %d", db->hdr.nr_cpy);
 
     return;
 }

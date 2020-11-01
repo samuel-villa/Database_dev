@@ -73,7 +73,7 @@ void import_CSV_country(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("Countries imported: %d", db->hdr.nr_cty);
+    printf("DONE => Countries imported: %d", db->hdr.nr_cty);
 
     return ;
 }
@@ -90,7 +90,7 @@ void export_CSV_country(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    printf("\nExporting countries...\n");
+    printf("\n\tExporting countries... ");
     fpo = fopen("data_export/exp_country.csv", "w");
 
     fprintf(fpo,"Id;Nm_Cty;Nm_Zon;Cd_Iso\n");
@@ -115,7 +115,7 @@ void export_CSV_country(dbc *db) {
     fclose(fp_lg);
     fclose(fpo);
 
-    printf("\nCountries exported: %d\n\n", db->hdr.nr_cty);
+    printf("DONE => Countries exported: %d", db->hdr.nr_cty);
 
     return;
 }

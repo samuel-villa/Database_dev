@@ -72,7 +72,7 @@ void import_CSV_group(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("Groups imported: %d", db->hdr.nr_grp);
+    printf("DONE => Groups imported: %d", db->hdr.nr_grp);
 
     return ;
 }
@@ -89,7 +89,7 @@ void export_CSV_group(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    printf("\nExporting groups...\n");
+    printf("\n\tExporting groups... ");
     fpo = fopen("data_export/exp_group.csv", "w");
 
     fprintf(fpo,"Id;Nm_Grp;Id_Cty\n");
@@ -113,7 +113,7 @@ void export_CSV_group(dbc *db) {
     fclose(fp_lg);
     fclose(fpo);
 
-    printf("\nGroups exported: %d\n\n", db->hdr.nr_grp);
+    printf("DONE => Groups exported: %d", db->hdr.nr_grp);
 
     return;
 }

@@ -114,7 +114,7 @@ void import_CSV_person(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("Persons imported: %d", db->hdr.nr_per);
+    printf("DONE => Persons imported: %d", db->hdr.nr_per);
 
     return ;
 }
@@ -131,7 +131,7 @@ void export_CSV_person(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    printf("\nExporting persons...\n");
+    printf("\n\tExporting persons... ");
     fpo = fopen("data_export/exp_person.csv", "w");
 
     fprintf(fpo,"id;id_cpy;id_job;nm_civ;nm_fst;nm_lst;cd_sex;dt_cre;nr_tel;nr_gsm;nm_mail;nr_val\n");
@@ -164,7 +164,7 @@ void export_CSV_person(dbc *db) {
     fclose(fp_lg);
     fclose(fpo);
 
-    printf("\nPersons exported: %d\n\n", db->hdr.nr_per);
+    printf("DONE => Persons exported: %d", db->hdr.nr_per);
 
     return;
 }

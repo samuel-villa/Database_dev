@@ -73,14 +73,14 @@ void open_db_menu(dbc *db, int os) {
     FILE *fp_db;
     db->status = DB_OPEN;
 
-    while (menu_sel != CLOSE_DB) {
+    while (menu_sel != BACK_TO_MAIN) {
         printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - Import File into DB\n", IMPORT);
         printf("\t%d - Export DB to File\n", EXPORT);
         printf("\t%d - Search\n", SEARCH);
         printf("\t%d - Generate Report\n", REPORT);
         printf("\t%d - System Info\n", SYSTEM_INFO_2);
-        printf("\t%d - Close DB\n\n", CLOSE_DB);
+        printf("\t%d - Go Back...\n\n", BACK_TO_MAIN);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
         switch (menu_sel) {
@@ -121,9 +121,7 @@ void open_db_menu(dbc *db, int os) {
                 pause(os);
                 clear(os);
                 break;
-            case CLOSE_DB:
-                //fclose(fp_db);
-                printf("DB closed\n");
+            case BACK_TO_MAIN:
                 break;
             default:
                 puts("Wrong Selection");

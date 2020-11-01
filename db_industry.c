@@ -70,7 +70,7 @@ void import_CSV_industry(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("Industries imported: %d", db->hdr.nr_ind);
+    printf("DONE => Industries imported: %d", db->hdr.nr_ind);
 
     return ;
 }
@@ -87,7 +87,7 @@ void export_CSV_industry(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    printf("\nExporting industries...\n");
+    printf("\n\tExporting industries... ");
     fpo = fopen("data_export/exp_industry.csv", "w");
 
     fprintf(fpo,"Id;Nm_Sec;Nm_Ind\n");
@@ -111,7 +111,7 @@ void export_CSV_industry(dbc *db) {
     fclose(fp_lg);
     fclose(fpo);
 
-    printf("\nIndustries exported: %d\n\n", db->hdr.nr_ind);
+    printf("DONE => Industries exported: %d", db->hdr.nr_ind);
 
     return;
 }

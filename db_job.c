@@ -73,7 +73,7 @@ void import_CSV_job(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("Jobs imported: %d", db->hdr.nr_job);
+    printf("DONE => Jobs imported: %d", db->hdr.nr_job);
 
     return ;
 }
@@ -90,7 +90,7 @@ void export_CSV_job(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    printf("\nExporting jobs...\n");
+    printf("\n\tExporting jobs... ");
     fpo = fopen("data_export/exp_job.csv", "w");
 
     fprintf(fpo,"Id;Nm_Lev;Nm_Dep;Nm_Job\n");
@@ -115,7 +115,7 @@ void export_CSV_job(dbc *db) {
     fclose(fp_lg);
     fclose(fpo);
 
-    printf("\nJobs exported: %d\n\n", db->hdr.nr_job);
+    printf("DONE => Jobs exported: %d", db->hdr.nr_job);
 
     return;
 }
