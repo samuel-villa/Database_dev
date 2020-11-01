@@ -43,7 +43,7 @@ int user_os() {
  * os: user OS
 ****************************************************************************************/
 void pause(int os) {
-    if (os == UNIX) system("read -p \"Press any key to continue...\"");
+    if (os == UNIX) system("read -p \"Press [Enter] key to continue...\"");
     else system("pause");
 }
 

@@ -252,7 +252,7 @@ void print_person(dbc *db);
 void rec_person(dbc *db, int id_grp);
 
 /// Menus ///
-void main_menu(dbc *db);
+void main_menu(dbc *db, int os);
 
 /// System Administration ///
 int user_os();

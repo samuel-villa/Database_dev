@@ -11,7 +11,7 @@
 /****************************************************************************************
 * Program main menu
 ****************************************************************************************/
-void main_menu(dbc *db) {
+void main_menu(dbc *db, int os) {
 
     int menu_sel = 0;
 
@@ -27,12 +27,18 @@ void main_menu(dbc *db) {
         switch (menu_sel) {
             case CREATE_DB:
                 create_db(db);
+                pause(os);
+                clear(os);
                 break;
             case OPEN_DB:
                 puts("Opening db");
+                pause(os);
+                clear(os);
                 break;
             case SYSTEM_INFO:
                 puts("Displaying System Info");
+                pause(os);
+                clear(os);
                 break;
             case EXIT:
                 exit(0);

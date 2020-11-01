@@ -17,7 +17,7 @@ int main() {
     dbc db;
 
     os = user_os();
-    main_menu(&db);
+    main_menu(&db, os);
 
     //create_db(&db);
 
