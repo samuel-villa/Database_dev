@@ -25,18 +25,32 @@ void main_menu(dbc *db, int os) {
 
         switch (menu_sel) {
             case CREATE_DB:
-                create_db(db);
-                pause(os);
-                clear(os);
+                if (db->status == DB_NOT_CREATED) {
+                    create_db(db);
+                    printf("\n\tThe program must restart.\n\n");
+                    exit(0);
+                } else {
+                    printf("\n\t'%s' is already created. Select 'Open DB'.\n\n", db->hdr.db_name);
+                    pause(os);
+                    clear(os);
+                }
                 break;
             case OPEN_DB:
-                printf("Opening database...\n");
-                open_db_menu(db, os);
-                pause(os);
-                clear(os);
+                if (db->status == DB_CLOSED) {
+                    printf("\n\tOpening database...\n");
+                    open_db_menu(db, os);
+                } else {
+                    printf("\n\tFirst you must create the DB. Select 'Create Empty DB'.\n\n");
+                    pause(os);
+                    clear(os);
+                }
                 break;
             case SYSTEM_INFO:
-                puts("Displaying System Info");
+                if (db->status != DB_NOT_CREATED) {
+                    display_system_info(db);
+                } else {
+                    printf("\n\tFirst you must create the DB. Select 'Create Empty DB'.\n\n");
+                }
                 pause(os);
                 clear(os);
                 break;

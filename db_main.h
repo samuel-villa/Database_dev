@@ -227,6 +227,7 @@ typedef struct db_client {
 void create_db(dbc *db);
 void load_header(dbc *db);
 void set_db_status(dbc *db);
+void display_system_info(dbc *db);
 
 /// Country ///
 void import_CSV_country(dbc *db);
