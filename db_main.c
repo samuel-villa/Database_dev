@@ -17,9 +17,10 @@ int main() {
     dbc db;
 
     os = user_os();
+    set_db_status(&db);
     main_menu(&db, os);
 
-    //create_db(&db);
+//    create_db(&db);
 
 //    import_CSV_country(&db);
 //    export_CSV_country(&db);

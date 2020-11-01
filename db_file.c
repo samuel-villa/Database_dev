@@ -113,3 +113,37 @@ void create_db(dbc *db) {
 
     printf("Database %s created\n", db->hdr.db_name);
 }
+
+
+
+/****************************************************************************************
+* Load header if DB file exists
+****************************************************************************************/
+void load_header(dbc *db) {
+
+    FILE *fp_db;
+
+    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+
+    fseek(fp_db, 0, SEEK_SET);
+    fread(&db->hdr, sizeof(hder), 1, fp_db);
+
+    fclose(fp_db);
+}
+
+
+/****************************************************************************************
+* Check if DB file is created
+****************************************************************************************/
+void set_db_status(dbc *db) {
+
+    FILE *fp_db;
+
+    if ((fp_db = fopen("data_db_clients/db_clients.dat", "rb")) == NULL) {
+        db->status = DB_NOT_CREATED;
+    } else {
+        load_header(db);
+        db->status = DB_CLOSED;
+    }
+    fclose(fp_db);
+}

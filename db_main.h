@@ -63,7 +63,13 @@ enum Open_DB_Menu {
     SEARCH,
     REPORT,
     SYSTEM_INFO_2,
-    CLOSE_DB
+    CLOSE_DB = 9
+};
+
+enum File_Status {
+    DB_NOT_CREATED,
+    DB_CLOSED,
+    DB_OPEN
 };
 
 typedef unsigned int uint;
@@ -76,25 +82,31 @@ typedef struct Header {
 
     uint db_size;       // db size
     char db_name[28];   // db name
+
     uint sz_cty;        // country bloc size
     uint sz_job;        // job bloc size
     uint sz_ind;        // industry bloc size
     uint sz_grp;        // group bloc size
     uint sz_cpy;        // company bloc size
     uint sz_per;        // person bloc size
+    char filler1[8];
+
     uint off_cty;       // country bloc position
     uint off_job;       // job bloc position
     uint off_ind;       // industry bloc position
     uint off_grp;       // group bloc position
     uint off_cpy;       // company bloc position
     uint off_per;       // person bloc position
+    char filler2[8];
+
     uint nr_cty;        // nr of countries
     uint nr_job;        // nr of jobs
     uint nr_ind;        // nr of industries
     uint nr_grp;        // nr of groups
     uint nr_cpy;        // nr of companies
     uint nr_per;        // nr of persons
-    char filler[16];    /// rearrange
+    char filler3[8];
+
 } hder;
 
 
@@ -164,7 +176,6 @@ typedef struct Company {
     char  nm_cit[40];   // city
     char  nr_tel[20];   // tel
     char  nm_www[50];   // website
-                        // TODO convert dt_cre to date (check on Macbook)
     char  dt_cre[11];   // date of creation in the db
     int   nr_emp;       // nr of employees
     float am_val;       // value of single stock
@@ -184,7 +195,6 @@ typedef struct Person {
     char nm_fst[52];    // firstname
     char nm_lst[52];    // lastname
     char cd_sex[2];        // sex
-                        // TODO convert dt_cre to date (check on Macbook)
     char dt_cre[11];    // date of creation in the db
     char nr_tel[16];    // tel
     char nr_gsm[16];    // mobile
@@ -205,13 +215,18 @@ typedef struct db_client {
     cgrp grp[SZ_GRP];   // buffer group
     ccpy cpy[SZ_CPY];   // buffer company
     cper per[SZ_PER];   // buffer person
+    int  status;
 } dbc;
 
 
 /****************************************************************************************
 * Prototypes
 ****************************************************************************************/
+
+/// DB File ///
 void create_db(dbc *db);
+void load_header(dbc *db);
+void set_db_status(dbc *db);
 
 /// Country ///
 void import_CSV_country(dbc *db);

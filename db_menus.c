@@ -15,9 +15,8 @@ void main_menu(dbc *db, int os) {
 
     int menu_sel = 0;
 
-    printf("\n\tDATABASE CLIENTS V0\n\n");
-
     while (menu_sel != EXIT) {
+        printf("\n\tDATABASE CLIENTS V0\n\n");
         printf("\t%d - Create Empty DB\n", CREATE_DB);
         printf("\t%d - Open DB\n", OPEN_DB);
         printf("\t%d - System Info\n", SYSTEM_INFO);
@@ -59,18 +58,16 @@ void open_db_menu(dbc *db, int os) {
     int menu_sel = 0;
     FILE *fp_db;
 
-    fp_db = fopen("data_db_clients/db_clients.dat", "wb");
+    fp_db = fopen("data_db_clients/db_clients.dat", "rb");
 
-    // TODO get title (fseek, ...)
-
-    printf("\n\tDATABASE CLIENTS V0: 'TITLE' OPEN\n\n");
+    printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
 
     while (menu_sel != CLOSE_DB) {
         printf("\t%d - Import File into DB\n", IMPORT);
         printf("\t%d - Export DB to File\n", EXPORT);
         printf("\t%d - Search\n", SEARCH);
-        printf("\t%d - Generate Report\n\n", REPORT);
-        printf("\t%d - System Info\n\n", SYSTEM_INFO_2);
+        printf("\t%d - Generate Report\n", REPORT);
+        printf("\t%d - System Info\n", SYSTEM_INFO_2);
         printf("\t%d - Close DB\n\n", CLOSE_DB);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -103,8 +100,6 @@ void open_db_menu(dbc *db, int os) {
             case CLOSE_DB:
                 fclose(fp_db);
                 printf("DB closed\n");
-                pause(os);
-                clear(os);
                 break;
             default:
                 puts("Wrong Selection");
