@@ -34,8 +34,6 @@ void import_CSV_country(dbc *db) {
 
     fseek(fp_db, db->hdr.off_cty, SEEK_SET);
 
-    //printf("%08X\n",db->hdr.off_cty);
-
     while (fgets(line, 200, fpi) != NULL) {
 
         memset(&cty, 0, sizeof(ccty));

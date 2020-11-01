@@ -34,8 +34,6 @@ void import_CSV_job(dbc *db) {
 
     fseek(fp_db, db->hdr.off_job, SEEK_SET);
 
-    //printf("%08X\n",db->hdr.off_job);
-
     while (fgets(line, 200, fpi) != NULL) {
 
         memset(&job, 0, sizeof(cjob));

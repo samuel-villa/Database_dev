@@ -34,8 +34,6 @@ void import_CSV_industry(dbc *db) {
 
     fseek(fp_db, db->hdr.off_ind, SEEK_SET);
 
-    //printf("%08X\n",db->hdr.off_ind);
-
     while (fgets(line, 200, fpi) != NULL) {
 
         memset(&ind, 0, sizeof(cind));

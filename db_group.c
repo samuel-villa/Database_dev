@@ -34,8 +34,6 @@ void import_CSV_group(dbc *db) {
 
     fseek(fp_db, db->hdr.off_grp, SEEK_SET);
 
-    //printf("%08X\n",db->hdr.off_grp);
-
     while (fgets(line, 200, fpi) != NULL) {
 
         memset(&grp, 0, sizeof(cgrp));

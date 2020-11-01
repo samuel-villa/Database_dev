@@ -34,8 +34,6 @@ void import_CSV_person(dbc *db) {
 
     fseek(fp_db, db->hdr.off_per, SEEK_SET);
 
-    //printf("%08X\n",db->hdr.off_per);
-
     while (fgets(line, 200, fpi) != NULL) {
 
         memset(&per, 0, sizeof(cper));
