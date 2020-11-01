@@ -41,6 +41,11 @@
 #include <string.h>
 #include <time.h>
 
+
+/***************************************************************************************
+* Definitions
+****************************************************************************************/
+
 #define SZ_CTY 100
 #define SZ_JOB 200
 #define SZ_IND 100
@@ -49,6 +54,7 @@
 //#define SZ_PER 500000
 #define SZ_CPY 200
 #define SZ_PER 200
+
 
 enum Main_Menu {
     CREATE_DB,
@@ -155,8 +161,9 @@ typedef struct Group {
 
     char tp_rec[8];     // rec type: GRP
     int  id_grp;        // primary key
-    char nm_grp[52];
-    int id_cty;
+    char filler1[20];
+    char nm_grp[60];
+    int  id_cty;
 } cgrp;
 
 
@@ -170,15 +177,16 @@ typedef struct Company {
     int   id_grp;       // foreign key ref to Group
     int   id_cty;       // foreign key ref to Country
     int   id_ind;       // foreign key ref to Industry
-    char  nm_cpy[95];   // company name
-    char  nm_adr[95];   // company address
+    char  nm_cpy[96];   // company name
+    char  nm_adr[86];   // company address
     char  cd_pos[10];   // post code
-    char  nm_cit[40];   // city
+    char  nm_cit[32];   // city
     char  nr_tel[20];   // tel
-    char  nm_www[50];   // website
+    char  nm_www[53];   // website
     char  dt_cre[11];   // date of creation in the db
     int   nr_emp;       // nr of employees
     float am_val;       // value of single stock
+    char  filler[12];
 } ccpy;
 
 
@@ -191,14 +199,14 @@ typedef struct Person {
     int  id_per;        // primary key
     int  id_cpy;        // foreign key ref to Company
     int  id_job;        // foreign key ref to Job
-    char nm_civ[20];    // title (Mr. M.)
-    char nm_fst[52];    // firstname
-    char nm_lst[52];    // lastname
-    char cd_sex[2];        // sex
-    char dt_cre[11];    // date of creation in the db
+    char nm_civ[16];    // title (Mr. M.)
+    char nm_fst[44];    // firstname
+    char nm_lst[56];    // lastname
+    char cd_sex[4];     // sex
+    char dt_cre[16];    // date of creation in the db
     char nr_tel[16];    // tel
     char nr_gsm[16];    // mobile
-    char nm_mail[65];   // email address
+    char nm_mail[64];   // email address
     int  nr_val;        // nr of stocks owned
 } cper;
 
