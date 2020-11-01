@@ -72,6 +72,18 @@ enum Open_DB_Menu {
     BACK_TO_MAIN = 9
 };
 
+enum Search_Menu {
+    S_COUNTRY,
+    S_INDUSTRY,
+    S_GROUP,
+    S_JOB,
+    S_COMPANY,
+    S_PERSON,
+    S_PERS_COMP,
+    S_COMP_DETAIL,
+    S_BACK = 9
+};
+
 enum File_Status {
     DB_NOT_CREATED,
     DB_CLOSED,
@@ -282,6 +294,7 @@ void rec_person(dbc *db, int id_grp);
 /// Menus ///
 void main_menu(dbc *db, int os);
 void open_db_menu(dbc *db, int os);
+void search_menu(dbc *db, int os);
 
 /// System Administration ///
 int user_os();
