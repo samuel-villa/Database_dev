@@ -60,3 +60,18 @@ void clear(int os) {
     if (os == UNIX) system("clear");
     else system("cls");
 }
+
+
+/****************************************************************************************
+ * Return current time converted into string
+****************************************************************************************/
+char *timestamp() {
+
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    return asctime(timeinfo);
+}

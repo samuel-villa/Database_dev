@@ -279,3 +279,4 @@ void open_db_menu(dbc *db, int os);
 int user_os();
 void pause(int os);
 void clear(int os);
+char *timestamp();
