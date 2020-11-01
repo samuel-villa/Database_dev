@@ -28,7 +28,7 @@ void import_CSV_group(dbc *db) {
     fpi = fopen("data_import/db_group.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
 
-    printf("\nImporting groups...\n");
+    printf("\n\tImporting groups... ");
 
     fgets(line, 200, fpi);
 
@@ -74,7 +74,7 @@ void import_CSV_group(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("\nGroups imported: %d\n\n", db->hdr.nr_grp);
+    printf("Groups imported: %d", db->hdr.nr_grp);
 
     return ;
 }

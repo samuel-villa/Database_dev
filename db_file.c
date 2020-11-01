@@ -111,7 +111,7 @@ void create_db(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("Database %s created\n", db->hdr.db_name);
+    printf("\n\tDatabase %s created\n", db->hdr.db_name);
 }
 
 
@@ -154,10 +154,10 @@ void set_db_status(dbc *db) {
 ****************************************************************************************/
 void display_system_info(dbc *db) {
 
-    printf("\n====================================\n\n");
+    printf("\n\t=====================================\n\n");
 
-    printf("\t* DB name:\t\t\t\t\t %s\n", db->hdr.db_name);
-    printf("\t* DB size:\t\t\t\t\t %8d\n", db->hdr.db_size);
+    printf("\t* DB name:\t\t\t\t '%s'\n", db->hdr.db_name);
+    printf("\t* DB size (bytes):\t\t\t %8d\n", db->hdr.db_size);
     printf("\t* Countries bloc size:\t\t %8d\n", db->hdr.sz_cty);
     printf("\t* Jobs bloc size:\t\t\t %8d\n", db->hdr.sz_job);
     printf("\t* Industries bloc size:\t\t %8d\n", db->hdr.sz_ind);
@@ -180,5 +180,5 @@ void display_system_info(dbc *db) {
     printf("\t* Nb of Companies:\t\t\t %8d\n", db->hdr.nr_cpy);
     printf("\t* Nb of Persons:\t\t\t %8d\n", db->hdr.nr_per);
 
-    printf("\n\n====================================\n");
+    printf("\n\n\t=====================================\n");
 }

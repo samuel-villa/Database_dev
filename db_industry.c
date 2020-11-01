@@ -28,7 +28,7 @@ void import_CSV_industry(dbc *db) {
     fpi = fopen("data_import/db_industry.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
 
-    printf("\nImporting industries...\n");
+    printf("\n\tImporting industries... ");
 
     fgets(line, 200, fpi);
 
@@ -72,7 +72,7 @@ void import_CSV_industry(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("\nIndustries imported: %d\n\n", db->hdr.nr_ind);
+    printf("Industries imported: %d", db->hdr.nr_ind);
 
     return ;
 }

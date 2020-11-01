@@ -28,13 +28,13 @@ void import_CSV_company(dbc *db) {
     fpi = fopen("data_import/test_cpy.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
 
-    printf("\nImporting companies...\n");
+    printf("\n\tImporting companies... ");
 
     fgets(line, 200, fpi);
 
     fseek(fp_db, db->hdr.off_cpy, SEEK_SET);
 
-    printf("%08X\n",db->hdr.off_cpy);
+    //printf("%08X\n",db->hdr.off_cpy);
 
     while (fgets(line, 200, fpi) != NULL) {
 
@@ -124,7 +124,7 @@ void import_CSV_company(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("\nCompanies imported: %d\n\n", db->hdr.nr_cpy);
+    printf("Companies imported: %d", db->hdr.nr_cpy);
 
     return ;
 }

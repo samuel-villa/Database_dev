@@ -27,7 +27,7 @@ void main_menu(dbc *db, int os) {
             case CREATE_DB:
                 if (db->status == DB_NOT_CREATED) {
                     create_db(db);
-                    printf("\n\tThe program must restart.\n\n");
+                    printf("\n\tThe program must restart...\n\n");
                     exit(0);
                 } else {
                     printf("\n\t'%s' is already created. Select 'Open DB'.\n\n", db->hdr.db_name);
@@ -71,12 +71,10 @@ void open_db_menu(dbc *db, int os) {
 
     int menu_sel = 0;
     FILE *fp_db;
-
-    fp_db = fopen("data_db_clients/db_clients.dat", "rb");
-
-    printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+    db->status = DB_OPEN;
 
     while (menu_sel != CLOSE_DB) {
+        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - Import File into DB\n", IMPORT);
         printf("\t%d - Export DB to File\n", EXPORT);
         printf("\t%d - Search\n", SEARCH);
@@ -87,17 +85,29 @@ void open_db_menu(dbc *db, int os) {
 
         switch (menu_sel) {
             case IMPORT:
-                printf("Import...\n");
+                import_CSV_country(db);
+                import_CSV_job(db);
+                import_CSV_industry(db);
+                import_CSV_group(db);
+                import_CSV_company(db);
+                import_CSV_person(db);
+                printf("\n\n");
                 pause(os);
                 clear(os);
                 break;
             case EXPORT:
-                printf("Export...\n");
+                export_CSV_country(db);
+                export_CSV_job(db);
+                export_CSV_industry(db);
+                export_CSV_group(db);
+                export_CSV_company(db);
+                export_CSV_person(db);
+                printf("\n\n");
                 pause(os);
                 clear(os);
                 break;
             case SEARCH:
-                printf("Sarch Menu...\n");
+                printf("Search Menu...\n");
                 pause(os);
                 clear(os);
                 break;
@@ -107,12 +117,12 @@ void open_db_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case SYSTEM_INFO_2:
-                puts("Displaying System Info");
+                display_system_info(db);
                 pause(os);
                 clear(os);
                 break;
             case CLOSE_DB:
-                fclose(fp_db);
+                //fclose(fp_db);
                 printf("DB closed\n");
                 break;
             default:
@@ -120,6 +130,4 @@ void open_db_menu(dbc *db, int os) {
                 break;
         }
     }
-
-    fclose(fp_db);
 }

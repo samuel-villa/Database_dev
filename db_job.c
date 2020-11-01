@@ -28,7 +28,7 @@ void import_CSV_job(dbc *db) {
     fpi = fopen("data_import/db_job.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
 
-    printf("\nImporting jobs ...\n");
+    printf("\n\tImporting jobs... ");
 
     fgets(line, 200, fpi);
 
@@ -75,7 +75,7 @@ void import_CSV_job(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("\nJobs imported: %d\n\n", db->hdr.nr_job);
+    printf("Jobs imported: %d", db->hdr.nr_job);
 
     return ;
 }

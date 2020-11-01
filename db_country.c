@@ -28,7 +28,7 @@ void import_CSV_country(dbc *db) {
     fpi = fopen("data_import/db_country.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
 
-    printf("\nImporting countries...\n");
+    printf("\n\tImporting countries... ");
 
     fgets(line, 200, fpi);
 
@@ -75,7 +75,7 @@ void import_CSV_country(dbc *db) {
     fclose(fp_lg);
     fclose(fpi);
 
-    printf("\nCountries imported: %d\n\n", db->hdr.nr_cty);
+    printf("Countries imported: %d", db->hdr.nr_cty);
 
     return ;
 }
