@@ -31,7 +31,7 @@ void main_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case OPEN_DB:
-                puts("Opening db");
+                puts("Opening db...");
                 pause(os);
                 clear(os);
                 break;

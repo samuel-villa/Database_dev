@@ -57,11 +57,6 @@ enum Main_Menu {
     EXIT = 9
 };
 
-enum OS {
-    UNIX,
-    WINDOWS
-};
-
 typedef unsigned int uint;
 
 
