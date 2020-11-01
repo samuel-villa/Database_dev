@@ -3,6 +3,8 @@
  *
  *       DB file creation
  *
+ *       TODO add timestamp for log records
+ *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
@@ -25,18 +27,17 @@ void create_db(dbc *db) {
     memset(&db->hdr, 0, sizeof(hder));
     memset(&cty, 0, sizeof(ccty));
 
-    fp_db = fopen("data_db_comp/db_comp.dat", "wb");
-    fp_lg = fopen("data_db_comp/db_comp.log", "a");
+    fp_db = fopen("data_db_clients/db_clients.dat", "wb");
+    fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
     // header creation ----------------------------
 
-    strcpy(db->hdr.db_name, "db_comp");
+    strcpy(db->hdr.db_name, "db_clients");
 
     db->hdr.sz_cty = SZ_CTY;
     db->hdr.sz_job = SZ_JOB;
     db->hdr.sz_ind = SZ_IND;
     db->hdr.sz_grp = SZ_GRP;
-    /// test
     db->hdr.sz_cpy = SZ_CPY;
     db->hdr.sz_per = SZ_PER;
 
@@ -44,8 +45,6 @@ void create_db(dbc *db) {
     db->hdr.off_job = db->hdr.off_cty + SZ_CTY * sizeof(ccty);
     db->hdr.off_ind = db->hdr.off_job + SZ_JOB * sizeof(cjob);
     db->hdr.off_grp = db->hdr.off_ind + SZ_IND * sizeof(cind);
-    /// test
-    //db->hdr.db_size = db->hdr.off_grp + SZ_GRP * sizeof(cgrp);
     db->hdr.off_cpy = db->hdr.off_grp + SZ_GRP * sizeof(cgrp);
     db->hdr.off_per = db->hdr.off_cpy + SZ_CPY * sizeof(ccpy);
     db->hdr.db_size = db->hdr.off_per + SZ_PER * sizeof(cper);
@@ -54,7 +53,6 @@ void create_db(dbc *db) {
     db->hdr.nr_job = 0;
     db->hdr.nr_ind = 0;
     db->hdr.nr_grp = 0;
-    /// test
     db->hdr.nr_cpy = 0;
     db->hdr.nr_per = 0;
 
@@ -113,5 +111,5 @@ void create_db(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("Databse %s created\n", db->hdr.db_name);
+    printf("Database %s created\n", db->hdr.db_name);
 }

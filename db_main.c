@@ -15,7 +15,9 @@ int main() {
 
     dbc db;
 
-    create_db(&db);
+    main_menu(&db);
+
+    //create_db(&db);
 
 //    import_CSV_country(&db);
 //    export_CSV_country(&db);
@@ -42,10 +44,10 @@ int main() {
 //    load_company(&db);
 //    print_company(&db);
 
-    import_CSV_person(&db);
-    export_CSV_person(&db);
-    load_person(&db);
-    print_person(&db);
+//    import_CSV_person(&db);
+//    export_CSV_person(&db);
+//    load_person(&db);
+//    print_person(&db);
 
     return 0;
 }

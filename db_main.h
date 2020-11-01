@@ -51,8 +51,8 @@
 #define SZ_PER 200
 
 enum Main_Menu {
-    OPEN_DB,
     CREATE_DB,
+    OPEN_DB,
     SYSTEM_INFO,
     EXIT = 9
 };
@@ -245,3 +245,6 @@ void export_CSV_person(dbc *db);
 void load_person(dbc *db);
 void print_person(dbc *db);
 void rec_person(dbc *db, int id_grp);
+
+/// Menus ///
+void main_menu(dbc *db);
