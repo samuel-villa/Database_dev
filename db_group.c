@@ -58,7 +58,7 @@ void import_CSV_group(dbc *db) {
         i++;
     }
 
-    fprintf(fp_lg, "Groups imported: %d\n", i);
+    fprintf(fp_lg, "%s Groups imported: %d\n", timestamp(), i);
 
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // load buffer (db) with 'fp_db'
@@ -107,7 +107,7 @@ void export_CSV_group(dbc *db) {
                 grp.id_cty);
     }
 
-    fprintf(fp_lg, "Groups exported: %d\n", db->hdr.nr_grp);
+    fprintf(fp_lg, "%s Groups exported: %d\n", timestamp(), db->hdr.nr_grp);
 
     fclose(fp_db);
     fclose(fp_lg);
@@ -145,7 +145,7 @@ void load_group(dbc *db) {
         db->grp[i] = grp;
     }
 
-    fprintf(fp_lg, "Groups loaded into buffer: %d\n", db->hdr.nr_grp);
+    fprintf(fp_lg, "%s Groups loaded into buffer: %d\n", timestamp(), db->hdr.nr_grp);
 
     fclose(fp_db);
     fclose(fp_lg);

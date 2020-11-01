@@ -108,7 +108,7 @@ void import_CSV_company(dbc *db) {
         i++;
     }
 
-    fprintf(fp_lg, "Companies imported: %d\n", i);
+    fprintf(fp_lg, "%s Companies imported: %d\n", timestamp(), i);
 
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);
@@ -167,7 +167,7 @@ void export_CSV_company(dbc *db) {
                 cpy.am_val);
     }
 
-    fprintf(fp_lg, "Companies exported: %d\n", db->hdr.nr_cpy);
+    fprintf(fp_lg, "%s Companies exported: %d\n", timestamp(), db->hdr.nr_cpy);
 
     fclose(fp_db);
     fclose(fp_lg);
@@ -205,7 +205,7 @@ void load_company(dbc *db) {
         db->cpy[i] = cpy;
     }
 
-    fprintf(fp_lg, "Companies loaded into buffer: %d\n", db->hdr.nr_cpy);
+    fprintf(fp_lg, "%s Companies loaded into buffer: %d\n", timestamp(), db->hdr.nr_cpy);
 
     fclose(fp_db);
     fclose(fp_lg);

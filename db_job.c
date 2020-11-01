@@ -59,7 +59,7 @@ void import_CSV_job(dbc *db) {
         i++;
     }
 
-    fprintf(fp_lg, "Jobs imported: %d\n", i);
+    fprintf(fp_lg, "%s Jobs imported: %d\n", timestamp(), i);
 
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // load buffer (db) with 'fp_db'
@@ -109,7 +109,7 @@ void export_CSV_job(dbc *db) {
                 job.nm_job);
     }
 
-    fprintf(fp_lg, "Jobs exported: %d\n", db->hdr.nr_job);
+    fprintf(fp_lg, "%s Jobs exported: %d\n", timestamp(), db->hdr.nr_job);
 
     fclose(fp_db);
     fclose(fp_lg);
@@ -147,7 +147,7 @@ void load_job(dbc *db) {
         db->job[i] = job;
     }
 
-    fprintf(fp_lg, "Jobs loaded into buffer: %d\n", db->hdr.nr_job);
+    fprintf(fp_lg, "%s Jobs loaded into buffer: %d\n", timestamp(), db->hdr.nr_job);
 
     fclose(fp_db);
     fclose(fp_lg);

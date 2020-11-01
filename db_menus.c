@@ -80,7 +80,7 @@ void open_db_menu(dbc *db, int os) {
         printf("\t%d - Search\n", SEARCH);
         printf("\t%d - Generate Report\n", REPORT);
         printf("\t%d - System Info\n", SYSTEM_INFO_2);
-        printf("\t%d - Go Back...\n\n", BACK_TO_MAIN);
+        printf("\t%d - GO BACK...\n\n", BACK_TO_MAIN);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
         switch (menu_sel) {

@@ -215,7 +215,7 @@ typedef struct db_client {
     cgrp grp[SZ_GRP];   // buffer group
     ccpy cpy[SZ_CPY];   // buffer company
     cper per[SZ_PER];   // buffer person
-    int  status;
+    int  status;        // db nonexistent, closed or open
 } dbc;
 
 
@@ -279,4 +279,4 @@ void open_db_menu(dbc *db, int os);
 int user_os();
 void pause(int os);
 void clear(int os);
-char *timestamp();
+const char *timestamp();

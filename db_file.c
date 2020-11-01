@@ -3,8 +3,6 @@
  *
  *       DB file creation
  *
- *       TODO add timestamp for log records
- *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
@@ -106,7 +104,7 @@ void create_db(dbc *db) {
     for (i=0; i<SZ_PER; i++)
         fwrite(&per, 1, sizeof(cper), fp_db);
 
-    fprintf(fp_lg, "Database %s created\n", db->hdr.db_name);
+    fprintf(fp_lg, "%s Database %s created\n", timestamp(), db->hdr.db_name);
 
     fclose(fp_db);
     fclose(fp_lg);

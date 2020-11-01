@@ -100,7 +100,7 @@ void import_CSV_person(dbc *db) {
         i++;
     }
 
-    fprintf(fp_lg, "Persons imported: %d\n", i);
+    fprintf(fp_lg, "%s Persons imported: %d\n", timestamp(), i);
 
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);
@@ -158,7 +158,7 @@ void export_CSV_person(dbc *db) {
                 per.nr_val);
     }
 
-    fprintf(fp_lg, "Persons exported: %d\n", db->hdr.nr_per);
+    fprintf(fp_lg, "%s Persons exported: %d\n", timestamp(), db->hdr.nr_per);
 
     fclose(fp_db);
     fclose(fp_lg);
@@ -196,7 +196,7 @@ void load_person(dbc *db) {
         db->per[i] = per;
     }
 
-    fprintf(fp_lg, "Persons loaded into buffer: %d\n", db->hdr.nr_per);
+    fprintf(fp_lg, "%s Persons loaded into buffer: %d\n", timestamp(), db->hdr.nr_per);
 
     fclose(fp_db);
     fclose(fp_lg);

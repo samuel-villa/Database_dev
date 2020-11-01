@@ -65,13 +65,25 @@ void clear(int os) {
 /****************************************************************************************
  * Return current time converted into string
 ****************************************************************************************/
-char *timestamp() {
+const char *timestamp() {
 
-    time_t rawtime;
-    struct tm * timeinfo;
+    int hours, minutes, seconds, day, month, year;
+    char *timestamp;
 
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
+    timestamp = (char*)malloc(sizeof(char));
 
-    return asctime(timeinfo);
+    time_t now;
+    time(&now);
+    struct tm *local = localtime(&now);
+
+    hours = local->tm_hour;
+    minutes = local->tm_min;
+    seconds = local->tm_sec;
+    day = local->tm_mday;
+    month = local->tm_mon + 1;
+    year = local->tm_year + 1900;
+
+    sprintf(timestamp, "%02d/%02d/%d %02d:%02d:%02d -", day, month, year, hours, minutes, seconds);
+
+    return timestamp;
 }
