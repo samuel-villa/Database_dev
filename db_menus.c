@@ -61,7 +61,9 @@ void open_db_menu(dbc *db, int os) {
 
     fp_db = fopen("data_db_clients/db_clients.dat", "wb");
 
-    printf("\n\tDATABASE CLIENTS V0\n\n");
+    // TODO get title (fseek, ...)
+
+    printf("\n\tDATABASE CLIENTS V0: 'TITLE' OPEN\n\n");
 
     while (menu_sel != CLOSE_DB) {
         printf("\t%d - Import File into DB\n", IMPORT);
