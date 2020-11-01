@@ -22,8 +22,8 @@ void import_CSV_group(dbc *db) {
     cgrp grp;
     FILE *fpi, *fp_db, *fp_lg;
 
-    fp_db = fopen("data_db_comp/db_comp.dat", "rb+");
-    fp_lg = fopen("data_db_comp/db_comp.log", "a");
+    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+    fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
     fpi = fopen("data_import/db_group.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
@@ -88,8 +88,8 @@ void export_CSV_group(dbc *db) {
     cgrp grp;
     FILE *fpo, *fp_db, *fp_lg;
 
-    fp_db = fopen("data_db_comp/db_comp.dat", "rb+");
-    fp_lg = fopen("data_db_comp/db_comp.log", "a");
+    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+    fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
     printf("\nExporting groups...\n");
     fpo = fopen("data_export/exp_group.csv", "w");
@@ -129,8 +129,8 @@ void load_group(dbc *db) {
     cgrp grp;
     FILE *fp_db, *fp_lg;
 
-    fp_db = fopen("data_db_comp/db_comp.dat", "rb+");
-    fp_lg = fopen("data_db_comp/db_comp.log", "a");
+    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+    fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
