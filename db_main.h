@@ -28,6 +28,8 @@
  *          - Database creation
  *          - Import data from .csv file
  *          - Export data to .csv file
+ *          - Display Countries, Industries, Groups and Jobs
+ *          - ...
  *
  *       Notes:
  *          -
