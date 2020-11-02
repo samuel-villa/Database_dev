@@ -178,5 +178,5 @@ void display_system_info(dbc *db) {
     printf("\t* Nb of Companies:\t\t\t %8d\n", db->hdr.nr_cpy);
     printf("\t* Nb of Persons:\t\t\t %8d\n", db->hdr.nr_per);
 
-    printf("\n\n\t=====================================\n");
+    printf("\n\n\t=====================================\n\n");
 }

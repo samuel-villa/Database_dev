@@ -52,10 +52,10 @@
 #define SZ_JOB 200
 #define SZ_IND 100
 #define SZ_GRP 3000
-//#define SZ_CPY 100000
-//#define SZ_PER 500000
-#define SZ_CPY 200
-#define SZ_PER 200
+#define SZ_CPY 100000
+#define SZ_PER 600000
+//#define SZ_CPY 200
+//#define SZ_PER 200
 
 
 enum Main_Menu {
@@ -192,11 +192,11 @@ typedef struct Company {
     int   id_cty;       // foreign key ref to Country
     int   id_ind;       // foreign key ref to Industry
     char  nm_cpy[96];   // company name
-    char  nm_adr[86];   // company address
-    char  cd_pos[10];   // post code
+    char  nm_adr[81];   // company address
+    char  cd_pos[15];   // post code
     char  nm_cit[32];   // city
-    char  nr_tel[20];   // tel
-    char  nm_www[53];   // website
+    char  nr_tel[23];   // tel
+    char  nm_www[50];   // website
     char  dt_cre[11];   // date of creation in the db
     int   nr_emp;       // nr of employees
     float am_val;       // value of single stock
@@ -235,8 +235,6 @@ typedef struct db_client {
     cjob job[SZ_JOB];   // buffer job
     cind ind[SZ_IND];   // buffer industry
     cgrp grp[SZ_GRP];   // buffer group
-    ccpy cpy[SZ_CPY];   // buffer company
-    cper per[SZ_PER];   // buffer person
     int  status;        // db nonexistent, closed or open
 } dbc;
 

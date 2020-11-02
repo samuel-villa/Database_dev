@@ -25,7 +25,7 @@ void import_CSV_company(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    fpi = fopen("data_import/test_cpy.csv", "r");
+    fpi = fopen("data_import/db_company.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
 
     printf("\n\tImporting companies... ");
@@ -178,67 +178,67 @@ void export_CSV_company(dbc *db) {
     return;
 }
 
-/****************************************************************************************
-* Load Company table into the buffer
-****************************************************************************************/
-void load_company(dbc *db) {
-
-    int i;
-    ccpy cpy;
-    FILE *fp_db, *fp_lg;
-
-    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-
-    fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
-
-    printf("\nLoading companies into buffer... ");
-
-    fseek(fp_db, db->hdr.off_cpy, SEEK_SET);
-
-    for (i=1; i<=db->hdr.nr_cpy; i++) {
-
-        memset(&cpy, 0, sizeof(ccpy));
-        fread(&cpy, 1, sizeof(ccpy), fp_db);
-
-        db->cpy[i] = cpy;
-    }
-
-    fprintf(fp_lg, "%s Companies loaded into buffer: %d\n", timestamp(), db->hdr.nr_cpy);
-
-    fclose(fp_db);
-    fclose(fp_lg);
-
-    printf("DONE => Companies loaded: %d\n\n", db->hdr.nr_cpy);
-}
-
-/****************************************************************************************
-* List and display Company table from the buffer
-****************************************************************************************/
-void print_company(dbc *db) {
-
-    for (int i=1; i<=db->hdr.nr_cpy; i++) { rec_company(db, i); }
-    puts("");
-}
-
-/****************************************************************************************
-* Display one Company record from the buffer
-****************************************************************************************/
-void rec_company(dbc *db, int id_cpy) {
-
-    printf("%4d %4d %4d %4d %95s %95s %10s %40s %20s %50s %11s %4d %.2f\n",
-           db->cpy[id_cpy].id_cpy,
-           db->cpy[id_cpy].id_grp,
-           db->cpy[id_cpy].id_cty,
-           db->cpy[id_cpy].id_ind,
-           db->cpy[id_cpy].nm_cpy,
-           db->cpy[id_cpy].nm_adr,
-           db->cpy[id_cpy].cd_pos,
-           db->cpy[id_cpy].nm_cit,
-           db->cpy[id_cpy].nr_tel,
-           db->cpy[id_cpy].nm_www,
-           db->cpy[id_cpy].dt_cre,
-           db->cpy[id_cpy].nr_emp,
-           db->cpy[id_cpy].am_val);
-}
+///****************************************************************************************
+//* Load Company table into the buffer
+//****************************************************************************************/
+//void load_company(dbc *db) {
+//
+//    int i;
+//    ccpy cpy;
+//    FILE *fp_db, *fp_lg;
+//
+//    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+//    fp_lg = fopen("data_db_clients/db_clients.log", "a");
+//
+//    fseek(fp_db, 0, SEEK_SET);
+//    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
+//
+//    printf("\nLoading companies into buffer... ");
+//
+//    fseek(fp_db, db->hdr.off_cpy, SEEK_SET);
+//
+//    for (i=1; i<=db->hdr.nr_cpy; i++) {
+//
+//        memset(&cpy, 0, sizeof(ccpy));
+//        fread(&cpy, 1, sizeof(ccpy), fp_db);
+//
+//        db->cpy[i] = cpy;
+//    }
+//
+//    fprintf(fp_lg, "%s Companies loaded into buffer: %d\n", timestamp(), db->hdr.nr_cpy);
+//
+//    fclose(fp_db);
+//    fclose(fp_lg);
+//
+//    printf("DONE => Companies loaded: %d\n\n", db->hdr.nr_cpy);
+//}
+//
+///****************************************************************************************
+//* List and display Company table from the buffer
+//****************************************************************************************/
+//void print_company(dbc *db) {
+//
+//    for (int i=1; i<=db->hdr.nr_cpy; i++) { rec_company(db, i); }
+//    puts("");
+//}
+//
+///****************************************************************************************
+//* Display one Company record from the buffer
+//****************************************************************************************/
+//void rec_company(dbc *db, int id_cpy) {
+//
+//    printf("%4d %4d %4d %4d %95s %95s %10s %40s %20s %50s %11s %4d %.2f\n",
+//           db->cpy[id_cpy].id_cpy,
+//           db->cpy[id_cpy].id_grp,
+//           db->cpy[id_cpy].id_cty,
+//           db->cpy[id_cpy].id_ind,
+//           db->cpy[id_cpy].nm_cpy,
+//           db->cpy[id_cpy].nm_adr,
+//           db->cpy[id_cpy].cd_pos,
+//           db->cpy[id_cpy].nm_cit,
+//           db->cpy[id_cpy].nr_tel,
+//           db->cpy[id_cpy].nm_www,
+//           db->cpy[id_cpy].dt_cre,
+//           db->cpy[id_cpy].nr_emp,
+//           db->cpy[id_cpy].am_val);
+//}

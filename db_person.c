@@ -25,7 +25,7 @@ void import_CSV_person(dbc *db) {
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    fpi = fopen("data_import/test_person.csv", "r");
+    fpi = fopen("data_import/db_person.csv", "r");
     if (fpi == NULL) { printf("Error\n"); return; }
 
     printf("\n\tImporting persons... ");
@@ -169,66 +169,66 @@ void export_CSV_person(dbc *db) {
     return;
 }
 
-/****************************************************************************************
-* Load Person table into the buffer
-****************************************************************************************/
-void load_person(dbc *db) {
-
-    int i;
-    cper per;
-    FILE *fp_db, *fp_lg;
-
-    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-
-    fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
-
-    printf("\nLoading persons into buffer... ");
-
-    fseek(fp_db, db->hdr.off_per, SEEK_SET);
-
-    for (i=1; i<=db->hdr.nr_per; i++) {
-
-        memset(&per, 0, sizeof(cper));
-        fread(&per, 1, sizeof(cper), fp_db);
-
-        db->per[i] = per;
-    }
-
-    fprintf(fp_lg, "%s Persons loaded into buffer: %d\n", timestamp(), db->hdr.nr_per);
-
-    fclose(fp_db);
-    fclose(fp_lg);
-
-    printf("DONE => Persons loaded: %d\n\n", db->hdr.nr_per);
-}
-
-/****************************************************************************************
-* List and display Person table from the buffer
-****************************************************************************************/
-void print_person(dbc *db) {
-
-    for (int i=1; i<=db->hdr.nr_per; i++) { rec_person(db, i); }
-    puts("");
-}
-
-/****************************************************************************************
-* Display one Person record from the buffer
-****************************************************************************************/
-void rec_person(dbc *db, int id_per) {
-
-    printf("%4d %4d %4d %20s %52s %52s %2s %11s %16s %16s %65s %4d\n",
-           db->per[id_per].id_per,
-           db->per[id_per].id_cpy,
-           db->per[id_per].id_job,
-           db->per[id_per].nm_civ,
-           db->per[id_per].nm_fst,
-           db->per[id_per].nm_lst,
-           db->per[id_per].cd_sex,
-           db->per[id_per].dt_cre,
-           db->per[id_per].nr_tel,
-           db->per[id_per].nr_gsm,
-           db->per[id_per].nm_mail,
-           db->per[id_per].nr_val);
-}
+///****************************************************************************************
+//* Load Person table into the buffer
+//****************************************************************************************/
+//void load_person(dbc *db) {
+//
+//    int i;
+//    cper per;
+//    FILE *fp_db, *fp_lg;
+//
+//    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+//    fp_lg = fopen("data_db_clients/db_clients.log", "a");
+//
+//    fseek(fp_db, 0, SEEK_SET);
+//    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
+//
+//    printf("\nLoading persons into buffer... ");
+//
+//    fseek(fp_db, db->hdr.off_per, SEEK_SET);
+//
+//    for (i=1; i<=db->hdr.nr_per; i++) {
+//
+//        memset(&per, 0, sizeof(cper));
+//        fread(&per, 1, sizeof(cper), fp_db);
+//
+//        db->per[i] = per;
+//    }
+//
+//    fprintf(fp_lg, "%s Persons loaded into buffer: %d\n", timestamp(), db->hdr.nr_per);
+//
+//    fclose(fp_db);
+//    fclose(fp_lg);
+//
+//    printf("DONE => Persons loaded: %d\n\n", db->hdr.nr_per);
+//}
+//
+///****************************************************************************************
+//* List and display Person table from the buffer
+//****************************************************************************************/
+//void print_person(dbc *db) {
+//
+//    for (int i=1; i<=db->hdr.nr_per; i++) { rec_person(db, i); }
+//    puts("");
+//}
+//
+///****************************************************************************************
+//* Display one Person record from the buffer
+//****************************************************************************************/
+//void rec_person(dbc *db, int id_per) {
+//
+//    printf("%4d %4d %4d %20s %52s %52s %2s %11s %16s %16s %65s %4d\n",
+//           db->per[id_per].id_per,
+//           db->per[id_per].id_cpy,
+//           db->per[id_per].id_job,
+//           db->per[id_per].nm_civ,
+//           db->per[id_per].nm_fst,
+//           db->per[id_per].nm_lst,
+//           db->per[id_per].cd_sex,
+//           db->per[id_per].dt_cre,
+//           db->per[id_per].nr_tel,
+//           db->per[id_per].nr_gsm,
+//           db->per[id_per].nm_mail,
+//           db->per[id_per].nr_val);
+//}
