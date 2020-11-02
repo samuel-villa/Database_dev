@@ -160,17 +160,20 @@ void search_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case S_INDUSTRY:
-                printf("List Industries\n");
+                load_industry(db);
+                print_industry(db);
                 pause(os);
                 clear(os);
                 break;
             case S_GROUP:
-                printf("List Groups\n");
+                load_group(db);
+                print_group(db);
                 pause(os);
                 clear(os);
                 break;
             case S_JOB:
-                printf("List Jobs\n");
+                load_job(db);
+                print_job(db);
                 pause(os);
                 clear(os);
                 break;

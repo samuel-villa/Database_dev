@@ -135,7 +135,7 @@ void load_job(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading jobs... %d\n", db->hdr.nr_job);
+    printf("\nLoading jobs into buffer... ");
 
     fseek(fp_db, db->hdr.off_job, SEEK_SET);
 
@@ -152,9 +152,7 @@ void load_job(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("\nJobs loaded into buffer: %d\n\n", db->hdr.nr_job);
-
-    return;
+    printf("DONE => Jobs loaded: %d\n\n", db->hdr.nr_job);
 }
 
 /****************************************************************************************
@@ -162,8 +160,8 @@ void load_job(dbc *db) {
 ****************************************************************************************/
 void print_job(dbc *db) {
 
-    for (int i=1; i<=db->hdr.nr_job; i++)
-        rec_job(db, i);
+    for (int i=1; i<=db->hdr.nr_job; i++) { rec_job(db, i); }
+    puts("");
 }
 
 /****************************************************************************************
@@ -171,7 +169,7 @@ void print_job(dbc *db) {
 ****************************************************************************************/
 void rec_job(dbc *db, int id_job) {
 
-    printf("%4d %32s %32s %52s\n",
+    printf("%4d %24s %24s %40s\n",
            db->job[id_job].id_job,
            db->job[id_job].nm_lev,
            db->job[id_job].nm_dep,

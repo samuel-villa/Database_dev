@@ -133,7 +133,7 @@ void load_group(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading groups... %d\n", db->hdr.nr_grp);
+    printf("\nLoading groups into buffer... ");
 
     fseek(fp_db, db->hdr.off_grp, SEEK_SET);
 
@@ -150,9 +150,7 @@ void load_group(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("\nGroups loaded into buffer: %d\n\n", db->hdr.nr_grp);
-
-    return;
+    printf("DONE => Groups loaded: %d\n\n", db->hdr.nr_grp);
 }
 
 /****************************************************************************************
@@ -160,8 +158,10 @@ void load_group(dbc *db) {
 ****************************************************************************************/
 void print_group(dbc *db) {
 
-    for (int i=1; i<=db->hdr.nr_grp; i++)
+    for (int i=1; i<=db->hdr.nr_grp; i++) {
         rec_group(db, i);
+    }
+    puts("");
 }
 
 /****************************************************************************************
@@ -169,7 +169,7 @@ void print_group(dbc *db) {
 ****************************************************************************************/
 void rec_group(dbc *db, int id_grp) {
 
-    printf("%4d %52s %4d\n",
+    printf("%4d %40s %4d\n",
            db->grp[id_grp].id_grp,
            db->grp[id_grp].nm_grp,
            db->grp[id_grp].id_cty);

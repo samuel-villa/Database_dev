@@ -152,8 +152,6 @@ void load_country(dbc *db) {
     fclose(fp_lg);
 
     printf("DONE => Countries loaded: %d\n\n", db->hdr.nr_cty);
-
-    return;
 }
 
 /****************************************************************************************

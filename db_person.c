@@ -184,7 +184,7 @@ void load_person(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading persons... %d\n", db->hdr.nr_per);
+    printf("\nLoading persons into buffer... ");
 
     fseek(fp_db, db->hdr.off_per, SEEK_SET);
 
@@ -201,9 +201,7 @@ void load_person(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("\nPersons loaded into buffer: %d\n\n", db->hdr.nr_per);
-
-    return;
+    printf("DONE => Persons loaded: %d\n\n", db->hdr.nr_per);
 }
 
 /****************************************************************************************
@@ -211,8 +209,8 @@ void load_person(dbc *db) {
 ****************************************************************************************/
 void print_person(dbc *db) {
 
-    for (int i=1; i<=db->hdr.nr_per; i++)
-        rec_person(db, i);
+    for (int i=1; i<=db->hdr.nr_per; i++) { rec_person(db, i); }
+    puts("");
 }
 
 /****************************************************************************************

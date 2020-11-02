@@ -193,7 +193,7 @@ void load_company(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading companies... %d\n", db->hdr.nr_cpy);
+    printf("\nLoading companies into buffer... ");
 
     fseek(fp_db, db->hdr.off_cpy, SEEK_SET);
 
@@ -210,9 +210,7 @@ void load_company(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("\nCompanies loaded into buffer: %d\n\n", db->hdr.nr_cpy);
-
-    return;
+    printf("DONE => Companies loaded: %d\n\n", db->hdr.nr_cpy);
 }
 
 /****************************************************************************************
@@ -220,8 +218,8 @@ void load_company(dbc *db) {
 ****************************************************************************************/
 void print_company(dbc *db) {
 
-    for (int i=1; i<=db->hdr.nr_cpy; i++)
-        rec_company(db, i);
+    for (int i=1; i<=db->hdr.nr_cpy; i++) { rec_company(db, i); }
+    puts("");
 }
 
 /****************************************************************************************
