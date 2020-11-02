@@ -8,7 +8,7 @@
 
 #include "db_main.h"
 
-#define BUF_LEN 200
+#define BUF_LEN 300
 
 /****************************************************************************************
 * Loading file db_company.csv in the db
@@ -30,11 +30,11 @@ void import_CSV_company(dbc *db) {
 
     printf("\n\tImporting companies... ");
 
-    fgets(line, 200, fpi);
+    fgets(line, 300, fpi);
 
     fseek(fp_db, db->hdr.off_cpy, SEEK_SET);
 
-    while (fgets(line, 200, fpi) != NULL) {
+    while (fgets(line, 300, fpi) != NULL) {
 
         memset(&cpy, 0, sizeof(ccpy));
         strcpy(cpy.tp_rec, "CPY");
