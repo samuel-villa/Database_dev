@@ -154,7 +154,8 @@ void search_menu(dbc *db, int os) {
 
         switch (menu_sel) {
             case S_COUNTRY:
-                printf("List Countries\n");
+                load_country(db);
+                print_country(db);
                 pause(os);
                 clear(os);
                 break;

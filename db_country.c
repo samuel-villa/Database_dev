@@ -134,7 +134,7 @@ void load_country(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading countries... %d\n", db->hdr.nr_cty);
+    printf("\nLoading countries into buffer... ");
 
     fseek(fp_db, db->hdr.off_cty, SEEK_SET);
 
@@ -151,7 +151,7 @@ void load_country(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("\nCountries loaded into buffer: %d\n\n", db->hdr.nr_cty);
+    printf("DONE => Countries loaded: %d\n\n", db->hdr.nr_cty);
 
     return;
 }
@@ -161,8 +161,10 @@ void load_country(dbc *db) {
 ****************************************************************************************/
 void print_country(dbc *db) {
 
-    for (int i=1; i<=db->hdr.nr_cty; i++)
+    for (int i=1; i<=db->hdr.nr_cty; i++) {
         rec_country(db, i);
+    }
+    puts("");
 }
 
 /****************************************************************************************
@@ -170,7 +172,7 @@ void print_country(dbc *db) {
 ****************************************************************************************/
 void rec_country(dbc *db, int id_cty) {
 
-    printf("%4d %20s %28s %4s\n",
+    printf("%4d %20s %18s %4s\n",
            db->cty[id_cty].id_cty,
            db->cty[id_cty].nm_zon,
            db->cty[id_cty].nm_cty,
