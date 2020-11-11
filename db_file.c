@@ -164,13 +164,13 @@ void display_system_info(dbc *db) {
     printf("\t* Persons bloc size:\t\t %8d\n", db->hdr.sz_per);
     puts("");
     /// debug purpose
-    printf("\t* Countries bloc position:\t %08X\n", db->hdr.off_cty);
-    printf("\t* Jobs bloc position:\t\t %08X\n", db->hdr.off_job);
-    printf("\t* Industries bloc position:\t %08X\n", db->hdr.off_ind);
-    printf("\t* Groups bloc position:\t\t %08X\n", db->hdr.off_grp);
-    printf("\t* Companies bloc position:\t %08X\n", db->hdr.off_cpy);
-    printf("\t* Persons bloc position:\t %08X\n", db->hdr.off_per);
-    puts("");
+//    printf("\t* Countries bloc position:\t %08X\n", db->hdr.off_cty);
+//    printf("\t* Jobs bloc position:\t\t %08X\n", db->hdr.off_job);
+//    printf("\t* Industries bloc position:\t %08X\n", db->hdr.off_ind);
+//    printf("\t* Groups bloc position:\t\t %08X\n", db->hdr.off_grp);
+//    printf("\t* Companies bloc position:\t %08X\n", db->hdr.off_cpy);
+//    printf("\t* Persons bloc position:\t %08X\n", db->hdr.off_per);
+//    puts("");
     printf("\t* Nb of Countries:\t\t\t %8d\n", db->hdr.nr_cty);
     printf("\t* Nb of Jobs:\t\t\t\t %8d\n", db->hdr.nr_job);
     printf("\t* Nb of Industries:\t\t\t %8d\n", db->hdr.nr_ind);
