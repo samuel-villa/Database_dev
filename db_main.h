@@ -54,8 +54,8 @@
 #define SZ_GRP 3000
 #define SZ_CPY 100000
 #define SZ_PER 600000
-//#define SZ_CPY 200
-//#define SZ_PER 200
+#define SZ_IPC 600000
+#define SZ_IPL 600000
 
 
 enum Main_Menu {
@@ -226,11 +226,39 @@ typedef struct Person {
 
 
 /***************************************************************************************
+* Index Person/Company table
+****************************************************************************************/
+typedef struct I_Person_Company {
+
+    char tp_rec[8];     // rec type: IPC
+    uint per_offset;    // person offset
+    int id_cpy;         // id company related to this person
+} tipc;
+
+
+/***************************************************************************************
+* Index Person/Company table
+****************************************************************************************/
+typedef struct I_Person_Lastname {
+
+    char tp_rec[8];     // rec type: IPL
+    uint per_offset;    // person offset
+    uint per_offset_l;  // person offset
+    uint per_offset_r;  // person offset
+    char nm_lst[56];    // lastname of this person
+} tipl;
+
+
+/***************************************************************************************
 * DB structure
 ****************************************************************************************/
 typedef struct db_client {
 
     hder hdr;           // header
+    /// must be tested
+    FILE *fp_db;        // db file pointer
+    FILE *fp_lg;        // log file pointer
+
     ccty cty[SZ_CTY];   // buffer country
     cjob job[SZ_JOB];   // buffer job
     cind ind[SZ_IND];   // buffer industry
@@ -283,6 +311,9 @@ void export_CSV_company(dbc *db);           // export data from db file to csv
 void load_company(dbc *db);
 void print_company(dbc *db);
 void rec_company(dbc *db, int id_grp);
+
+// TODO
+void load_buffer(dbc *db, FILE *fp, int nr);
 
 /// Person ///
 void import_CSV_person(dbc *db);            // import data to db file
