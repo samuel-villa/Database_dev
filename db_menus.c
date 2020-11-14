@@ -92,6 +92,7 @@ void open_db_menu(dbc *db, int os) {
                 import_CSV_group(db);
                 import_CSV_company(db);
                 import_CSV_person(db);
+                create_index(db);
                 printf("\n\n");
                 pause(os);
                 clear(os);

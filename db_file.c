@@ -50,7 +50,8 @@ void create_db(dbc *db) {
     db->hdr.off_cpy = db->hdr.off_grp + SZ_GRP * sizeof(cgrp);
     db->hdr.off_per = db->hdr.off_cpy + SZ_CPY * sizeof(ccpy);
     db->hdr.off_ipc = db->hdr.off_per + SZ_PER * sizeof(cper);
-    db->hdr.db_size = db->hdr.off_ipc + SZ_IPC * sizeof(tipl);
+    db->hdr.off_ipl = db->hdr.off_ipc + SZ_IPC * sizeof(tipc);
+    db->hdr.db_size = db->hdr.off_ipl + SZ_IPL * sizeof(tipl);
 
     db->hdr.nr_cty = 0;
     db->hdr.nr_job = 0;
@@ -211,4 +212,12 @@ void display_system_info(dbc *db) {
     printf("\t* Nb of Persons lastnames indexes: %-8d\n", db->hdr.nr_ipl);
 
     printf("\n\n\t===============================================\n\n");
+}
+
+
+/****************************************************************************************
+* Create index bloc Person/Lastname into db
+****************************************************************************************/
+void write_indexes_hdr(dbc *db) {
+
 }

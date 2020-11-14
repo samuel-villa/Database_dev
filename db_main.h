@@ -299,6 +299,7 @@ void create_db(dbc *db);                    // create empty DB
 void load_header(dbc *db);                  // read file header and load RAM
 void set_db_status(dbc *db);                // file can be Nonexistent, closed or open
 void display_system_info(dbc *db);          // display header Info from RAM
+void write_indexes_hdr(dbc *db);            // TODO
 
 /// Country ///
 void import_CSV_country(dbc *db);           // import data to db file
@@ -350,15 +351,17 @@ void search_person_by_name(dbc *db);        // TODO
 /// Index ///
 void sort_index(dbc *db);                   // TODO
 void create_index_per_cpy(dbc *db);         // TODO
+void create_index_per_lastname(dbc *db);    // TODO
+void create_index(dbc *db);                 // TODO
 void search_company_employees(dbc *db);     // TODO
 void company_details(dbc *db);              // TODO
-void search_group_companies(dbc *db);       // TODO
+void search_group_companies(dbc *db);       // TODO extra
 
 /// Menus ///
 void main_menu(dbc *db, int os);            // First menu when running the program
-void open_db_menu(dbc *db, int os);         // sub-menu
-void search_menu(dbc *db, int os);          // sub_sub_menu
-void report_menu(dbc *db, int os);
+void open_db_menu(dbc *db, int os);         // main    -> sub-menu
+void search_menu(dbc *db, int os);          // open_db -> sub-menu
+void report_menu(dbc *db, int os);          // open_db -> sub-menu
 
 /// System Administration ///
 int user_os();                              // request OS to user in order to adapt some basic command

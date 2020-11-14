@@ -9,6 +9,44 @@
 #include "db_main.h"
 
 /****************************************************************************************
+* Create index blocs into db
+****************************************************************************************/
+void create_index(dbc *db) {
+
+    printf("\n\tCreating indexes... ");
+
+    // alloc
+    create_index_per_cpy(db);
+    // free
+
+    // alloc
+    create_index_per_lastname(db);
+    // free
+
+    write_indexes_hdr(db);
+
+    printf("DONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
+}
+
+
+/****************************************************************************************
+* Create index bloc Person/Company into db
+****************************************************************************************/
+void create_index_per_cpy(dbc *db) {
+
+
+}
+
+
+/****************************************************************************************
+* Create index bloc Person/Lastname into db
+****************************************************************************************/
+void create_index_per_lastname(dbc *db) {
+
+
+}
+
+/****************************************************************************************
 * Give the list of employees per Company
 ****************************************************************************************/
 void search_company_employees(dbc *db) {
@@ -47,4 +85,12 @@ void search_group_companies(dbc *db) {
     printf("enter group ID: ...\n");
 
     /// print option to generate report ***
+}
+
+
+/****************************************************************************************
+* Sorting algorithm used for index creation
+****************************************************************************************/
+void sort_index(dbc *db) {
+
 }
