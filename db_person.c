@@ -232,3 +232,28 @@ void export_CSV_person(dbc *db) {
 //           db->per[id_per].nm_mail,
 //           db->per[id_per].nr_val);
 //}
+
+/****************************************************************************************
+ Search Person by Lastname
+****************************************************************************************/
+void search_person_by_name(dbc *db) {
+
+    printf("*** search peron by name ***\n");
+    printf("enter beginning of lastname: ...\n");
+
+    /// print option to generate report ***
+
+}
+
+
+/****************************************************************************************
+ Search Person by Lastname
+****************************************************************************************/
+void search_person_by_id(dbc *db) {
+
+    printf("*** search peron by id ***\n");
+    printf("enter person ID: ...\n");
+
+    /// print option to generate report ***
+
+}

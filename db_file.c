@@ -20,6 +20,8 @@ void create_db(dbc *db) {
     cgrp grp;
     ccpy cpy;
     cper per;
+    tipc pc;
+    tipl pl;
     FILE *fp_db, *fp_lg;
 
     memset(&db->hdr, 0, sizeof(hder));
@@ -38,6 +40,8 @@ void create_db(dbc *db) {
     db->hdr.sz_grp = SZ_GRP;
     db->hdr.sz_cpy = SZ_CPY;
     db->hdr.sz_per = SZ_PER;
+    db->hdr.sz_ipc = SZ_IPC;
+    db->hdr.sz_ipl = SZ_IPL;
 
     db->hdr.off_cty = sizeof(hder);
     db->hdr.off_job = db->hdr.off_cty + SZ_CTY * sizeof(ccty);
@@ -45,7 +49,8 @@ void create_db(dbc *db) {
     db->hdr.off_grp = db->hdr.off_ind + SZ_IND * sizeof(cind);
     db->hdr.off_cpy = db->hdr.off_grp + SZ_GRP * sizeof(cgrp);
     db->hdr.off_per = db->hdr.off_cpy + SZ_CPY * sizeof(ccpy);
-    db->hdr.db_size = db->hdr.off_per + SZ_PER * sizeof(cper);
+    db->hdr.off_ipc = db->hdr.off_per + SZ_PER * sizeof(cper);
+    db->hdr.db_size = db->hdr.off_ipc + SZ_IPC * sizeof(tipl);
 
     db->hdr.nr_cty = 0;
     db->hdr.nr_job = 0;
@@ -53,6 +58,8 @@ void create_db(dbc *db) {
     db->hdr.nr_grp = 0;
     db->hdr.nr_cpy = 0;
     db->hdr.nr_per = 0;
+    db->hdr.nr_ipc = 0;
+    db->hdr.nr_ipl = 0;
 
     fwrite(&db->hdr, 1, sizeof(db->hdr), fp_db);
 
@@ -104,6 +111,23 @@ void create_db(dbc *db) {
     for (i=0; i<SZ_PER; i++)
         fwrite(&per, 1, sizeof(cper), fp_db);
 
+    // Creation of person/company index table ----------------------------
+
+    memset(&pc, 0, sizeof(tipc));
+    strcpy(pc.tp_rec, "IPC");
+
+    for (i=0; i<SZ_IPC; i++)
+        fwrite(&pc, 1, sizeof(tipc), fp_db);
+
+    // Creation of person lastname index table ----------------------------
+
+    memset(&pl, 0, sizeof(tipl));
+    strcpy(pl.tp_rec, "IPL");
+
+    for (i=0; i<SZ_IPL; i++)
+        fwrite(&pl, 1, sizeof(tipl), fp_db);
+
+
     fprintf(fp_lg, "%s Database %s created\n", timestamp(), db->hdr.db_name);
 
     fclose(fp_db);
@@ -150,18 +174,21 @@ void set_db_status(dbc *db) {
 /****************************************************************************************
 * Display System Info: stocked in Header
 ****************************************************************************************/
+// FIXME display
 void display_system_info(dbc *db) {
 
-    printf("\n\t=====================================\n\n");
+    printf("\n\t===============================================\n\n");
 
-    printf("\t* DB name:\t\t\t\t '%s'\n", db->hdr.db_name);
-    printf("\t* DB size (bytes):\t\t\t%8d\n", db->hdr.db_size);
-    printf("\t* Countries bloc size:\t\t %8d\n", db->hdr.sz_cty);
-    printf("\t* Jobs bloc size:\t\t\t %8d\n", db->hdr.sz_job);
-    printf("\t* Industries bloc size:\t\t %8d\n", db->hdr.sz_ind);
-    printf("\t* Groups bloc size:\t\t\t %8d\n", db->hdr.sz_grp);
-    printf("\t* Companies bloc size:\t\t %8d\n", db->hdr.sz_cpy);
-    printf("\t* Persons bloc size:\t\t %8d\n", db->hdr.sz_per);
+    printf("\t* DB name                        : %s\n", db->hdr.db_name);
+    printf("\t* DB size (bytes)                : %-8d\n", db->hdr.db_size);
+    printf("\t* Countries bloc size            : %-8d\n", db->hdr.sz_cty);
+    printf("\t* Jobs bloc size                 : %-8d\n", db->hdr.sz_job);
+    printf("\t* Industries bloc size           : %-8d\n", db->hdr.sz_ind);
+    printf("\t* Groups bloc size               : %-8d\n", db->hdr.sz_grp);
+    printf("\t* Companies bloc size            : %-8d\n", db->hdr.sz_cpy);
+    printf("\t* Persons bloc size              : %-8d\n", db->hdr.sz_per);
+    printf("\t* Persons/Companies bloc size    : %-8d\n", db->hdr.sz_ipc);
+    printf("\t* Persons lastname bloc size     : %-8d\n", db->hdr.sz_ipl);
     puts("");
     /// debug purpose
 //    printf("\t* Countries bloc position:\t %08X\n", db->hdr.off_cty);
@@ -170,13 +197,18 @@ void display_system_info(dbc *db) {
 //    printf("\t* Groups bloc position:\t\t %08X\n", db->hdr.off_grp);
 //    printf("\t* Companies bloc position:\t %08X\n", db->hdr.off_cpy);
 //    printf("\t* Persons bloc position:\t %08X\n", db->hdr.off_per);
+//    printf("\t* Persons/Companies bloc position:\t %08X\n", db->hdr.off_ipc);
+//    printf("\t* Persons lastname bloc position:\t %08X\n", db->hdr.off_ipl);
 //    puts("");
-    printf("\t* Nb of Countries:\t\t\t %8d\n", db->hdr.nr_cty);
-    printf("\t* Nb of Jobs:\t\t\t\t %8d\n", db->hdr.nr_job);
-    printf("\t* Nb of Industries:\t\t\t %8d\n", db->hdr.nr_ind);
-    printf("\t* Nb of Groups:\t\t\t\t %8d\n", db->hdr.nr_grp);
-    printf("\t* Nb of Companies:\t\t\t %8d\n", db->hdr.nr_cpy);
-    printf("\t* Nb of Persons:\t\t\t %8d\n", db->hdr.nr_per);
+    printf("\t* Nb of Countries                : %-8d\n", db->hdr.nr_cty);
+    printf("\t* Nb of Jobs                     : %-8d\n", db->hdr.nr_job);
+    printf("\t* Nb of Industries               : %-8d\n", db->hdr.nr_ind);
+    printf("\t* Nb of Groups                   : %-8d\n", db->hdr.nr_grp);
+    printf("\t* Nb of Companies                : %-8d\n", db->hdr.nr_cpy);
+    printf("\t* Nb of Persons                  : %-8d\n", db->hdr.nr_per);
+    /// debug purpose
+    printf("\t* Nb of Persons/Companies indexes: %-8d\n", db->hdr.nr_ipc);
+    printf("\t* Nb of Persons lastnames indexes: %-8d\n", db->hdr.nr_ipl);
 
-    printf("\n\n\t=====================================\n\n");
+    printf("\n\n\t===============================================\n\n");
 }

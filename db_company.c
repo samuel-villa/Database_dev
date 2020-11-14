@@ -242,3 +242,24 @@ void export_CSV_company(dbc *db) {
 //           db->cpy[id_cpy].nr_emp,
 //           db->cpy[id_cpy].am_val);
 //}
+
+/****************************************************************************************
+ Search Company by ID
+****************************************************************************************/
+void search_company_by_name(dbc *db) {
+
+    printf("*** search company by name ***\n");
+    printf("enter beginning of company name: ...\n");
+
+}
+
+
+/****************************************************************************************
+ Search Company by ID
+****************************************************************************************/
+void search_company_by_id(dbc *db) {
+
+    printf("*** search company by ID ***\n");
+    printf("enter company id: ...)\n");
+
+}

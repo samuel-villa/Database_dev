@@ -86,6 +86,13 @@ enum Search_Menu {
     S_BACK = 9
 };
 
+enum Report_Menu {
+    R_PERS_COMP,
+    R_COMP_GROUP,
+    R_PERS_NAME,
+    R_BACK = 9
+};
+
 enum File_Status {
     DB_NOT_CREATED,
     DB_CLOSED,
@@ -101,7 +108,7 @@ typedef unsigned int uint;
 typedef struct Header {
 
     uint db_size;       // db size
-    char db_name[28];   // db name
+    char db_name[28];   // db name                                  // 32 bytes
 
     uint sz_cty;        // country bloc size
     uint sz_job;        // job bloc size
@@ -109,7 +116,8 @@ typedef struct Header {
     uint sz_grp;        // group bloc size
     uint sz_cpy;        // company bloc size
     uint sz_per;        // person bloc size
-    char filler1[8];
+    uint sz_ipc;        // pers/comp index size
+    uint sz_ipl;        // pers/lastname index size                 // 32 bytes
 
     uint off_cty;       // country bloc position
     uint off_job;       // job bloc position
@@ -117,7 +125,8 @@ typedef struct Header {
     uint off_grp;       // group bloc position
     uint off_cpy;       // company bloc position
     uint off_per;       // person bloc position
-    char filler2[8];
+    uint off_ipc;       // pers/comp index bloc position
+    uint off_ipl;       // pers/lastname index bloc position        // 32 bytes
 
     uint nr_cty;        // nr of countries
     uint nr_job;        // nr of jobs
@@ -125,8 +134,8 @@ typedef struct Header {
     uint nr_grp;        // nr of groups
     uint nr_cpy;        // nr of companies
     uint nr_per;        // nr of persons
-    char filler3[8];
-
+    uint nr_ipc;        // nr of indexes pers/comp
+    uint nr_ipl;        // nr of indexes pers/lastname              // 32 bytes
 } hder;
 
 
@@ -245,8 +254,20 @@ typedef struct I_Person_Lastname {
     uint per_offset;    // person offset
     uint per_offset_l;  // person offset
     uint per_offset_r;  // person offset
-    char nm_lst[56];    // lastname of this person
+    char fill[12];
+    char nm_lst[64];    // lastname of this person
 } tipl;
+
+
+/***************************************************************************************
+* Sorting table
+****************************************************************************************/
+typedef struct Sorting {
+
+    int  id;            // object id to be sorted
+    char nm[64];        // used only for lastname search
+    uint off_sort_obj;  // object offset
+} t_sort;
 
 
 /***************************************************************************************
@@ -255,7 +276,7 @@ typedef struct I_Person_Lastname {
 typedef struct db_client {
 
     hder hdr;           // header
-    /// must be tested
+    /// TODO to be implemented
     FILE *fp_db;        // db file pointer
     FILE *fp_lg;        // log file pointer
 
@@ -264,6 +285,8 @@ typedef struct db_client {
     cind ind[SZ_IND];   // buffer industry
     cgrp grp[SZ_GRP];   // buffer group
     int  status;        // db nonexistent, closed or open
+
+    t_sort *sort;       // points to list of objects to be sorted
 } dbc;
 
 
@@ -311,9 +334,9 @@ void export_CSV_company(dbc *db);           // export data from db file to csv
 void load_company(dbc *db);
 void print_company(dbc *db);
 void rec_company(dbc *db, int id_grp);
-
-// TODO
 void load_buffer(dbc *db, FILE *fp, int nr);
+void search_company_by_id(dbc *db);         // TODO
+void search_company_by_name(dbc *db);       // TODO
 
 /// Person ///
 void import_CSV_person(dbc *db);            // import data to db file
@@ -321,11 +344,21 @@ void export_CSV_person(dbc *db);            // export data from db file to csv
 void load_person(dbc *db);
 void print_person(dbc *db);
 void rec_person(dbc *db, int id_grp);
+void search_person_by_id(dbc *db);          // TODO
+void search_person_by_name(dbc *db);        // TODO
+
+/// Index ///
+void sort_index(dbc *db);                   // TODO
+void create_index_per_cpy(dbc *db);         // TODO
+void search_company_employees(dbc *db);     // TODO
+void company_details(dbc *db);              // TODO
+void search_group_companies(dbc *db);       // TODO
 
 /// Menus ///
 void main_menu(dbc *db, int os);            // First menu when running the program
 void open_db_menu(dbc *db, int os);         // sub-menu
 void search_menu(dbc *db, int os);          // sub_sub_menu
+void report_menu(dbc *db, int os);
 
 /// System Administration ///
 int user_os();                              // request OS to user in order to adapt some basic command

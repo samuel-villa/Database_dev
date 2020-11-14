@@ -112,7 +112,7 @@ void open_db_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case REPORT:
-                printf("Generate Report...\n");
+                report_menu(db, os);
                 pause(os);
                 clear(os);
                 break;
@@ -178,26 +178,63 @@ void search_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case S_PERSON:
-                printf("Search Persons\n");
+                search_person_by_id(db);        // OR
+                search_person_by_name(db);
                 pause(os);
                 clear(os);
                 break;
             case S_COMPANY:
-                printf("Search Companies\n");
+                search_company_by_id(db);       // OR
+                search_company_by_name(db);
                 pause(os);
                 clear(os);
                 break;
             case S_PERS_COMP:
-                printf("Search Persons/Company\n");
+                search_company_employees(db);
                 pause(os);
                 clear(os);
                 break;
             case S_COMP_DETAIL:
-                printf("Search Company details\n");
+                company_details(db);
                 pause(os);
                 clear(os);
                 break;
             case S_BACK:
+                break;
+            default:
+                puts("Wrong Selection");
+                break;
+        }
+    }
+}
+
+
+/****************************************************************************************
+* Search in Database Menu
+****************************************************************************************/
+void report_menu(dbc *db, int os) {
+
+    int menu_sel = 0;
+
+    while (menu_sel != R_BACK) {
+        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\t%d - Employees per Company\n", R_PERS_COMP);
+        printf("\t%d - Companies per Group\n", R_COMP_GROUP);
+        printf("\t%d - Employees per Partial Lastname\n", R_PERS_NAME);
+        printf("\t%d - GO BACK\n\n", R_BACK);
+        printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
+
+        switch (menu_sel) {
+            case R_PERS_COMP:
+                printf("create report with search_company_employees('print option')");
+                break;
+            case R_COMP_GROUP:
+                printf("create report with search_group_companies('print option')");
+                break;
+            case R_PERS_NAME:
+                printf("create report with search_person_by_name('print option')");
+                break;
+            case R_BACK:
                 break;
             default:
                 puts("Wrong Selection");
