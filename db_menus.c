@@ -56,6 +56,8 @@ void main_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case EXIT:
+                fclose(db->fp_db);          // just in case we forget any fclose()
+                fclose(db->fp_lg);
                 exit(0);
             default:
                 puts("Wrong Selection");

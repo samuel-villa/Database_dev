@@ -99,6 +99,12 @@ enum File_Status {
     DB_OPEN
 };
 
+enum Sort_Type {
+    SORT_PERS_COMP,
+    SORT_COMP_GROUP,
+    SORT_PERS_NAME
+};
+
 typedef unsigned int uint;
 
 
@@ -286,7 +292,7 @@ typedef struct db_client {
     cgrp grp[SZ_GRP];   // buffer group
     int  status;        // db nonexistent, closed or open
 
-    t_sort *sort;       // points to list of objects to be sorted
+    t_sort *sort;       // points to list of elements to be sorted
 } dbc;
 
 
@@ -349,7 +355,7 @@ void search_person_by_id(dbc *db);          // TODO
 void search_person_by_name(dbc *db);        // TODO
 
 /// Index ///
-void sort_index(dbc *db);                   // TODO
+void sort_index(dbc *db, int type);         // TODO
 void create_index_per_cpy(dbc *db);         // TODO
 void create_index_per_lastname(dbc *db);    // TODO
 void create_index(dbc *db);                 // TODO
