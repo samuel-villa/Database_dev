@@ -354,7 +354,7 @@ void search_person_by_id(dbc *db);          // TODO
 void search_person_by_name(dbc *db);        // TODO
 
 /// Index ///
-void sort_index(dbc *db, int type);         // TODO
+void sort_index(dbc *db, int nr, int type); // TODO
 void create_index_per_cpy(dbc *db);         // TODO
 void create_index_per_lastname(dbc *db);    // TODO
 void create_index(dbc *db);                 // TODO

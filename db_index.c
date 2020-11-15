@@ -54,7 +54,7 @@ void create_index_per_cpy(dbc *db) {
         db->sort[i].off_sort_obj = pt_cpy;                      // set read data into db->sort[i]
     }
 
-    sort_index(db, SORT_PERS_COMP);
+    sort_index(db, db->hdr.nr_ipc, SORT_PERS_COMP);
 
     fseek(db->fp_db, db->hdr.off_ipc, SEEK_SET);                // getting first element offset
 
@@ -134,12 +134,30 @@ void search_group_companies(dbc *db) {
 /****************************************************************************************
 * Sorting algorithm used for index creation
 ****************************************************************************************/
-void sort_index(dbc *db, int type) {
+void sort_index(dbc *db, int nr, int type) {
 
-    /// test
-//    for (int i=0; i<100; i++) {
-//        printf("%d %d\n", db->sort[i].id, db->sort[i].off_sort_obj);
-//    }
+    if (type == SORT_PERS_COMP) {
+
+        int j, k=0, t=0;
+        int unordered=1, bigger=0;
+        t_sort tmp;
+
+        while (unordered) {
+            unordered = 0;
+            k++;
+            for (j=0; j<nr-k; j++) {
+
+                bigger = db->sort[j].id > db->sort[j+1].id;
+
+                if (bigger) {
+                    tmp = db->sort[j+1];
+                    db->sort[j+1] = db->sort[j];
+                    db->sort[j] = tmp;
+                    unordered = 1;
+                }
+            }
+        }
+    }
 }
 
 
