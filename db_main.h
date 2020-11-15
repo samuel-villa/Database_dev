@@ -271,7 +271,7 @@ typedef struct I_Person_Lastname {
 typedef struct Sorting {
 
     int  id;            // object id to be sorted
-    char nm[64];        // used only for lastname search
+    char ln[64];        // used when searching by lastname
     uint off_sort_obj;  // object offset
 } t_sort;
 
@@ -282,7 +282,7 @@ typedef struct Sorting {
 typedef struct db_client {
 
     hder hdr;           // header
-    /// TODO to be implemented
+    /// TODO *fps to be implemented into the whole project
     FILE *fp_db;        // db file pointer
     FILE *fp_lg;        // log file pointer
 
@@ -291,7 +291,6 @@ typedef struct db_client {
     cind ind[SZ_IND];   // buffer industry
     cgrp grp[SZ_GRP];   // buffer group
     int  status;        // db nonexistent, closed or open
-
     t_sort *sort;       // points to list of elements to be sorted
 } dbc;
 
@@ -362,6 +361,8 @@ void create_index(dbc *db);                 // TODO
 void search_company_employees(dbc *db);     // TODO
 void company_details(dbc *db);              // TODO
 void search_group_companies(dbc *db);       // TODO extra
+void alloc_sort_table(dbc *db, uint size);  // TODO
+void free_sort_table(dbc *db);              // TODO
 
 /// Menus ///
 void main_menu(dbc *db, int os);            // First menu when running the program

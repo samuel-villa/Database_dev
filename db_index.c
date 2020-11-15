@@ -34,6 +34,7 @@ void create_index(dbc *db) {
 ****************************************************************************************/
 void create_index_per_cpy(dbc *db) {
 
+    int i;
     uint pt_cpy;
     cper per;
     tipc ipc;
@@ -46,7 +47,7 @@ void create_index_per_cpy(dbc *db) {
     // TODO alloc memory for db->sort (sizeof(cper))
 
     // read data from person table and set db->sort table
-    for (int i=0; i<db->hdr.nr_per; i++) {
+    for (i=0; i<db->hdr.nr_per; i++) {
         memset(&per, 0, sizeof(cper));                          // init element
         pt_cpy = db->hdr.off_ipc + i * sizeof(cper);            // getting element offset
         fseek(db->fp_db, pt_cpy, SEEK_SET);                     // place cursor at element offset
@@ -60,13 +61,15 @@ void create_index_per_cpy(dbc *db) {
     fseek(db->fp_db, db->hdr.off_ipc, SEEK_SET);                // getting first element offset
 
     // write sorted data into db
-    for (int i=0; i<db->hdr.nr_per; i++) {
+    for (i=0; i<db->hdr.nr_per; i++) {
         memset(&ipc, 0, sizeof(tipc));                          // init tipc element to be written
         strcpy(ipc.tp_rec, "IPC");                              // set element data
         ipc.id_cpy = db->sort[i].id;                            // fill element data from sorted table
         ipc.per_offset = db->sort[i].off_sort_obj;              // fill element data from sorted table
         fwrite(&ipc, sizeof(tipc), 1, db->fp_db);        // write element into db
     }
+
+    db->hdr.nr_ipc = i;
 
     // TODO free allocated memory
 
@@ -136,5 +139,21 @@ void search_group_companies(dbc *db) {
 * Sorting algorithm used for index creation
 ****************************************************************************************/
 void sort_index(dbc *db, int type) {
+
+}
+
+
+/****************************************************************************************
+* Allocate memory to the sorting table in RAM
+****************************************************************************************/
+void alloc_sort_table(dbc *db, uint size) {
+
+}
+
+
+/****************************************************************************************
+* Free memory used by the sorting table in RAM
+****************************************************************************************/
+void free_sort_table(dbc *db) {
 
 }
