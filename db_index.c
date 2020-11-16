@@ -25,7 +25,7 @@ void create_index(dbc *db) {
 
     //write_indexes_hdr(db);
 
-    printf("\nDONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
+    printf("\n\tDONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
 }
 
 
@@ -35,26 +35,29 @@ void create_index(dbc *db) {
 void create_index_per_cpy(dbc *db) {
 
     int i;
-    uint pt_cpy;
+    uint pt_per;
     cper per;
     tipc ipc;
+
+    // FIXME works only with test files (little files)
+    //  it doesn't work with db_person.csv and db_company.csv (get stuck)
 
     db->fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
-    printf("\n\tCreating indexes for persons per company... ");
+    printf("\n\t\t* Creating indexes for persons per company... ");
 
     // read data from person table and set db->sort table
     for (i=0; i<db->hdr.nr_per; i++) {
         memset(&per, 0, sizeof(cper));                          // init element
-        pt_cpy = db->hdr.off_per + i * sizeof(cper);            // getting element offset
-        fseek(db->fp_db, pt_cpy, SEEK_SET);                     // place cursor at element offset
+        pt_per = db->hdr.off_per + i * sizeof(cper);            // getting element offset
+        fseek(db->fp_db, pt_per, SEEK_SET);                     // place cursor at element offset
         fread(&per, sizeof(cper), 1, db->fp_db);         // read element
         db->sort[i].id = per.id_cpy;                            // set read data into db->sort[i]
-        db->sort[i].off_sort_obj = pt_cpy;                      // set read data into db->sort[i]
+        db->sort[i].off_sort_obj = pt_per;                      // set read data into db->sort[i]
     }
 
-    sort_index(db, db->hdr.nr_ipc, SORT_PERS_COMP);
+    sort_index(db, db->hdr.nr_per, SORT_PERS_COMP);
 
     fseek(db->fp_db, db->hdr.off_ipc, SEEK_SET);                // getting first element offset
 
@@ -158,6 +161,10 @@ void sort_index(dbc *db, int nr, int type) {
             }
         }
     }
+    ///debug
+    for (int i=0; i<100; i++) {
+        printf("\n%d %u\n", db->sort[i].id, db->sort[i].off_sort_obj);
+    }
 }
 
 
@@ -166,8 +173,8 @@ void sort_index(dbc *db, int nr, int type) {
 ****************************************************************************************/
 void alloc_sort_table(dbc *db, uint size) {
 
-    db->sort = malloc(size * sizeof(cper));
-
+    db->sort = (t_sort*)malloc(size * sizeof(t_sort));
+    memset(db->sort, 0, size * sizeof(t_sort));
 }
 
 
@@ -176,6 +183,7 @@ void alloc_sort_table(dbc *db, uint size) {
 ****************************************************************************************/
 void free_sort_table(dbc *db) {
 
-    free(db->sort);
+    if (db->sort)
+        free(db->sort);
 
 }
