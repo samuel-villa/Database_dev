@@ -39,9 +39,6 @@ void create_index_per_cpy(dbc *db) {
     cper per;
     tipc ipc;
 
-    // FIXME works only with test files (little files)
-    //  it doesn't work with db_person.csv and db_company.csv (get stuck)
-
     db->fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
