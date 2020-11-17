@@ -54,7 +54,8 @@ void create_index_per_cpy(dbc *db) {
         db->sort[i].off_sort_obj = pt_per;                      // set read data into db->sort[i]
     }
 
-    sort_index(db, db->hdr.nr_per, SORT_PERS_COMP);
+    //sort_bubble_index(db, db->hdr.nr_per, SORT_PERS_COMP);
+    quicksort(db, 0, db->hdr.nr_per-1);
 
     fseek(db->fp_db, db->hdr.off_ipc, SEEK_SET);                // getting first element offset
 
@@ -134,7 +135,7 @@ void search_group_companies(dbc *db) {
 /****************************************************************************************
 * Sorting algorithm used for index creation
 ****************************************************************************************/
-void sort_index(dbc *db, int nr, int type) {
+void sort_bubble_index(dbc *db, int nr, int type) {
 
     if (type == SORT_PERS_COMP) {
 
@@ -161,6 +162,41 @@ void sort_index(dbc *db, int nr, int type) {
     ///debug
     for (int i=0; i<100; i++) {
         printf("\n%d %u\n", db->sort[i].id, db->sort[i].off_sort_obj);
+    }
+}
+
+
+/****************************************************************************************
+* Quick Sort algorithm used for index creation
+****************************************************************************************/
+void quicksort(dbc *db, int first, int last) {
+
+    int i, j, pivot, temp;
+
+    if(first < last) {
+        pivot = first;
+        i = first;
+        j = last;
+
+        while(i < j) {
+            while(db->sort[i].id <= db->sort[pivot].id && i<last)
+                i++;
+            while(db->sort[j].id > db->sort[pivot].id)
+                j--;
+            if(i < j){
+                temp = db->sort[i].id;
+                db->sort[i].id = db->sort[j].id;
+                db->sort[j].id = temp;
+            }
+        }
+
+        temp = db->sort[pivot].id;
+        db->sort[pivot].id = db->sort[j].id;
+        db->sort[j].id = temp;
+
+        quicksort(db, first,j-1);
+        quicksort(db,j+1, last);
+
     }
 }
 
