@@ -259,7 +259,47 @@ void search_company_by_name(dbc *db) {
 ****************************************************************************************/
 void search_company_by_id(dbc *db) {
 
-    printf("*** search company by ID ***\n");
-    printf("enter company id: ...)\n");
+    int id;
+    ccpy cpy;
+    FILE *fp_db;
 
+    fp_db = open_db_file(db);       // debug purpose, this must be handled globally: within open_menu()
+
+    printf("\n\t--> Enter Company ID: "); scanf("%d", &id); fflush(stdin);
+
+    cpy = read_single_company(db, id);
+
+    //fseek(fp_db, db->hdr.off_cpy + id * sizeof(ccpy), SEEK_SET);
+    //fread(&cpy, sizeof(ccpy), 1, fp_db);
+
+    ///test
+    //cpy = read_single_company(db, id);
+    printf("%d %s\n", cpy.id_cpy, cpy.nm_cpy);
+
+    //search_binary(db, 175, 0);
+
+    //printf("right: %d ==> %d %s\n", id, elm.id_cpy, elm.nm_cpy);
+
+    fclose(fp_db);
+
+}
+
+
+
+/****************************************************************************************
+* Read Company record given its position nb.
+****************************************************************************************/
+ccpy read_single_company(dbc *db, int position) {
+
+    ccpy cpy;
+
+    FILE *fp;
+    fp = open_db_file(db);
+
+    fseek(fp, db->hdr.off_cpy + position * sizeof(ccpy), SEEK_SET);
+    fread(&cpy, sizeof(ccpy), 1, fp);
+
+    fclose(fp);
+
+    return cpy;
 }

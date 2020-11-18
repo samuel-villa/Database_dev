@@ -54,8 +54,8 @@ void create_index_per_cpy(dbc *db) {
         db->sort[i].off_sort_obj = pt_per;                      // set read data into db->sort[i]
     }
 
-    //sort_bubble_index(db, db->hdr.nr_per, SORT_PERS_COMP);
-    quicksort(db, 0, db->hdr.nr_per-1);
+    //sort_bubble_index(db, db->hdr.nr_per, SORT_PERS_COMP);    // inefficient: more than 15 min of waiting
+    quicksort(db, 0, db->hdr.nr_per-1, SORT_PERS_COMP);
 
     fseek(db->fp_db, db->hdr.off_ipc, SEEK_SET);                // getting first element offset
 
@@ -76,8 +76,6 @@ void create_index_per_cpy(dbc *db) {
     fclose(db->fp_lg);
 
     printf("DONE => Indexes created: %d", db->hdr.nr_ipc);
-
-
 }
 
 
@@ -88,6 +86,61 @@ void create_index_per_lastname(dbc *db) {
 
 
 }
+
+
+/****************************************************************************************
+* Binary Search per ID. Split by search type
+****************************************************************************************/
+void search_binary(dbc *db, int id, int type) {
+
+    int size, mid, left=0;
+    int right = db->hdr.nr_cpy - 1;
+    uint tmp_off, elm_off;
+    ccpy elm, lef, rig;
+
+    lef = read_single_company(db, 1);
+    printf("%d %s\n", lef.id_cpy, lef.nm_cpy);
+
+//    tmp_off = ftell(db->fp_db);
+//
+//    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
+//    size = sizeof(ccpy);
+//    //elm_off = db->hdr.off_cpy + size * (id-1);
+//
+//    while (right - left > 1) {
+//
+//        mid = (right + left) / 2;
+//
+//        memset(&elm, 0, size);
+//        if (fread(&elm, size * mid, 1, db->fp_db)) {
+//            //elm = read_single_company(db, id);
+//
+//            if (id <= elm.id_cpy) {
+//                right = mid;
+//            } else {
+//                left = mid;
+//            }
+//        }
+//        printf("ok\n");
+//    }
+    //return right;
+}
+
+
+
+/****************************************************************************************
+* Read Person record given its offset.
+****************************************************************************************/
+cper read_single_person(dbc *db, int offset) {
+
+    cper per;
+
+    fseek(db->fp_db, db->hdr.off_per + offset * sizeof(cper), SEEK_SET);
+    fread(&per, sizeof(ccpy), 1, db->fp_db);
+
+    return per;
+}
+
 
 /****************************************************************************************
 * Give the list of employees per Company
@@ -159,44 +212,42 @@ void sort_bubble_index(dbc *db, int nr, int type) {
             }
         }
     }
-    ///debug
-    for (int i=0; i<100; i++) {
-        printf("\n%d %u\n", db->sort[i].id, db->sort[i].off_sort_obj);
-    }
 }
 
 
 /****************************************************************************************
 * Quick Sort algorithm used for index creation
 ****************************************************************************************/
-void quicksort(dbc *db, int first, int last) {
+void quicksort(dbc *db, int first, int last, int type) {
 
-    int i, j, pivot, temp;
+    if (type == SORT_PERS_COMP) {
 
-    if(first < last) {
-        pivot = first;
-        i = first;
-        j = last;
+        int i, j, pivot, temp;
 
-        while(i < j) {
-            while(db->sort[i].id <= db->sort[pivot].id && i<last)
-                i++;
-            while(db->sort[j].id > db->sort[pivot].id)
-                j--;
-            if(i < j){
-                temp = db->sort[i].id;
-                db->sort[i].id = db->sort[j].id;
-                db->sort[j].id = temp;
+        if (first < last) {
+            pivot = first;
+            i = first;
+            j = last;
+
+            while (i < j) {
+                while (db->sort[i].id <= db->sort[pivot].id && i < last)
+                    i++;
+                while (db->sort[j].id > db->sort[pivot].id)
+                    j--;
+                if (i < j) {
+                    temp = db->sort[i].id;
+                    db->sort[i].id = db->sort[j].id;
+                    db->sort[j].id = temp;
+                }
             }
+
+            temp = db->sort[pivot].id;
+            db->sort[pivot].id = db->sort[j].id;
+            db->sort[j].id = temp;
+
+            quicksort(db, first, j - 1, SORT_PERS_COMP);
+            quicksort(db, j + 1, last, SORT_PERS_COMP);
         }
-
-        temp = db->sort[pivot].id;
-        db->sort[pivot].id = db->sort[j].id;
-        db->sort[j].id = temp;
-
-        quicksort(db, first,j-1);
-        quicksort(db,j+1, last);
-
     }
 }
 
@@ -218,5 +269,4 @@ void free_sort_table(dbc *db) {
 
     if (db->sort)
         free(db->sort);
-
 }

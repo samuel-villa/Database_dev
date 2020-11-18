@@ -105,6 +105,16 @@ enum Sort_Type {
     SORT_PERS_NAME
 };
 
+enum Binary_Search_Type {
+    PERS_ID,
+    COMP_ID,
+};
+
+enum Record_Type {
+    REC_PERS,
+    REC_COMP,
+};
+
 typedef unsigned int uint;
 
 
@@ -300,79 +310,85 @@ typedef struct db_client {
 ****************************************************************************************/
 
 /// DB File ///
-void create_db(dbc *db);                    // create empty DB
-void load_header(dbc *db);                  // read file header and load RAM
-void set_db_status(dbc *db);                // file can be Nonexistent, closed or open
-void display_system_info(dbc *db);          // display header Info from RAM
-void write_indexes_hdr(dbc *db);            // TODO
+void create_db(dbc *db);                                    // create empty DB
+FILE * open_db_file(dbc *db);                               // handles DB file pointer globally
+void close_db_file(dbc *db);
+void load_header(dbc *db);                                  // read file header and load RAM
+void set_db_status(dbc *db);                                // file can be Nonexistent, closed or open
+void display_system_info(dbc *db);                          // display header Info from RAM
+void write_indexes_hdr(dbc *db);                            // TODO
 
 /// Country ///
-void import_CSV_country(dbc *db);           // import data to db file
-void export_CSV_country(dbc *db);           // export data from db file to csv
-void load_country(dbc *db);                 // load data to RAM
-void print_country(dbc *db);                // display data loaded on RAM
-void rec_country(dbc *db, int id_cty);      // display one single records
+void import_CSV_country(dbc *db);                           // import data to db file
+void export_CSV_country(dbc *db);                           // export data from db file to csv
+void load_country(dbc *db);                                 // load data to RAM
+void print_country(dbc *db);                                // display data loaded on RAM
+void rec_country(dbc *db, int id_cty);                      // display one single records
 
 /// Industry ///
-void import_CSV_industry(dbc *db);          // import data to db file
-void export_CSV_industry(dbc *db);          // export data from db file to csv
-void load_industry(dbc *db);                // load data to RAM
-void print_industry(dbc *db);               // display data loaded on RAM
-void rec_industry(dbc *db, int id_ind);     // display one single records
+void import_CSV_industry(dbc *db);                          // import data to db file
+void export_CSV_industry(dbc *db);                          // export data from db file to csv
+void load_industry(dbc *db);                                // load data to RAM
+void print_industry(dbc *db);                               // display data loaded on RAM
+void rec_industry(dbc *db, int id_ind);                     // display one single records
 
 /// Job ///
-void import_CSV_job(dbc *db);               // import data to db file
-void export_CSV_job(dbc *db);               // export data from db file to csv
-void load_job(dbc *db);                     // load data to RAM
-void print_job(dbc *db);                    // display data loaded on RAM
-void rec_job(dbc *db, int id_job);          // display one single records
+void import_CSV_job(dbc *db);                               // import data to db file
+void export_CSV_job(dbc *db);                               // export data from db file to csv
+void load_job(dbc *db);                                     // load data to RAM
+void print_job(dbc *db);                                    // display data loaded on RAM
+void rec_job(dbc *db, int id_job);                          // display one single records
 
 /// Group ///
-void import_CSV_group(dbc *db);             // import data to db file
-void export_CSV_group(dbc *db);             // export data from db file to csv
-void load_group(dbc *db);                   // load data to RAM
-void print_group(dbc *db);                  // display data loaded on RAM
-void rec_group(dbc *db, int id_grp);        // display one single records
+void import_CSV_group(dbc *db);                             // import data to db file
+void export_CSV_group(dbc *db);                             // export data from db file to csv
+void load_group(dbc *db);                                   // load data to RAM
+void print_group(dbc *db);                                  // display data loaded on RAM
+void rec_group(dbc *db, int id_grp);                        // display one single records
 
 /// Company ///
-void import_CSV_company(dbc *db);           // import data to db file
-void export_CSV_company(dbc *db);           // export data from db file to csv
+void import_CSV_company(dbc *db);                           // import data to db file
+void export_CSV_company(dbc *db);                           // export data from db file to csv
 void load_company(dbc *db);
 void print_company(dbc *db);
 void rec_company(dbc *db, int id_grp);
 void load_buffer(dbc *db, FILE *fp, int nr);
-void search_company_by_id(dbc *db);         // TODO
-void search_company_by_name(dbc *db);       // TODO
+void search_company_by_id(dbc *db);                         // TODO
+void search_company_by_name(dbc *db);                       // TODO
+ccpy read_single_company(dbc *db, int position);              // read cpy record given its offset
+
+void search_binary(dbc *db, int id, int type);
 
 /// Person ///
-void import_CSV_person(dbc *db);            // import data to db file
-void export_CSV_person(dbc *db);            // export data from db file to csv
+void import_CSV_person(dbc *db);                            // import data to db file
+void export_CSV_person(dbc *db);                            // export data from db file to csv
 void load_person(dbc *db);
 void print_person(dbc *db);
 void rec_person(dbc *db, int id_grp);
-void search_person_by_id(dbc *db);          // TODO
-void search_person_by_name(dbc *db);        // TODO
+void search_person_by_id(dbc *db);                          // TODO
+void search_person_by_name(dbc *db);                        // TODO
+cper read_single_person(dbc *db, int position);               // // read per record given its offset
 
 /// Index ///
 void sort_bubble_index(dbc *db, int nr, int type);
-void quicksort(dbc *db, int first, int last);
-void create_index_per_cpy(dbc *db);         // TODO
-void create_index_per_lastname(dbc *db);    // TODO
-void create_index(dbc *db);                 // TODO
-void search_company_employees(dbc *db);     // TODO
-void company_details(dbc *db);              // TODO
-void search_group_companies(dbc *db);       // TODO extra
-void alloc_sort_table(dbc *db, uint size);  // TODO
-void free_sort_table(dbc *db);              // TODO
+void quicksort(dbc *db, int first, int last, int type);
+void create_index_per_cpy(dbc *db);                         //
+void create_index_per_lastname(dbc *db);                    // TODO
+void create_index(dbc *db);                                 // TODO create_index_per_lastname to be implemented
+void search_company_employees(dbc *db);                     // TODO
+void company_details(dbc *db);                              // TODO
+void search_group_companies(dbc *db);                       // TODO extra
+void alloc_sort_table(dbc *db, uint size);                  // TODO
+void free_sort_table(dbc *db);                              // TODO
 
 /// Menus ///
-void main_menu(dbc *db, int os);            // First menu when running the program
-void open_db_menu(dbc *db, int os);         // main    -> sub-menu
-void search_menu(dbc *db, int os);          // open_db -> sub-menu
-void report_menu(dbc *db, int os);          // open_db -> sub-menu
+void main_menu(dbc *db, int os);                            // First menu when running the program
+void open_db_menu(dbc *db, int os);                         // main    -> sub-menu
+void search_menu(dbc *db, int os);                          // open_db -> sub-menu
+void report_menu(dbc *db, int os);                          // open_db -> sub-menu
 
 /// System Administration ///
-int user_os();                              // request OS to user in order to adapt some basic command
-void pause(int os);                         // pause screen, a key must be pressed to continue
-void clear(int os);                         // clear screen
-const char *timestamp();                    // get current time
+int user_os();                                              // request OS to user in order to adapt some basic command
+void pause(int os);                                         // pause screen, a key must be pressed to continue
+void clear(int os);                                         // clear screen
+const char *timestamp();                                    // get current time

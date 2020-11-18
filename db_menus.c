@@ -188,7 +188,7 @@ void search_menu(dbc *db, int os) {
                 break;
             case S_COMPANY:
                 search_company_by_id(db);       // OR
-                search_company_by_name(db);
+                //search_company_by_name(db);
                 pause(os);
                 clear(os);
                 break;
