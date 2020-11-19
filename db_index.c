@@ -90,56 +90,54 @@ void create_index_per_lastname(dbc *db) {
 
 /****************************************************************************************
 * Binary Search per ID. Split by search type
+* return element position within the db company block
 ****************************************************************************************/
-void search_binary(dbc *db, int id, int type) {
+int search_binary(dbc *db, int id, int type) {
 
-    int size, mid, left=0;
-    int right = db->hdr.nr_cpy - 1;
-    uint tmp_off, elm_off;
-    ccpy elm, lef, rig;
+    int size, mid, left=0, right;
+    ccpy elm;
 
-    lef = read_single_company(db, 1);
-    printf("%d %s\n", lef.id_cpy, lef.nm_cpy);
+    size = sizeof(ccpy);
+    right = db->hdr.nr_cpy - 1;
 
-//    tmp_off = ftell(db->fp_db);
-//
-//    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
-//    size = sizeof(ccpy);
-//    //elm_off = db->hdr.off_cpy + size * (id-1);
-//
-//    while (right - left > 1) {
-//
-//        mid = (right + left) / 2;
-//
-//        memset(&elm, 0, size);
-//        if (fread(&elm, size * mid, 1, db->fp_db)) {
-//            //elm = read_single_company(db, id);
-//
-//            if (id <= elm.id_cpy) {
-//                right = mid;
-//            } else {
-//                left = mid;
-//            }
-//        }
-//        printf("ok\n");
-//    }
-    //return right;
+    memset(&elm, 0, size);
+
+    elm = read_single_company(db, 0);           // check db first element
+    printf("test %d \n", elm.id_cpy);                   // => 108
+    if (id < elm.id_cpy) {                              // if ID we search < 108
+        return REC_OUT_RANGE;
+    }
+
+    if (id == elm.id_cpy) {                             // if match (if ID we search is the first db element)
+        return id;
+    }
+
+    elm = read_single_company(db, right);               // check db last element
+    printf("test %d \n", elm.id_cpy);                   // => 686255
+    if (id > elm.id_cpy) {                              // if ID we search > 686255
+        return REC_OUT_RANGE;
+    }
+
+    while (right - left > 1) {
+
+        mid = (right + left) / 2;
+        elm = read_single_company(db, mid);
+
+        if (id <= elm.id_cpy) {
+            right = mid;
+        } else {
+            left = mid;
+        }
+    }
+    elm = read_single_company(db, right);
+
+    if(id == elm.id_cpy) {
+        return right;
+    } else {
+        return REC_NOT_FOUND;
+    }
 }
 
-
-
-/****************************************************************************************
-* Read Person record given its offset.
-****************************************************************************************/
-cper read_single_person(dbc *db, int offset) {
-
-    cper per;
-
-    fseek(db->fp_db, db->hdr.off_per + offset * sizeof(cper), SEEK_SET);
-    fread(&per, sizeof(ccpy), 1, db->fp_db);
-
-    return per;
-}
 
 
 /****************************************************************************************

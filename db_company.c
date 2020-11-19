@@ -259,7 +259,7 @@ void search_company_by_name(dbc *db) {
 ****************************************************************************************/
 void search_company_by_id(dbc *db) {
 
-    int id;
+    int id, index;
     ccpy cpy;
     FILE *fp_db;
 
@@ -267,18 +267,12 @@ void search_company_by_id(dbc *db) {
 
     printf("\n\t--> Enter Company ID: "); scanf("%d", &id); fflush(stdin);
 
-    cpy = read_single_company(db, id);
+    index = search_binary(db, id, 0);
 
-    //fseek(fp_db, db->hdr.off_cpy + id * sizeof(ccpy), SEEK_SET);
-    //fread(&cpy, sizeof(ccpy), 1, fp_db);
+    cpy = read_single_company(db, index);
 
     ///test
-    //cpy = read_single_company(db, id);
-    printf("%d %s\n", cpy.id_cpy, cpy.nm_cpy);
-
-    //search_binary(db, 175, 0);
-
-    //printf("right: %d ==> %d %s\n", id, elm.id_cpy, elm.nm_cpy);
+    printf("FOUND %d %s\n", cpy.id_cpy, cpy.nm_cpy);
 
     fclose(fp_db);
 

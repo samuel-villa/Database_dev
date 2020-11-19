@@ -115,6 +115,11 @@ enum Record_Type {
     REC_COMP,
 };
 
+enum Error_Code {
+    REC_OUT_RANGE = -1,         // search_binary()
+    REC_NOT_FOUND = -2          // search_binary()
+};
+
 typedef unsigned int uint;
 
 
@@ -357,7 +362,7 @@ void search_company_by_id(dbc *db);                         // TODO
 void search_company_by_name(dbc *db);                       // TODO
 ccpy read_single_company(dbc *db, int position);              // read cpy record given its offset
 
-void search_binary(dbc *db, int id, int type);
+int search_binary(dbc *db, int id, int type);
 
 /// Person ///
 void import_CSV_person(dbc *db);                            // import data to db file

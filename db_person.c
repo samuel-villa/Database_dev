@@ -233,6 +233,22 @@ void export_CSV_person(dbc *db) {
 //           db->per[id_per].nr_val);
 //}
 
+
+/****************************************************************************************
+* Read Person record given its position within DB Person block.
+****************************************************************************************/
+cper read_single_person(dbc *db, int offset) {
+
+    cper per;
+
+    fseek(db->fp_db, db->hdr.off_per + offset * sizeof(cper), SEEK_SET);
+    fread(&per, sizeof(ccpy), 1, db->fp_db);
+
+    return per;
+}
+
+
+
 /****************************************************************************************
  Search Person by Lastname
 ****************************************************************************************/
