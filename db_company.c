@@ -178,80 +178,31 @@ void export_CSV_company(dbc *db) {
     return;
 }
 
-///****************************************************************************************
-//* Load Company table into the buffer
-//****************************************************************************************/
-//void load_company(dbc *db) {
-//
-//    int i;
-//    ccpy cpy;
-//    FILE *fp_db, *fp_lg;
-//
-//    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-//    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-//
-//    fseek(fp_db, 0, SEEK_SET);
-//    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
-//
-//    printf("\nLoading companies into buffer... ");
-//
-//    fseek(fp_db, db->hdr.off_cpy, SEEK_SET);
-//
-//    for (i=1; i<=db->hdr.nr_cpy; i++) {
-//
-//        memset(&cpy, 0, sizeof(ccpy));
-//        fread(&cpy, 1, sizeof(ccpy), fp_db);
-//
-//        db->cpy[i] = cpy;
-//    }
-//
-//    fprintf(fp_lg, "%s Companies loaded into buffer: %d\n", timestamp(), db->hdr.nr_cpy);
-//
-//    fclose(fp_db);
-//    fclose(fp_lg);
-//
-//    printf("DONE => Companies loaded: %d\n\n", db->hdr.nr_cpy);
-//}
-//
-///****************************************************************************************
-//* List and display Company table from the buffer
-//****************************************************************************************/
-//void print_company(dbc *db) {
-//
-//    for (int i=1; i<=db->hdr.nr_cpy; i++) { rec_company(db, i); }
-//    puts("");
-//}
-//
-///****************************************************************************************
-//* Display one Company record from the buffer
-//****************************************************************************************/
-//void rec_company(dbc *db, int id_cpy) {
-//
-//    printf("%4d %4d %4d %4d %95s %95s %10s %40s %20s %50s %11s %4d %.2f\n",
-//           db->cpy[id_cpy].id_cpy,
-//           db->cpy[id_cpy].id_grp,
-//           db->cpy[id_cpy].id_cty,
-//           db->cpy[id_cpy].id_ind,
-//           db->cpy[id_cpy].nm_cpy,
-//           db->cpy[id_cpy].nm_adr,
-//           db->cpy[id_cpy].cd_pos,
-//           db->cpy[id_cpy].nm_cit,
-//           db->cpy[id_cpy].nr_tel,
-//           db->cpy[id_cpy].nm_www,
-//           db->cpy[id_cpy].dt_cre,
-//           db->cpy[id_cpy].nr_emp,
-//           db->cpy[id_cpy].am_val);
-//}
 
 /****************************************************************************************
- Search Company by ID
+* Display one Company record
 ****************************************************************************************/
-void search_company_by_name(dbc *db) {
+void display_single_company(dbc *db, ccpy cpy) {
 
-    printf("*** search company by name ***\n");
-    printf("enter beginning of company name: ...\n");
+    printf("\n***************************************************************************\n");
 
+    printf("\n\tID company........... %-80d", cpy.id_cpy);
+    printf("\n\tCompany name......... %-80s", cpy.nm_cpy);
+    printf("\n\tGroup (to change).... %-80d", cpy.id_grp);
+    printf("\n\tCountry (to change).. %-80d", cpy.id_cty);
+    printf("\n\tIndustry (to change). %-80d", cpy.id_ind);
+    printf("\n\tAddress.............. %-80s", cpy.nm_adr);
+    printf("\n\tPost code............ %-80s", cpy.cd_pos);
+    printf("\n\tCity................. %-80s", cpy.nm_cit);
+    printf("\n\tTel.................. %-80s", cpy.nr_tel);
+    printf("\n\tWebsite.............. %-80s", cpy.nm_www);
+    printf("\n\tDate of creation..... %-80s", cpy.dt_cre);
+    printf("\n\tNb of employees...... %-80d", cpy.nr_emp);
+    printf("\n\tStock value.......... %-80.2f", cpy.am_val);
+
+    printf("\n\n***************************************************************************\n");
 }
+
 
 
 /****************************************************************************************
@@ -263,19 +214,21 @@ void search_company_by_id(dbc *db) {
     ccpy cpy;
     FILE *fp_db;
 
-    fp_db = open_db_file(db);       // debug purpose, this must be handled globally: within open_menu()
+    fp_db = open_db_file(db);
 
     printf("\n\t--> Enter Company ID: "); scanf("%d", &id); fflush(stdin);
+    index = search_binary(db, id, 0);                   // get element index within db file cpy bloc
 
-    index = search_binary(db, id, 0);
-
-    cpy = read_single_company(db, index);
-
-    ///test
-    printf("FOUND %d %s\n", cpy.id_cpy, cpy.nm_cpy);
+    if (index == REC_OUT_RANGE) {
+        printf("\n\tCompany ID %d is out of range\n\n", id);
+    } else if (index == REC_NOT_FOUND) {
+        printf("\n\tNo results with Company ID %d\n\n", id);
+    } else {
+        cpy = read_single_company(db, index);                // read cpy at given index
+        display_single_company(db, cpy);
+    }
 
     fclose(fp_db);
-
 }
 
 
@@ -286,14 +239,27 @@ void search_company_by_id(dbc *db) {
 ccpy read_single_company(dbc *db, int position) {
 
     ccpy cpy;
+    FILE *fp_db;
 
-    FILE *fp;
-    fp = open_db_file(db);
+    fp_db = open_db_file(db);
 
-    fseek(fp, db->hdr.off_cpy + position * sizeof(ccpy), SEEK_SET);
-    fread(&cpy, sizeof(ccpy), 1, fp);
+    fseek(fp_db, db->hdr.off_cpy + position * sizeof(ccpy), SEEK_SET);
+    fread(&cpy, sizeof(ccpy), 1, fp_db);
 
-    fclose(fp);
+    fclose(fp_db);
 
     return cpy;
+}
+
+
+
+/****************************************************************************************
+ Search Company by ID
+****************************************************************************************/
+// TODO
+void search_company_by_name(dbc *db) {
+
+    printf("*** search company by name ***\n");
+    printf("enter beginning of company name: ...\n");
+
 }

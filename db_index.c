@@ -103,7 +103,6 @@ int search_binary(dbc *db, int id, int type) {
     memset(&elm, 0, size);
 
     elm = read_single_company(db, 0);           // check db first element
-    printf("test %d \n", elm.id_cpy);                   // => 108
     if (id < elm.id_cpy) {                              // if ID we search < 108
         return REC_OUT_RANGE;
     }
@@ -113,7 +112,6 @@ int search_binary(dbc *db, int id, int type) {
     }
 
     elm = read_single_company(db, right);               // check db last element
-    printf("test %d \n", elm.id_cpy);                   // => 686255
     if (id > elm.id_cpy) {                              // if ID we search > 686255
         return REC_OUT_RANGE;
     }

@@ -354,10 +354,7 @@ void rec_group(dbc *db, int id_grp);                        // display one singl
 /// Company ///
 void import_CSV_company(dbc *db);                           // import data to db file
 void export_CSV_company(dbc *db);                           // export data from db file to csv
-void load_company(dbc *db);
-void print_company(dbc *db);
-void rec_company(dbc *db, int id_grp);
-void load_buffer(dbc *db, FILE *fp, int nr);
+void display_single_company(dbc *db, ccpy cpy);
 void search_company_by_id(dbc *db);                         // TODO
 void search_company_by_name(dbc *db);                       // TODO
 ccpy read_single_company(dbc *db, int position);              // read cpy record given its offset
