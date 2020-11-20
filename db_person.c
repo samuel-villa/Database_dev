@@ -174,16 +174,21 @@ void export_CSV_person(dbc *db) {
 ****************************************************************************************/
 void display_single_person(dbc *db, cper per) {
 
+    ccpy cpy;
+    int index, id = per.id_cpy;
+
+    index = search_binary(db, id, COMP_ID);
+    cpy = read_single_company(db, index);
+
     printf("\n***************************************************************************\n");
-    // TODO function to display country, group and industry
 
     printf("\n\tID person.............. %-80d", per.id_per);
-    printf("\n\tID company (to change). %-80d", per.id_cpy);
-    printf("\n\tID job (to change)..... %-80d", per.id_job);
     printf("\n\tTitle.................. %-80s", per.nm_civ);
     printf("\n\tFirstname.............. %-80s", per.nm_fst);
     printf("\n\tLastname............... %-80s", per.nm_lst);
-    printf("\n\tsex.................... %-80s", per.cd_sex);
+    printf("\n\tCompany................ %s", cpy.nm_cpy);
+    printf("\n\tJob.................... %s", db->job[per.id_job].nm_job);
+    printf("\n\tSex.................... %-80s", per.cd_sex);
     printf("\n\tMobile................. %-80s", per.nr_gsm);
     printf("\n\tTel.................... %-80s", per.nr_tel);
     printf("\n\tEmail.................. %-80s", per.nm_mail);

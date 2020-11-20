@@ -142,6 +142,11 @@ void search_menu(dbc *db, int os) {
 
     int menu_sel = 0;
 
+    load_country(db);
+    load_industry(db);
+    load_group(db);
+    load_job(db);
+
     while (menu_sel != S_BACK) {
         printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - List Countries\n", S_COUNTRY);
@@ -157,25 +162,21 @@ void search_menu(dbc *db, int os) {
 
         switch (menu_sel) {
             case S_COUNTRY:
-                load_country(db);
                 print_country(db);
                 pause(os);
                 clear(os);
                 break;
             case S_INDUSTRY:
-                load_industry(db);
                 print_industry(db);
                 pause(os);
                 clear(os);
                 break;
             case S_GROUP:
-                load_group(db);
                 print_group(db);
                 pause(os);
                 clear(os);
                 break;
             case S_JOB:
-                load_job(db);
                 print_job(db);
                 pause(os);
                 clear(os);

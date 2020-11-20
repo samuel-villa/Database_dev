@@ -133,7 +133,7 @@ void load_group(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading groups into buffer... ");
+    printf("\n\tLoading groups into buffer... ");
 
     fseek(fp_db, db->hdr.off_grp, SEEK_SET);
 
@@ -150,7 +150,7 @@ void load_group(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("DONE => Groups loaded: %d\n\n", db->hdr.nr_grp);
+    printf("DONE => Groups loaded: %d\n", db->hdr.nr_grp);
 }
 
 /****************************************************************************************

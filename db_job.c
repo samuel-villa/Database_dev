@@ -135,7 +135,7 @@ void load_job(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading jobs into buffer... ");
+    printf("\n\tLoading jobs into buffer... ");
 
     fseek(fp_db, db->hdr.off_job, SEEK_SET);
 
@@ -152,7 +152,7 @@ void load_job(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("DONE => Jobs loaded: %d\n\n", db->hdr.nr_job);
+    printf("DONE => Jobs loaded: %d\n", db->hdr.nr_job);
 }
 
 /****************************************************************************************

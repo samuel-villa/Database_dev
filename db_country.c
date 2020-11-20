@@ -134,7 +134,7 @@ void load_country(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading countries into buffer... ");
+    printf("\n\tLoading countries into buffer... ");
 
     fseek(fp_db, db->hdr.off_cty, SEEK_SET);
 
@@ -151,7 +151,7 @@ void load_country(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("DONE => Countries loaded: %d\n\n", db->hdr.nr_cty);
+    printf("DONE => Countries loaded: %d\n", db->hdr.nr_cty);
 }
 
 /****************************************************************************************

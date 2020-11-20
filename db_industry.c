@@ -131,7 +131,7 @@ void load_industry(dbc *db) {
     fseek(fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
 
-    printf("\nLoading industries into buffer... ");
+    printf("\n\tLoading industries into buffer... ");
 
     fseek(fp_db, db->hdr.off_ind, SEEK_SET);
 
@@ -148,7 +148,7 @@ void load_industry(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("DONE => Industries loaded: %d\n\n", db->hdr.nr_ind);
+    printf("DONE => Industries loaded: %d\n", db->hdr.nr_ind);
 }
 
 /****************************************************************************************

@@ -185,13 +185,12 @@ void export_CSV_company(dbc *db) {
 void display_single_company(dbc *db, ccpy cpy) {
 
     printf("\n***************************************************************************\n");
-    // TODO function to display country, group and industry
 
     printf("\n\tID company........... %-80d", cpy.id_cpy);
     printf("\n\tCompany name......... %-80s", cpy.nm_cpy);
-    printf("\n\tGroup (to change).... %-80d", cpy.id_grp);
-    printf("\n\tCountry (to change).. %-80d", cpy.id_cty);
-    printf("\n\tIndustry (to change). %-80d", cpy.id_ind);
+    printf("\n\tGroup................ %s", db->grp[cpy.id_grp].nm_grp);
+    printf("\n\tCountry.............. %s", db->cty[cpy.id_cty].nm_cty);
+    printf("\n\tIndustry............. %s", db->ind[cpy.id_ind].nm_ind);
     printf("\n\tAddress.............. %-80s", cpy.nm_adr);
     printf("\n\tPost code............ %-80s", cpy.cd_pos);
     printf("\n\tCity................. %-80s", cpy.nm_cit);
@@ -218,7 +217,7 @@ void search_company_by_id(dbc *db) {
     fp_db = open_db_file(db);
 
     printf("\n\t--> Enter Company ID: "); scanf("%d", &id); fflush(stdin);
-    index = search_binary(db, id, COMP_ID);                   // get element index within db file cpy bloc
+    index = search_binary(db, id, COMP_ID);             // get element index within db file cpy bloc
 
     if (index == REC_OUT_RANGE) {
         printf("\n\tCompany ID %d is out of range\n\n", id);
