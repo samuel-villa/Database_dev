@@ -165,84 +165,50 @@ void export_CSV_person(dbc *db) {
     fclose(fpo);
 
     printf("DONE => Persons exported: %d", db->hdr.nr_per);
-
-    return;
 }
 
-///****************************************************************************************
-//* Load Person table into the buffer
-//****************************************************************************************/
-//void load_person(dbc *db) {
-//
-//    int i;
-//    cper per;
-//    FILE *fp_db, *fp_lg;
-//
-//    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-//    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-//
-//    fseek(fp_db, 0, SEEK_SET);
-//    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
-//
-//    printf("\nLoading persons into buffer... ");
-//
-//    fseek(fp_db, db->hdr.off_per, SEEK_SET);
-//
-//    for (i=1; i<=db->hdr.nr_per; i++) {
-//
-//        memset(&per, 0, sizeof(cper));
-//        fread(&per, 1, sizeof(cper), fp_db);
-//
-//        db->per[i] = per;
-//    }
-//
-//    fprintf(fp_lg, "%s Persons loaded into buffer: %d\n", timestamp(), db->hdr.nr_per);
-//
-//    fclose(fp_db);
-//    fclose(fp_lg);
-//
-//    printf("DONE => Persons loaded: %d\n\n", db->hdr.nr_per);
-//}
-//
-///****************************************************************************************
-//* List and display Person table from the buffer
-//****************************************************************************************/
-//void print_person(dbc *db) {
-//
-//    for (int i=1; i<=db->hdr.nr_per; i++) { rec_person(db, i); }
-//    puts("");
-//}
-//
-///****************************************************************************************
-//* Display one Person record from the buffer
-//****************************************************************************************/
-//void rec_person(dbc *db, int id_per) {
-//
-//    printf("%4d %4d %4d %20s %52s %52s %2s %11s %16s %16s %65s %4d\n",
-//           db->per[id_per].id_per,
-//           db->per[id_per].id_cpy,
-//           db->per[id_per].id_job,
-//           db->per[id_per].nm_civ,
-//           db->per[id_per].nm_fst,
-//           db->per[id_per].nm_lst,
-//           db->per[id_per].cd_sex,
-//           db->per[id_per].dt_cre,
-//           db->per[id_per].nr_tel,
-//           db->per[id_per].nr_gsm,
-//           db->per[id_per].nm_mail,
-//           db->per[id_per].nr_val);
-//}
+
+
+/****************************************************************************************
+* Display one Person record
+****************************************************************************************/
+void display_single_person(dbc *db, cper per) {
+
+    printf("\n***************************************************************************\n");
+    // TODO function to display country, group and industry
+
+    printf("\n\tID person.............. %-80d", per.id_per);
+    printf("\n\tID company (to change). %-80d", per.id_cpy);
+    printf("\n\tID job (to change)..... %-80d", per.id_job);
+    printf("\n\tTitle.................. %-80s", per.nm_civ);
+    printf("\n\tFirstname.............. %-80s", per.nm_fst);
+    printf("\n\tLastname............... %-80s", per.nm_lst);
+    printf("\n\tsex.................... %-80s", per.cd_sex);
+    printf("\n\tMobile................. %-80s", per.nr_gsm);
+    printf("\n\tTel.................... %-80s", per.nr_tel);
+    printf("\n\tEmail.................. %-80s", per.nm_mail);
+    printf("\n\tDate of creation....... %-80s", per.dt_cre);
+    printf("\n\tStocks owned........... %-80d", per.nr_val);
+
+    printf("\n\n***************************************************************************\n");
+}
+
 
 
 /****************************************************************************************
 * Read Person record given its position within DB Person block.
 ****************************************************************************************/
-cper read_single_person(dbc *db, int offset) {
+cper read_single_person(dbc *db, int index) {
 
     cper per;
+    FILE *fp_db;
 
-    fseek(db->fp_db, db->hdr.off_per + offset * sizeof(cper), SEEK_SET);
-    fread(&per, sizeof(ccpy), 1, db->fp_db);
+    fp_db = open_db_file(db);
+
+    fseek(fp_db, db->hdr.off_per + index * sizeof(cper), SEEK_SET);
+    fread(&per, sizeof(ccpy), 1, fp_db);
+
+    fclose(fp_db);
 
     return per;
 }
@@ -250,25 +216,41 @@ cper read_single_person(dbc *db, int offset) {
 
 
 /****************************************************************************************
- Search Person by Lastname
+ Search Person by ID
 ****************************************************************************************/
-void search_person_by_name(dbc *db) {
+void search_person_by_id(dbc *db) {
 
-    printf("*** search peron by name ***\n");
-    printf("enter beginning of lastname: ...\n");
+    int id, index;
+    cper per;
+    FILE *fp_db;
 
-    /// print option to generate report ***
+    fp_db = open_db_file(db);
 
+    printf("\n\t--> Enter Person ID: "); scanf("%d", &id); fflush(stdin);
+    index = search_binary(db, id, PERS_ID);           // get element index within db file per bloc
+
+    if (index == REC_OUT_RANGE) {
+        printf("\n\tPerson ID %d is out of range\n\n", id);
+    } else if (index == REC_NOT_FOUND) {
+        printf("\n\tNo results with Person ID %d\n\n", id);
+    } else {
+        per = read_single_person(db, index);          // read per at given index
+        display_single_person(db, per);
+    }
+
+    fclose(fp_db);
 }
+
 
 
 /****************************************************************************************
  Search Person by Lastname
 ****************************************************************************************/
-void search_person_by_id(dbc *db) {
+// TODO
+void search_person_by_name(dbc *db) {
 
-    printf("*** search peron by id ***\n");
-    printf("enter person ID: ...\n");
+    printf("*** search peron by name ***\n");
+    printf("enter beginning of lastname: ...\n");
 
     /// print option to generate report ***
 

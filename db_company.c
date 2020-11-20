@@ -185,6 +185,7 @@ void export_CSV_company(dbc *db) {
 void display_single_company(dbc *db, ccpy cpy) {
 
     printf("\n***************************************************************************\n");
+    // TODO function to display country, group and industry
 
     printf("\n\tID company........... %-80d", cpy.id_cpy);
     printf("\n\tCompany name......... %-80s", cpy.nm_cpy);
@@ -217,7 +218,7 @@ void search_company_by_id(dbc *db) {
     fp_db = open_db_file(db);
 
     printf("\n\t--> Enter Company ID: "); scanf("%d", &id); fflush(stdin);
-    index = search_binary(db, id, 0);                   // get element index within db file cpy bloc
+    index = search_binary(db, id, COMP_ID);                   // get element index within db file cpy bloc
 
     if (index == REC_OUT_RANGE) {
         printf("\n\tCompany ID %d is out of range\n\n", id);
@@ -236,14 +237,14 @@ void search_company_by_id(dbc *db) {
 /****************************************************************************************
 * Read Company record given its position nb.
 ****************************************************************************************/
-ccpy read_single_company(dbc *db, int position) {
+ccpy read_single_company(dbc *db, int index) {
 
     ccpy cpy;
     FILE *fp_db;
 
     fp_db = open_db_file(db);
 
-    fseek(fp_db, db->hdr.off_cpy + position * sizeof(ccpy), SEEK_SET);
+    fseek(fp_db, db->hdr.off_cpy + index * sizeof(ccpy), SEEK_SET);
     fread(&cpy, sizeof(ccpy), 1, fp_db);
 
     fclose(fp_db);

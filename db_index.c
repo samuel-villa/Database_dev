@@ -95,45 +95,88 @@ void create_index_per_lastname(dbc *db) {
 int search_binary(dbc *db, int id, int type) {
 
     int size, mid, left=0, right;
-    ccpy elm;
 
-    size = sizeof(ccpy);
-    right = db->hdr.nr_cpy - 1;
+    if (type == COMP_ID) {
 
-    memset(&elm, 0, size);
+        ccpy elm;
+        size = sizeof(ccpy);
+        right = db->hdr.nr_cpy - 1;
+        memset(&elm, 0, size);
 
-    elm = read_single_company(db, 0);           // check db first element
-    if (id < elm.id_cpy) {                              // if ID we search < 108
-        return REC_OUT_RANGE;
-    }
+        elm = read_single_company(db, 0);           // check db first element
+        if (id < elm.id_cpy) {                            // if ID we search < 108
+            return REC_OUT_RANGE;
+        }
 
-    if (id == elm.id_cpy) {                             // if match (if ID we search is the first db element)
-        return id;
-    }
+        if (id == elm.id_cpy) {                           // if match (if ID we search is the first db element)
+            return 0;
+        }
 
-    elm = read_single_company(db, right);               // check db last element
-    if (id > elm.id_cpy) {                              // if ID we search > 686255
-        return REC_OUT_RANGE;
-    }
+        elm = read_single_company(db, right);             // check db last element
+        if (id > elm.id_cpy) {                            // if ID we search > 686255
+            return REC_OUT_RANGE;
+        }
 
-    while (right - left > 1) {
+        while (right - left > 1) {
 
-        mid = (right + left) / 2;
-        elm = read_single_company(db, mid);
+            mid = (right + left) / 2;
+            elm = read_single_company(db, mid);
 
-        if (id <= elm.id_cpy) {
-            right = mid;
+            if (id <= elm.id_cpy) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        elm = read_single_company(db, right);
+
+        if (id == elm.id_cpy) {
+            return right;
         } else {
-            left = mid;
+            return REC_NOT_FOUND;
+        }
+
+    } else if (type == PERS_ID) {
+
+        cper elm;
+        size = sizeof(cper);
+        right = db->hdr.nr_per - 1;
+        memset(&elm, 0, size);
+
+        elm = read_single_person(db, 0);           // check db first element
+        if (id < elm.id_per) {                           // if ID we search < 108
+            return REC_OUT_RANGE;
+        }
+
+        if (id == elm.id_per) {                          // if match (if ID we search is the first db element)
+            return 0;
+        }
+
+        elm = read_single_person(db, right);             // check db last element
+        if (id > elm.id_per) {                           // if ID we search > 686255
+            return REC_OUT_RANGE;
+        }
+
+        while (right - left > 1) {
+
+            mid = (right + left) / 2;
+            elm = read_single_person(db, mid);
+
+            if (id <= elm.id_per) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        elm = read_single_person(db, right);
+
+        if(id == elm.id_per) {
+            return right;
+        } else {
+            return REC_NOT_FOUND;
         }
     }
-    elm = read_single_company(db, right);
-
-    if(id == elm.id_cpy) {
-        return right;
-    } else {
-        return REC_NOT_FOUND;
-    }
+    return 0;
 }
 
 

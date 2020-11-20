@@ -182,7 +182,7 @@ void search_menu(dbc *db, int os) {
                 break;
             case S_PERSON:
                 search_person_by_id(db);        // OR
-                search_person_by_name(db);
+                //search_person_by_name(db);
                 pause(os);
                 clear(os);
                 break;

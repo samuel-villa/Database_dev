@@ -354,27 +354,26 @@ void rec_group(dbc *db, int id_grp);                        // display one singl
 /// Company ///
 void import_CSV_company(dbc *db);                           // import data to db file
 void export_CSV_company(dbc *db);                           // export data from db file to csv
-void display_single_company(dbc *db, ccpy cpy);
-void search_company_by_id(dbc *db);                         // TODO
+void display_single_company(dbc *db, ccpy cpy);             // display company struct attributes
+void search_company_by_id(dbc *db);                         // generic search function for cpy ID
 void search_company_by_name(dbc *db);                       // TODO
-ccpy read_single_company(dbc *db, int position);              // read cpy record given its offset
-
-int search_binary(dbc *db, int id, int type);
+ccpy read_single_company(dbc *db, int index);               // read cpy record given its offset
 
 /// Person ///
 void import_CSV_person(dbc *db);                            // import data to db file
 void export_CSV_person(dbc *db);                            // export data from db file to csv
-void load_person(dbc *db);
-void print_person(dbc *db);
-void rec_person(dbc *db, int id_grp);
-void search_person_by_id(dbc *db);                          // TODO
+void display_single_person(dbc *db, cper per);              // display company struct attributes
+void search_person_by_id(dbc *db);                          // generic search function for cpy ID
 void search_person_by_name(dbc *db);                        // TODO
-cper read_single_person(dbc *db, int position);               // // read per record given its offset
+cper read_single_person(dbc *db, int index);                // read per record given its offset
+
+/// Generic ///
+int search_binary(dbc *db, int id, int type);               // multiplexed for pers/id and company/id
 
 /// Index ///
-void sort_bubble_index(dbc *db, int nr, int type);
-void quicksort(dbc *db, int first, int last, int type);
-void create_index_per_cpy(dbc *db);                         //
+void sort_bubble_index(dbc *db, int nr, int type);          // bubble sort (inefficient in this project, very slow)
+void quicksort(dbc *db, int first, int last, int type);     // best sort solution for this project
+void create_index_per_cpy(dbc *db);                         // creates db bloc of tipc elements
 void create_index_per_lastname(dbc *db);                    // TODO
 void create_index(dbc *db);                                 // TODO create_index_per_lastname to be implemented
 void search_company_employees(dbc *db);                     // TODO
