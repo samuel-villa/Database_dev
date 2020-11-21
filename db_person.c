@@ -223,7 +223,7 @@ cper read_single_person(dbc *db, int index) {
 
 
 /****************************************************************************************
- Search Person by ID
+ Search Person by ID - Binary search by primary key in Person table
 ****************************************************************************************/
 void search_person_by_id(dbc *db) {
 
@@ -241,7 +241,7 @@ void search_person_by_id(dbc *db) {
     } else if (index == REC_NOT_FOUND) {
         printf("\n\tNo results with Person ID %d\n\n", id);
     } else {
-        per = read_single_person(db, index);          // read per at given index
+        per = read_single_person(db, index);               // read per at given index
         display_single_person(db, per);
     }
 
@@ -251,7 +251,7 @@ void search_person_by_id(dbc *db) {
 
 
 /****************************************************************************************
- Search Person by Lastname
+* Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
 ****************************************************************************************/
 void search_person_by_name(dbc *db) {
 

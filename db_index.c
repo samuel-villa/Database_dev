@@ -54,7 +54,6 @@ void create_index_per_cpy(dbc *db) {
         db->sort[i].off_sort_obj = pt_per;                      // set read data into db->sort[i]
     }
 
-    //sort_bubble_index(db, db->hdr.nr_per, SORT_PERS_COMP);    // inefficient: more than 15 min of waiting
     quicksort(db, 0, db->hdr.nr_per-1, SORT_PERS_COMP);
 
     fseek(db->fp_db, db->hdr.off_ipc, SEEK_SET);                // getting first element offset
@@ -69,6 +68,10 @@ void create_index_per_cpy(dbc *db) {
     }
 
     db->hdr.nr_ipc = i;
+
+    /// test
+    fseek(db->fp_db, sizeof(hder), SEEK_SET);
+    fwrite(&db->hdr, sizeof(hder), 1, db->fp_db);
 
     fprintf(db->fp_lg, "%s Index persons per company created\n", timestamp());
 
@@ -278,7 +281,7 @@ int search_binary_string(dbc *db, char *name) {
 /****************************************************************************************
 * Give the list of employees per Company
 ****************************************************************************************/
-void search_company_employees(dbc *db) {
+void get_comp_employees(dbc *db) {
 
     printf("*** search company employees ***\n");
     printf("enter beginning of company name: ...\n");
@@ -305,7 +308,7 @@ void search_group_companies(dbc *db) {
 
 
 /****************************************************************************************
-* Sorting algorithm used for index creation
+* Sorting algorithm used for index creation (inefficient for this project: very slow)
 ****************************************************************************************/
 void sort_bubble_index(dbc *db, int nr, int type) {
 

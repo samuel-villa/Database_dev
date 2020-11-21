@@ -155,7 +155,6 @@ void search_menu(dbc *db, int os) {
         printf("\t%d - List Jobs\n", S_JOB);
         printf("\t%d - Search Companies\n", S_COMPANY);
         printf("\t%d - Search Persons\n", S_PERSON);
-        printf("\t%d - Search Persons/Company\n", S_PERS_COMP);
         printf("\t%d - GO BACK\n\n", S_BACK);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -181,20 +180,12 @@ void search_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case S_PERSON:
-                //search_person_by_id(db);        // OR
-                search_person_by_name(db);
-                pause(os);
+                search_person_menu(db, os);
                 clear(os);
                 break;
             case S_COMPANY:
-                search_company_by_id(db);       // OR
+                search_company_menu(db, os);
                 //search_company_by_name(db);
-                pause(os);
-                clear(os);
-                break;
-            case S_PERS_COMP:
-                search_company_employees(db);
-                pause(os);
                 clear(os);
                 break;
             case S_BACK:
@@ -233,6 +224,70 @@ void report_menu(dbc *db, int os) {
                 printf("create report with search_person_by_name('print option')");
                 break;
             case R_BACK:
+                break;
+            default:
+                puts("Wrong Selection");
+                break;
+        }
+    }
+}
+
+
+
+/****************************************************************************************
+* Search in Database Menu
+****************************************************************************************/
+void search_person_menu(dbc *db, int os) {
+
+    int menu_sel = 0;
+
+    while (menu_sel != 9) {
+        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\t%d - Search Person by ID\n", 0);
+        printf("\t%d - Search person by Lastname\n", 1);
+        printf("\t%d - GO BACK\n\n", 9);
+        printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
+
+        switch (menu_sel) {
+            case 0:
+                search_person_by_id(db);
+                break;
+            case 1:
+                search_person_by_name(db);
+                break;
+            case 9:
+                break;
+            default:
+                puts("Wrong Selection");
+                break;
+        }
+    }
+}
+
+
+
+/****************************************************************************************
+* Search in Database Menu
+****************************************************************************************/
+void search_company_menu(dbc *db, int os) {
+
+    int menu_sel = 0;
+
+    while (menu_sel != 9) {
+        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\t%d - Search Company by ID\n", 0);
+        printf("\t%d - Get company employees\n", 1);
+        printf("\t%d - GO BACK\n\n", 9);
+        printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
+
+        switch (menu_sel) {
+            case 0:
+                search_company_by_id(db);
+                break;
+            case 1:
+                get_comp_employees(db);
+                break;
+            case 9:
                 break;
             default:
                 puts("Wrong Selection");

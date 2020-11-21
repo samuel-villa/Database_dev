@@ -375,7 +375,7 @@ void quicksort(dbc *db, int first, int last, int type);     // best sort solutio
 void create_index_per_cpy(dbc *db);                         // creates db bloc of tipc elements
 void create_index_per_name(dbc *db);                        // TODO
 void create_index(dbc *db);                                 // TODO create_index_per_lastname to be implemented
-void search_company_employees(dbc *db);                     // TODO
+void get_comp_employees(dbc *db);                           // TODO
 void search_group_companies(dbc *db);                       // TODO extra
 void alloc_sort_table(dbc *db, uint size);                  // TODO
 void free_sort_table(dbc *db);                              // TODO
@@ -386,6 +386,8 @@ void main_menu(dbc *db, int os);                            // First menu when r
 void open_db_menu(dbc *db, int os);                         // main    -> sub-menu
 void search_menu(dbc *db, int os);                          // open_db -> sub-menu
 void report_menu(dbc *db, int os);                          // open_db -> sub-menu
+void search_person_menu(dbc *db, int os);                   // search_menu -> sub-menu
+void search_company_menu(dbc *db, int os);                  // search_menu -> sub-menu
 
 /// System Administration ///
 int user_os();                                              // request OS to user in order to adapt some basic command

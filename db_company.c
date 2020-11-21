@@ -206,7 +206,7 @@ void display_single_company(dbc *db, ccpy cpy) {
 
 
 /****************************************************************************************
- Search Company by ID
+ Search Company by ID - Binary search by primary key in Company table
 ****************************************************************************************/
 void search_company_by_id(dbc *db) {
 
