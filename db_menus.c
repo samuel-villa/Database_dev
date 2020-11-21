@@ -156,7 +156,6 @@ void search_menu(dbc *db, int os) {
         printf("\t%d - Search Companies\n", S_COMPANY);
         printf("\t%d - Search Persons\n", S_PERSON);
         printf("\t%d - Search Persons/Company\n", S_PERS_COMP);
-        printf("\t%d - Get Company details\n", S_COMP_DETAIL);
         printf("\t%d - GO BACK\n\n", S_BACK);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -182,8 +181,8 @@ void search_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case S_PERSON:
-                search_person_by_id(db);        // OR
-                //search_person_by_name(db);
+                //search_person_by_id(db);        // OR
+                search_person_by_name(db);
                 pause(os);
                 clear(os);
                 break;
@@ -195,11 +194,6 @@ void search_menu(dbc *db, int os) {
                 break;
             case S_PERS_COMP:
                 search_company_employees(db);
-                pause(os);
-                clear(os);
-                break;
-            case S_COMP_DETAIL:
-                company_details(db);
                 pause(os);
                 clear(os);
                 break;

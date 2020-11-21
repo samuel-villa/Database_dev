@@ -82,7 +82,6 @@ enum Search_Menu {
     S_COMPANY,
     S_PERSON,
     S_PERS_COMP,
-    S_COMP_DETAIL,
     S_BACK = 9
 };
 
@@ -297,7 +296,6 @@ typedef struct Sorting {
 typedef struct db_client {
 
     hder hdr;           // header
-    /// TODO *fps to be implemented into the whole project
     FILE *fp_db;        // db file pointer
     FILE *fp_lg;        // log file pointer
 
@@ -369,18 +367,19 @@ cper read_single_person(dbc *db, int index);                // read per record g
 
 /// Generic ///
 int search_binary(dbc *db, int id, int type);               // multiplexed for pers/id and company/id
+int search_binary_string(dbc *db, char *name);
 
 /// Index ///
 void sort_bubble_index(dbc *db, int nr, int type);          // bubble sort (inefficient in this project, very slow)
 void quicksort(dbc *db, int first, int last, int type);     // best sort solution for this project
 void create_index_per_cpy(dbc *db);                         // creates db bloc of tipc elements
-void create_index_per_lastname(dbc *db);                    // TODO
+void create_index_per_name(dbc *db);                        // TODO
 void create_index(dbc *db);                                 // TODO create_index_per_lastname to be implemented
 void search_company_employees(dbc *db);                     // TODO
-void company_details(dbc *db);                              // TODO
 void search_group_companies(dbc *db);                       // TODO extra
 void alloc_sort_table(dbc *db, uint size);                  // TODO
 void free_sort_table(dbc *db);                              // TODO
+tipl read_single_tipl_rec(dbc *db, int index);
 
 /// Menus ///
 void main_menu(dbc *db, int os);                            // First menu when running the program

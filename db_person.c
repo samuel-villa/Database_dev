@@ -119,6 +119,8 @@ void import_CSV_person(dbc *db) {
     return ;
 }
 
+
+
 /****************************************************************************************
 * Export table Person to csv file
 ****************************************************************************************/
@@ -211,7 +213,7 @@ cper read_single_person(dbc *db, int index) {
     fp_db = open_db_file(db);
 
     fseek(fp_db, db->hdr.off_per + index * sizeof(cper), SEEK_SET);
-    fread(&per, sizeof(ccpy), 1, fp_db);
+    fread(&per, sizeof(cper), 1, fp_db);
 
     fclose(fp_db);
 
@@ -251,12 +253,28 @@ void search_person_by_id(dbc *db) {
 /****************************************************************************************
  Search Person by Lastname
 ****************************************************************************************/
-// TODO
 void search_person_by_name(dbc *db) {
 
-    printf("*** search peron by name ***\n");
-    printf("enter beginning of lastname: ...\n");
+    int index;
+    char lastname[64];
+    cper per;
+    tipl ipl;
+    FILE *fp_db;
 
-    /// print option to generate report ***
+    fp_db = open_db_file(db);
 
+    printf("\n\t--> Enter Person Name: "); scanf("%s", lastname); fflush(stdin);
+
+    index = search_binary_string(db, lastname);         // index from sorted list (tipl)
+    ipl = read_single_tipl_rec(db, index);
+
+    if (index == REC_NOT_FOUND) {
+        printf("\n\tPerson not found\n\n");
+    } else {
+        fseek(fp_db, ipl.per_offset, SEEK_SET);         // go to person offset
+        fread(&per, sizeof(cper), 1, fp_db);     // read person
+        display_single_person(db, per);
+    }
+
+    fclose(fp_db);
 }
