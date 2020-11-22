@@ -485,18 +485,18 @@ void load_ipl_in_ram(dbc *db) {
     for (i=0; i<db->hdr.nr_per; i++) {
 
         memset(&ipc, 0, sizeof(tipc));
-        pt_ipc = db->hdr.off_ipc + i * sizeof(tipc);                            // getting element offset
-        fseek(db->fp_db, pt_ipc, SEEK_SET);                                     // place cursor at element offset
-        fread(&ipc, sizeof(tipc), 1, db->fp_db);                         // read element
+        pt_ipc = db->hdr.off_ipc + i * sizeof(tipc);               // getting element offset
+        fseek(db->fp_db, pt_ipc, SEEK_SET);                        // place cursor at element offset
+        fread(&ipc, sizeof(tipc), 1, db->fp_db);            // read element
 
-        db->lsort[i].id = ipc.id_cpy;                                           // set read data into db->sort[i]
-        db->lsort[i].off_sort_obj = ipc.per_offset;                             // set read data into db->sort[i]
+        db->lsort[i].id = ipc.id_cpy;                              // set read data into db->lsort[i]
+        db->lsort[i].off_sort_obj = ipc.per_offset;                // set read data into db->lsort[i]
 
-        pt_next = ipc.per_offset + 1*sizeof(cper);                                // getting next element offset
-        if (pt_next >= db->hdr.db_size) {                                       // prevent out range
+        pt_next = ipc.per_offset + 1*sizeof(cper);                 // getting next element offset
+        if (pt_next >= db->hdr.db_size) {                          // prevent out range
             pt_next = db->hdr.db_size;
         }
-        db->lsort[i].off_next = pt_next;                                        // set pointer to next elm
+        db->lsort[i].off_next = pt_next;                           // set read data into db->lsort[i]
     }
 
     fclose(db->fp_db);
@@ -509,13 +509,10 @@ void load_ipl_in_ram(dbc *db) {
 ****************************************************************************************/
 void get_comp_employees(dbc *db) {
 
-    tipc ipc;
-    int comp_id = 108;
+    int comp_id;
 
+    printf("\n\t--> Enter Company ID: "); scanf("%d", &comp_id); fflush(stdin);
     list_comp_employees(db, comp_id);
-
-    printf("done\n");
-
 }
 
 
@@ -524,39 +521,62 @@ void get_comp_employees(dbc *db) {
 ****************************************************************************************/
 void list_comp_employees(dbc *db, int comp_id) {
 
-    cper per;
-    tipc ipc;
+    cper per, next_per;
+    ccpy cpy;
     FILE *fp_db;
-    uint cur_per;
-    uint next_per;
+    int index;
 
     fp_db = open_db_file(db);
 
-    //memset(&ipc, 0, sizeof(tipc));
+    index = search_binary(db, comp_id, COMP_ID);                      // get element index within db file cpy bloc
+    if (index == REC_OUT_RANGE) {
+        printf("\n\tCompany ID %d is out of range\n\n", comp_id);
+    } else if (index == REC_NOT_FOUND) {
+        printf("\n\tNo results with Company ID %d\n\n", comp_id);
+    } else {
+        cpy = read_single_company(db, index);                              // read cpy at given index
 
-    ///test
-    //per = read_single_person(db, 0);
-    //ipc = read_single_tipc_rec(db, 0);
-    printf("%d %u %u\n", db->lsort[10].id, db->lsort[10].off_sort_obj, db->lsort[10].off_next);
+        printf("\n\t********************************************************************************\n");
 
-//    for (int i=0; i<db->hdr.nr_ipc; i++) {
-//
-//        if (comp_id == db->lsort[i].id) {
-//
-//            memset(&per, 0, sizeof(cper));
-//            cur_per = fseek(fp_db, db->lsort[i].off_sort_obj, SEEK_SET);         // go to person offset
-//            fread(&per, sizeof(cper), 1, fp_db);
-//            next_per = fseek(fp_db, db->lsort[i].off_next, SEEK_SET);
-//            printf("offset: %u %u\n", cur_per, next_per);
-//
-//        }
-//    }
+        printf("\n\tCompany name......... %s", cpy.nm_cpy);
+        printf("\n\tID company........... %-d", cpy.id_cpy);
+        printf("\n\tCountry.............. %s", db->cty[cpy.id_cty].nm_cty);
 
+        printf("\n\n\t********************************************************************************\n");
+        printf("\n\t*** EMPLOYEES ***\n");
+        printf("\n\t%-8s", "ID");
+        printf(" %15s", "Lastname");
+        printf(" %15s", "Firstname");
+        printf(" %40s", "Job\n");
+    }
 
+    for (int i=0; i<db->hdr.nr_per; i++) {
 
+        if (comp_id == db->lsort[i].id) {
 
+            memset(&per, 0, sizeof(cper));
+            fseek(fp_db, db->lsort[i].off_sort_obj, SEEK_SET);             // go to person offset
+            fread(&per, sizeof(cper), 1, fp_db);                    // read current person
 
+            memset(&next_per, 0, sizeof(cper));
+            fseek(fp_db, db->lsort[i].off_next, SEEK_SET);                 // get next person offset
+            fread(&next_per, sizeof(cper), 1, fp_db);               // read next person
 
+            printf("\n\t%-8d", per.id_per);
+            printf(" %15s", per.nm_lst);
+            printf(" %15s", per.nm_fst);
+            printf(" %40s", db->job[per.id_job].nm_job);
+
+            if (comp_id == next_per.id_cpy) {
+                printf("\n\t%-8d", next_per.id_per);
+                printf(" %15s", next_per.nm_lst);
+                printf(" %15s", next_per.nm_fst);
+                printf(" %40s", db->job[next_per.id_job].nm_job);
+                i++;
+            }
+        }
+    }
+    printf("\n\n\t********************************************************************************\n");
 
     fclose(fp_db);
 }

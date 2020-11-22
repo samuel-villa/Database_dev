@@ -60,7 +60,7 @@ void main_menu(dbc *db, int os) {
                 fclose(db->fp_lg);
                 exit(0);
             default:
-                puts("Wrong Selection");
+                puts("\n\tWrong Selection");
                 break;
         }
     }
@@ -127,7 +127,7 @@ void open_db_menu(dbc *db, int os) {
             case BACK_TO_MAIN:
                 break;
             default:
-                puts("Wrong Selection");
+                puts("\n\tWrong Selection");
                 break;
         }
     }
@@ -191,7 +191,7 @@ void search_menu(dbc *db, int os) {
             case S_BACK:
                 break;
             default:
-                puts("Wrong Selection");
+                puts("\n\tWrong Selection");
                 break;
         }
     }
@@ -226,7 +226,7 @@ void report_menu(dbc *db, int os) {
             case R_BACK:
                 break;
             default:
-                puts("Wrong Selection");
+                puts("\n\tWrong Selection");
                 break;
         }
     }
@@ -258,7 +258,7 @@ void search_person_menu(dbc *db, int os) {
             case 9:
                 break;
             default:
-                puts("Wrong Selection");
+                puts("\n\tWrong Selection");
                 break;
         }
     }
@@ -290,7 +290,7 @@ void search_company_menu(dbc *db, int os) {
             case 9:
                 break;
             default:
-                puts("Wrong Selection");
+                puts("\n\tWrong Selection");
                 break;
         }
     }
