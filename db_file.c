@@ -151,6 +151,19 @@ FILE * open_db_file(dbc *db) {
 
 
 /****************************************************************************************
+* Opens DB log file globally
+****************************************************************************************/
+FILE * open_lg_file(dbc *db) {
+
+    FILE *fp_lg;
+
+    fp_lg = fopen("data_db_clients/db_clients.log", "a");
+
+    return fp_lg;
+}
+
+
+/****************************************************************************************
 * Closes DB file globally
 ****************************************************************************************/
 void close_db_file(dbc *db) {
@@ -240,13 +253,16 @@ void display_system_info(dbc *db) {
 ****************************************************************************************/
 void update_hdr(dbc *db) {
 
-    FILE *fp_db;
+    FILE *fp_db, *fp_lg;
 
     fp_db = open_db_file(db);
+    fp_lg = open_lg_file(db);
 
     fseek(fp_db, 0, SEEK_SET);
-    fwrite(&db->hdr, sizeof(hder), 1, fp_db);
+    fread(&db->hdr, sizeof(hder), 1, fp_db);
+
+    fprintf(fp_lg, "%s Database header updated\n", timestamp());
 
     fclose(fp_db);
-
+    fclose(fp_lg);
 }
