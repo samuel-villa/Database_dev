@@ -2,16 +2,16 @@
  * Programmation procedurale 2020 - Dossier: Database Clients V0
  *
  *       Requirements:
- *          • La création de la base de données
- *          • L’importation des 6 tables fournies sous forme de fichier .csv
- *          • L’exportation de ces 6 tables sous forme de fichier .csv
- *          • La création des index nécessaires aux requêtes précisées
- *          • Des écrans permettant de lister l’information par recherche séquentielle pour les tables de codes
- *          • Des écrans permettant d’afficher par recherche dichotomique
- *              • Une personne donnée par sa clé primaire
- *              • Une compagnie donnée par sa clé primaire
- *          • Au moins un écran permettant d’afficher via une liste chainée en mémoire
- *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
+ *          • La création de la base de données                                                                   OK
+ *          • L’importation des 6 tables fournies sous forme de fichier .csv                                      OK
+ *          • L’exportation de ces 6 tables sous forme de fichier .csv                                            OK
+ *          • La création des index nécessaires aux requêtes précisées                                            OK
+ *          • Des écrans permettant de lister l’information par recherche séquentielle pour les tables de codes   OK
+ *          • Des écrans permettant d’afficher par recherche dichotomique                                         OK
+ *              • Une personne donnée par sa clé primaire                                                         OK
+ *              • Une compagnie donnée par sa clé primaire                                                        OK
+ *          • Au moins un écran permettant d’afficher via une liste chainée en mémoire                            OK
+ *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire                         OK
  *              • Les compagnies appartenant à un groupe donné
  *          • Au moins un écran utilisant un index binaire sur disque dans la recherche
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
@@ -86,7 +86,6 @@ enum Search_Menu {
     S_JOB,
     S_COMPANY,
     S_PERSON,
-    S_PERS_COMP,
     S_BACK = 9
 };
 
@@ -112,11 +111,6 @@ enum Sort_Type {
 enum Binary_Search_Type {
     PERS_ID,
     COMP_ID,
-};
-
-enum Record_Type {
-    REC_PERS,
-    REC_COMP,
 };
 
 enum Error_Code {
@@ -266,7 +260,7 @@ typedef struct I_Person_Company {
 
     char tp_rec[8];     // rec type: IPC
     uint per_offset;    // person offset
-    int id_cpy;         // id company related to this person
+    int  id_cpy;        // id company related to this person
 } tipc;
 
 
@@ -312,16 +306,16 @@ typedef struct Linked_Sorting {
 ****************************************************************************************/
 typedef struct db_client {
 
-    hder hdr;           // header
-    FILE *fp_db;        // db file pointer
-    FILE *fp_lg;        // log file pointer
-    ccty cty[SZ_CTY];   // buffer country
-    cjob job[SZ_JOB];   // buffer job
-    cind ind[SZ_IND];   // buffer industry
-    cgrp grp[SZ_GRP];   // buffer group
-    int  status;        // db nonexistent, closed or open
-    t_sort *sort;       // points to list of elements to be sorted
-    t_lsort *lsort;     // points to linked list of elements to be sorted
+    hder    hdr;         // header
+    FILE    *fp_db;      // db file pointer
+    FILE    *fp_lg;      // log file pointer
+    ccty    cty[SZ_CTY]; // buffer country
+    cjob    job[SZ_JOB]; // buffer job
+    cind    ind[SZ_IND]; // buffer industry
+    cgrp    grp[SZ_GRP]; // buffer group
+    int     status;      // db nonexistent, closed or open
+    t_sort  *sort;       // points to list of elements to be sorted
+    t_lsort *lsort;      // points to linked list of elements to be sorted
 } dbc;
 
 
@@ -371,7 +365,8 @@ void import_CSV_company(dbc *db);                           // import data to db
 void export_CSV_company(dbc *db);                           // export data from db file to csv
 void display_single_company(dbc *db, ccpy cpy);             // display company struct attributes
 void search_company_by_id(dbc *db);                         // generic search function for cpy ID
-void search_company_by_name(dbc *db);                       // TODO
+void search_company_by_name(dbc *db);                       // TODO BinaryTree:
+                                                            // TODO make it not case sensitive && partial name function
 ccpy read_single_company(dbc *db, int index);               // read cpy record given its index
 
 /// Person ///
@@ -379,7 +374,8 @@ void import_CSV_person(dbc *db);                            // import data to db
 void export_CSV_person(dbc *db);                            // export data from db file to csv
 void display_single_person(dbc *db, cper per);              // display company struct attributes
 void search_person_by_id(dbc *db);                          // generic search function for cpy ID
-void search_person_by_name(dbc *db);                        // TODO make it not case sensitive && partial name function
+void search_person_by_name(dbc *db);                        // TODO BinaryTree:
+                                                            // TODO make it not case sensitive && partial name function
 cper read_single_person(dbc *db, int index);                // read per record given its index
 
 /// Generic ///

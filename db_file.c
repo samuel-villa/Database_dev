@@ -169,6 +169,7 @@ FILE * open_lg_file(dbc *db) {
 void close_db_file(dbc *db) {
 
     fclose(db->fp_db);
+    fclose(db->fp_lg);
 
 }
 
@@ -225,24 +226,24 @@ void display_system_info(dbc *db) {
     printf("\t* Persons lastname bloc size     : %-8d\n", db->hdr.sz_ipl);
     puts("");
     /// debug purpose
-    printf("\t* Countries bloc position        : %08X\n", db->hdr.off_cty);
-    printf("\t* Jobs bloc position             : %08X\n", db->hdr.off_job);
-    printf("\t* Industries bloc position       : %08X\n", db->hdr.off_ind);
-    printf("\t* Groups bloc position           : %08X\n", db->hdr.off_grp);
-    printf("\t* Companies bloc position        : %08X\n", db->hdr.off_cpy);
-    printf("\t* Persons bloc position          : %08X\n", db->hdr.off_per);
-    printf("\t* Persons/Companies bloc position: %08X\n", db->hdr.off_ipc);
-    printf("\t* Persons lastname bloc position : %08X\n", db->hdr.off_ipl);
-    puts("");
+//    printf("\t* Countries bloc position        : %08X\n", db->hdr.off_cty);
+//    printf("\t* Jobs bloc position             : %08X\n", db->hdr.off_job);
+//    printf("\t* Industries bloc position       : %08X\n", db->hdr.off_ind);
+//    printf("\t* Groups bloc position           : %08X\n", db->hdr.off_grp);
+//    printf("\t* Companies bloc position        : %08X\n", db->hdr.off_cpy);
+//    printf("\t* Persons bloc position          : %08X\n", db->hdr.off_per);
+//    printf("\t* Persons/Companies bloc position: %08X\n", db->hdr.off_ipc);
+//    printf("\t* Persons lastname bloc position : %08X\n", db->hdr.off_ipl);
+//    puts("");
     printf("\t* Nb of Countries                : %-8d\n", db->hdr.nr_cty);
     printf("\t* Nb of Jobs                     : %-8d\n", db->hdr.nr_job);
     printf("\t* Nb of Industries               : %-8d\n", db->hdr.nr_ind);
     printf("\t* Nb of Groups                   : %-8d\n", db->hdr.nr_grp);
     printf("\t* Nb of Companies                : %-8d\n", db->hdr.nr_cpy);
     printf("\t* Nb of Persons                  : %-8d\n", db->hdr.nr_per);
-    /// debug purpose
-    printf("\t* Nb of Persons/Companies indexes: %-8d\n", db->hdr.nr_ipc);
-    printf("\t* Nb of Persons lastnames indexes: %-8d\n", db->hdr.nr_ipl);
+//    /// debug purpose
+//    printf("\t* Nb of Persons/Companies indexes: %-8d\n", db->hdr.nr_ipc);
+//    printf("\t* Nb of Persons lastnames indexes: %-8d\n", db->hdr.nr_ipl);
 
     printf("\n\n\t===============================================\n\n");
 }

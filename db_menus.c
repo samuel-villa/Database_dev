@@ -209,7 +209,7 @@ void report_menu(dbc *db, int os) {
         printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - Employees per Company\n", R_PERS_COMP);
         printf("\t%d - Companies per Group\n", R_COMP_GROUP);
-        printf("\t%d - Employees per Partial Lastname\n", R_PERS_NAME);
+        printf("\t%d - Employees by Partial Lastname\n", R_PERS_NAME);
         printf("\t%d - GO BACK\n\n", R_BACK);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 

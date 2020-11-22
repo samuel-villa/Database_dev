@@ -149,16 +149,16 @@ int search_binary(dbc *db, int id, int type) {
         memset(&elm, 0, size);
 
         elm = read_single_company(db, 0);           // check db first element
-        if (id < elm.id_cpy) {                            // if ID we search < 108
+        if (id < elm.id_cpy) {                            // if ID we search < first cpy ID
             return REC_OUT_RANGE;
         }
 
-        if (id == elm.id_cpy) {                           // if match (if ID we search is the first db element)
+        if (id == elm.id_cpy) {                           // if match (if ID we search IS the first db element)
             return 0;
         }
 
         elm = read_single_company(db, right);             // check db last element
-        if (id > elm.id_cpy) {                            // if ID we search > 686255
+        if (id > elm.id_cpy) {                            // if ID we search > last cpy ID
             return REC_OUT_RANGE;
         }
 
@@ -189,16 +189,16 @@ int search_binary(dbc *db, int id, int type) {
         memset(&elm, 0, size);
 
         elm = read_single_person(db, 0);           // check db first element
-        if (id < elm.id_per) {                           // if ID we search < 108
+        if (id < elm.id_per) {                           // if ID we search < first person ID
             return REC_OUT_RANGE;
         }
 
-        if (id == elm.id_per) {                          // if match (if ID we search is the first db element)
+        if (id == elm.id_per) {                          // if match (if ID we search IS the first db element)
             return 0;
         }
 
         elm = read_single_person(db, right);             // check db last element
-        if (id > elm.id_per) {                           // if ID we search > 686255
+        if (id > elm.id_per) {                           // if ID we search > last person ID
             return REC_OUT_RANGE;
         }
 
@@ -232,8 +232,9 @@ int search_binary(dbc *db, int id, int type) {
 ****************************************************************************************/
 int search_binary_string(dbc *db, char *name) {
 
-    // FIXME improve it in order to get ALL persons responding to a given string (name)
-    // FIXME set it as NOT case sensitive (upper || lower)
+    // TODO Binary Tree
+    // TODO improve it in order to get ALL persons responding to a given string (name)
+    // TODO set it as NOT case sensitive (upper || lower)
 
     int size, mid, left=0, right;
 
@@ -523,11 +524,12 @@ void list_comp_employees(dbc *db, int comp_id) {
     cper per, next_per;
     ccpy cpy;
     FILE *fp_db;
-    int index;
+    int index, count=0;
 
     fp_db = open_db_file(db);
 
     index = search_binary(db, comp_id, COMP_ID);                      // get element index within db file cpy bloc
+
     if (index == REC_OUT_RANGE) {
         printf("\n\tCompany ID %d is out of range\n\n", comp_id);
     } else if (index == REC_NOT_FOUND) {
@@ -536,17 +538,16 @@ void list_comp_employees(dbc *db, int comp_id) {
         cpy = read_single_company(db, index);                              // read cpy at given index
 
         printf("\n\t********************************************************************************\n");
-
         printf("\n\tCompany name......... %s", cpy.nm_cpy);
         printf("\n\tID company........... %-d", cpy.id_cpy);
         printf("\n\tCountry.............. %s", db->cty[cpy.id_cty].nm_cty);
-
         printf("\n\n\t********************************************************************************\n");
         printf("\n\t*** EMPLOYEES ***\n");
         printf("\n\t%-8s", "ID");
         printf(" %15s", "Lastname");
         printf(" %15s", "Firstname");
-        printf(" %40s", "Job\n");
+        printf("%40s", "Job");
+        printf("\n\t--------------------------------------------------------------------------------");
     }
 
     for (int i=0; i<db->hdr.nr_per; i++) {
@@ -566,16 +567,20 @@ void list_comp_employees(dbc *db, int comp_id) {
             printf(" %15s", per.nm_fst);
             printf(" %40s", db->job[per.id_job].nm_job);
 
-            if (comp_id == next_per.id_cpy) {
+            count++;
+
+            if (comp_id == next_per.id_cpy) {                              // if next element should be printed too
                 printf("\n\t%-8d", next_per.id_per);
                 printf(" %15s", next_per.nm_lst);
                 printf(" %15s", next_per.nm_fst);
                 printf(" %40s", db->job[next_per.id_job].nm_job);
                 i++;
+                count++;
             }
         }
     }
+    printf("\n\t--------------------------------------------------------------------------------");
+    printf("\n\tEmployees: %d", count);
     printf("\n\n\t********************************************************************************\n");
-
     fclose(fp_db);
 }
