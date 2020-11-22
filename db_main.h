@@ -291,6 +291,18 @@ typedef struct Sorting {
 
 
 /***************************************************************************************
+* Linked Sorting table
+****************************************************************************************/
+typedef struct Linked_Sorting {
+
+    int  id;            // object id to be sorted
+    char ln[64];        // used when searching by lastname
+    uint off_sort_obj;  // object offset
+    uint off_next;      // next object offset
+} t_lsort;
+
+
+/***************************************************************************************
 * DB structure
 ****************************************************************************************/
 typedef struct db_client {
@@ -305,6 +317,7 @@ typedef struct db_client {
     cgrp grp[SZ_GRP];   // buffer group
     int  status;        // db nonexistent, closed or open
     t_sort *sort;       // points to list of elements to be sorted
+    t_lsort *lsort;     // points to linked list of elements to be sorted
 } dbc;
 
 
@@ -315,7 +328,7 @@ typedef struct db_client {
 /// DB File ///
 void create_db(dbc *db);                                    // create empty DB
 FILE * open_db_file(dbc *db);                               // handles DB file pointer globally
-void close_db_file(dbc *db);
+void close_db_file(dbc *db);                                // closes DB file globally
 void load_header(dbc *db);                                  // read file header and load RAM
 void set_db_status(dbc *db);                                // file can be Nonexistent, closed or open
 void display_system_info(dbc *db);                          // display header Info from RAM
@@ -355,31 +368,35 @@ void export_CSV_company(dbc *db);                           // export data from 
 void display_single_company(dbc *db, ccpy cpy);             // display company struct attributes
 void search_company_by_id(dbc *db);                         // generic search function for cpy ID
 void search_company_by_name(dbc *db);                       // TODO
-ccpy read_single_company(dbc *db, int index);               // read cpy record given its offset
+ccpy read_single_company(dbc *db, int index);               // read cpy record given its index
 
 /// Person ///
 void import_CSV_person(dbc *db);                            // import data to db file
 void export_CSV_person(dbc *db);                            // export data from db file to csv
 void display_single_person(dbc *db, cper per);              // display company struct attributes
 void search_person_by_id(dbc *db);                          // generic search function for cpy ID
-void search_person_by_name(dbc *db);                        // TODO
-cper read_single_person(dbc *db, int index);                // read per record given its offset
+void search_person_by_name(dbc *db);                        // TODO not case sensitive and partial name
+cper read_single_person(dbc *db, int index);                // read per record given its index
 
 /// Generic ///
 int search_binary(dbc *db, int id, int type);               // multiplexed for pers/id and company/id
-int search_binary_string(dbc *db, char *name);
+int search_binary_string(dbc *db, char *name);              // binary search of person lastname
 
 /// Index ///
 void sort_bubble_index(dbc *db, int nr, int type);          // bubble sort (inefficient in this project, very slow)
 void quicksort(dbc *db, int first, int last, int type);     // best sort solution for this project
 void create_index_per_cpy(dbc *db);                         // creates db bloc of tipc elements
-void create_index_per_name(dbc *db);                        // TODO
-void create_index(dbc *db);                                 // TODO create_index_per_lastname to be implemented
+void create_index_per_name(dbc *db);                        // creates db bloc of tipl elements
+void create_index(dbc *db);                                 // calls the two previous functions
 void get_comp_employees(dbc *db);                           // TODO
 void search_group_companies(dbc *db);                       // TODO extra
-void alloc_sort_table(dbc *db, uint size);                  // TODO
-void free_sort_table(dbc *db);                              // TODO
-tipl read_single_tipl_rec(dbc *db, int index);
+void alloc_sort_table(dbc *db, uint size);                  // RAM allocation for sort type
+void free_sort_table(dbc *db);                              // free RAM for sort type
+tipl read_single_tipl_rec(dbc *db, int index);              // read ipl record given its index
+void alloc_link_sort_table(dbc *db, uint size);             // RAM allocation for linked sort type
+void free_link_sort_table(dbc *db);                         // free RAM for linked sort type
+void load_ipl_in_ram(dbc *db);                              // load linked sorted list from ipl table
+void list_comp_employees(dbc *db, int comp_id);
 
 /// Menus ///
 void main_menu(dbc *db, int os);                            // First menu when running the program

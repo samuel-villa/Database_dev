@@ -23,6 +23,11 @@ void create_index(dbc *db) {
     create_index_per_name(db);
     free_sort_table(db);
 
+    ///test
+    alloc_link_sort_table(db, db->hdr.nr_per);
+    load_ipl_in_ram(db);
+    free_link_sort_table(db);
+
     //write_indexes_hdr(db);
 
     printf("\n\tDONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
@@ -68,10 +73,6 @@ void create_index_per_cpy(dbc *db) {
     }
 
     db->hdr.nr_ipc = i;
-
-    /// test
-    fseek(db->fp_db, sizeof(hder), SEEK_SET);
-    fwrite(&db->hdr, sizeof(hder), 1, db->fp_db);
 
     fprintf(db->fp_lg, "%s Index persons per company created\n", timestamp());
 
@@ -277,21 +278,6 @@ int search_binary_string(dbc *db, char *name) {
 }
 
 
-
-/****************************************************************************************
-* Give the list of employees per Company
-****************************************************************************************/
-void get_comp_employees(dbc *db) {
-
-    printf("*** search company employees ***\n");
-    printf("enter beginning of company name: ...\n");
-    printf("OR\n");
-    printf("enter company ID: ...\n");
-
-    /// print option to generate report ***
-}
-
-
 /****************************************************************************************
 * Give the list of companies per Group
 ****************************************************************************************/
@@ -344,7 +330,8 @@ void quicksort(dbc *db, int first, int last, int type) {
 
     if (type == SORT_PERS_COMP) {                       // sorting persons by ID company
 
-        int i, j, pivot, temp;
+        int i, j, pivot;
+        t_sort temp;
 
         if (first < last) {
             pivot = first;
@@ -357,15 +344,15 @@ void quicksort(dbc *db, int first, int last, int type) {
                 while (db->sort[j].id > db->sort[pivot].id)
                     j--;
                 if (i < j) {
-                    temp = db->sort[i].id;
-                    db->sort[i].id = db->sort[j].id;
-                    db->sort[j].id = temp;
+                    temp = db->sort[i];
+                    db->sort[i] = db->sort[j];
+                    db->sort[j] = temp;
                 }
             }
 
-            temp = db->sort[pivot].id;
-            db->sort[pivot].id = db->sort[j].id;
-            db->sort[j].id = temp;
+            temp = db->sort[pivot];
+            db->sort[pivot] = db->sort[j];
+            db->sort[j] = temp;
 
             quicksort(db, first, j - 1, SORT_PERS_COMP);
             quicksort(db, j + 1, last, SORT_PERS_COMP);
@@ -414,6 +401,16 @@ void alloc_sort_table(dbc *db, uint size) {
 
 
 /****************************************************************************************
+* Allocate memory to the linked sorting table in RAM
+****************************************************************************************/
+void alloc_link_sort_table(dbc *db, uint size) {
+
+    db->lsort = (t_lsort*)malloc(size * sizeof(t_lsort));
+    memset(db->lsort, 0, size * sizeof(t_lsort));
+}
+
+
+/****************************************************************************************
 * Free memory used by the sorting table in RAM
 ****************************************************************************************/
 void free_sort_table(dbc *db) {
@@ -422,6 +419,15 @@ void free_sort_table(dbc *db) {
         free(db->sort);
 }
 
+
+/****************************************************************************************
+* Free memory used by the sorting table in RAM
+****************************************************************************************/
+void free_link_sort_table(dbc *db) {
+
+    if (db->lsort)
+        free(db->lsort);
+}
 
 
 /****************************************************************************************
@@ -440,4 +446,117 @@ tipl read_single_tipl_rec(dbc *db, int index) {
     fclose(fp_db);
 
     return ipl;
+}
+
+
+/****************************************************************************************
+* Read Index Person/Company record given its position within DB Index tipc block.
+****************************************************************************************/
+tipc read_single_tipc_rec(dbc *db, int index) {
+
+    tipc ipc;
+    FILE *fp_db;
+
+    fp_db = open_db_file(db);
+
+    fseek(fp_db, db->hdr.off_ipc + index * sizeof(tipc), SEEK_SET);
+    fread(&ipc, sizeof(tipc), 1, fp_db);
+
+    fclose(fp_db);
+
+    return ipc;
+}
+
+
+/****************************************************************************************
+* Give the list of employees per Company
+****************************************************************************************/
+void load_ipl_in_ram(dbc *db) {
+
+    uint pt_next;
+    uint pt_ipc;
+    tipc ipc;
+    int i;
+
+    db->fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+    db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
+
+    // read data from ipc table and set db->lsort table
+    for (i=0; i<db->hdr.nr_per; i++) {
+
+        memset(&ipc, 0, sizeof(tipc));
+        pt_ipc = db->hdr.off_ipc + i * sizeof(tipc);                            // getting element offset
+        fseek(db->fp_db, pt_ipc, SEEK_SET);                                     // place cursor at element offset
+        fread(&ipc, sizeof(tipc), 1, db->fp_db);                         // read element
+
+        db->lsort[i].id = ipc.id_cpy;                                           // set read data into db->sort[i]
+        db->lsort[i].off_sort_obj = ipc.per_offset;                             // set read data into db->sort[i]
+
+        pt_next = ipc.per_offset + 1*sizeof(cper);                                // getting next element offset
+        if (pt_next >= db->hdr.db_size) {                                       // prevent out range
+            pt_next = db->hdr.db_size;
+        }
+        db->lsort[i].off_next = pt_next;                                        // set pointer to next elm
+    }
+
+    fclose(db->fp_db);
+    fclose(db->fp_lg);
+}
+
+
+/****************************************************************************************
+* Give the list of employees per Company
+****************************************************************************************/
+void get_comp_employees(dbc *db) {
+
+    tipc ipc;
+    int comp_id = 108;
+
+    list_comp_employees(db, comp_id);
+
+    printf("done\n");
+
+}
+
+
+/****************************************************************************************
+* Display the list of employees of one Company given its ID
+****************************************************************************************/
+void list_comp_employees(dbc *db, int comp_id) {
+
+    cper per;
+    tipc ipc;
+    FILE *fp_db;
+    uint cur_per;
+    uint next_per;
+
+    fp_db = open_db_file(db);
+
+    //memset(&ipc, 0, sizeof(tipc));
+
+    ///test
+    //per = read_single_person(db, 0);
+    //ipc = read_single_tipc_rec(db, 0);
+    printf("%d %u %u\n", db->lsort[10].id, db->lsort[10].off_sort_obj, db->lsort[10].off_next);
+
+//    for (int i=0; i<db->hdr.nr_ipc; i++) {
+//
+//        if (comp_id == db->lsort[i].id) {
+//
+//            memset(&per, 0, sizeof(cper));
+//            cur_per = fseek(fp_db, db->lsort[i].off_sort_obj, SEEK_SET);         // go to person offset
+//            fread(&per, sizeof(cper), 1, fp_db);
+//            next_per = fseek(fp_db, db->lsort[i].off_next, SEEK_SET);
+//            printf("offset: %u %u\n", cur_per, next_per);
+//
+//        }
+//    }
+
+
+
+
+
+
+
+    fclose(fp_db);
 }
