@@ -29,10 +29,15 @@
  *          - Import data from .csv file
  *          - Export data to .csv file
  *          - Display Countries, Industries, Groups and Jobs
- *          - ...
+ *          - Search companies by ID
+ *          - Search persons by ID and/or by lastname
+ *          - Display company employees given its ID (linked list in RAM)
  *
- *       Notes:
- *          -
+ *       Not yet implemented:
+ *          - Search person by partial lastname
+ *          - Reports
+ *          - Sort linked lists A-Z and Z-A
+ *          - Extras
  *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
@@ -310,7 +315,6 @@ typedef struct db_client {
     hder hdr;           // header
     FILE *fp_db;        // db file pointer
     FILE *fp_lg;        // log file pointer
-
     ccty cty[SZ_CTY];   // buffer country
     cjob job[SZ_JOB];   // buffer job
     cind ind[SZ_IND];   // buffer industry
@@ -332,7 +336,7 @@ void close_db_file(dbc *db);                                // closes DB file gl
 void load_header(dbc *db);                                  // read file header and load RAM
 void set_db_status(dbc *db);                                // file can be Nonexistent, closed or open
 void display_system_info(dbc *db);                          // display header Info from RAM
-void write_indexes_hdr(dbc *db);                            // TODO
+void update_hdr(dbc *db);                                   // write into DB header
 
 /// Country ///
 void import_CSV_country(dbc *db);                           // import data to db file
@@ -375,7 +379,7 @@ void import_CSV_person(dbc *db);                            // import data to db
 void export_CSV_person(dbc *db);                            // export data from db file to csv
 void display_single_person(dbc *db, cper per);              // display company struct attributes
 void search_person_by_id(dbc *db);                          // generic search function for cpy ID
-void search_person_by_name(dbc *db);                        // TODO not case sensitive and partial name
+void search_person_by_name(dbc *db);                        // TODO make it not case sensitive && partial name function
 cper read_single_person(dbc *db, int index);                // read per record given its index
 
 /// Generic ///
@@ -388,7 +392,6 @@ void quicksort(dbc *db, int first, int last, int type);     // best sort solutio
 void create_index_per_cpy(dbc *db);                         // creates db bloc of tipc elements
 void create_index_per_name(dbc *db);                        // creates db bloc of tipl elements
 void create_index(dbc *db);                                 // calls the two previous functions
-void get_comp_employees(dbc *db);                           // TODO
 void search_group_companies(dbc *db);                       // TODO extra
 void alloc_sort_table(dbc *db, uint size);                  // RAM allocation for sort type
 void free_sort_table(dbc *db);                              // free RAM for sort type
@@ -396,15 +399,16 @@ tipl read_single_tipl_rec(dbc *db, int index);              // read ipl record g
 void alloc_link_sort_table(dbc *db, uint size);             // RAM allocation for linked sort type
 void free_link_sort_table(dbc *db);                         // free RAM for linked sort type
 void load_ipl_in_ram(dbc *db);                              // load linked sorted list from ipl table
-void list_comp_employees(dbc *db, int comp_id);
+void get_comp_employees(dbc *db);                           // request company ID and gives the list of employees
+void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
 
 /// Menus ///
 void main_menu(dbc *db, int os);                            // First menu when running the program
-void open_db_menu(dbc *db, int os);                         // main    -> sub-menu
-void search_menu(dbc *db, int os);                          // open_db -> sub-menu
-void report_menu(dbc *db, int os);                          // open_db -> sub-menu
-void search_person_menu(dbc *db, int os);                   // search_menu -> sub-menu
-void search_company_menu(dbc *db, int os);                  // search_menu -> sub-menu
+void open_db_menu(dbc *db, int os);                         // main         -> sub-menu
+void search_menu(dbc *db, int os);                          // open_db      -> sub-menu
+void report_menu(dbc *db, int os);                          // open_db      -> sub-menu
+void search_person_menu(dbc *db, int os);                   // search_menu  -> sub-menu
+void search_company_menu(dbc *db, int os);                  // search_menu  -> sub-menu
 
 /// System Administration ///
 int user_os();                                              // request OS to user in order to adapt some basic command

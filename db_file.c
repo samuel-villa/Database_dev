@@ -25,7 +25,6 @@ void create_db(dbc *db) {
     FILE *fp_db, *fp_lg;
 
     memset(&db->hdr, 0, sizeof(hder));
-    memset(&cty, 0, sizeof(ccty));
 
     fp_db = fopen("data_db_clients/db_clients.dat", "wb");
     fp_lg = fopen("data_db_clients/db_clients.log", "a");
@@ -239,6 +238,15 @@ void display_system_info(dbc *db) {
 /****************************************************************************************
 * Create index bloc Person/Lastname into db
 ****************************************************************************************/
-void write_indexes_hdr(dbc *db) {
+void update_hdr(dbc *db) {
+
+    FILE *fp_db;
+
+    fp_db = open_db_file(db);
+
+    fseek(fp_db, 0, SEEK_SET);
+    fwrite(&db->hdr, sizeof(hder), 1, fp_db);
+
+    fclose(fp_db);
 
 }

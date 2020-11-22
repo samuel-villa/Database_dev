@@ -23,12 +23,11 @@ void create_index(dbc *db) {
     create_index_per_name(db);
     free_sort_table(db);
 
-    ///test
     alloc_link_sort_table(db, db->hdr.nr_per);
     load_ipl_in_ram(db);
     free_link_sort_table(db);
 
-    //write_indexes_hdr(db);
+    update_hdr(db);
 
     printf("\n\tDONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
 }
