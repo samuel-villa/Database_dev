@@ -9,7 +9,8 @@
 #include "db_main.h"
 
 /****************************************************************************************
-* DB creation based on SZ_* constants
+ * DB creation based on SZ_* constants
+ * set up the empty db for all tables and the header
 ****************************************************************************************/
 void create_db(dbc *db) {
 
@@ -138,7 +139,7 @@ void create_db(dbc *db) {
 
 
 /****************************************************************************************
-* Opens DB file globally
+* Opens DB .dat file globally
 ****************************************************************************************/
 FILE * open_db_file(dbc *db) {
 
@@ -151,7 +152,7 @@ FILE * open_db_file(dbc *db) {
 
 
 /****************************************************************************************
-* Opens DB log file globally
+* Opens DB .log file globally
 ****************************************************************************************/
 FILE * open_lg_file(dbc *db) {
 
@@ -164,7 +165,7 @@ FILE * open_lg_file(dbc *db) {
 
 
 /****************************************************************************************
-* Closes DB file globally
+* Closes DB files globally
 ****************************************************************************************/
 void close_db_file(dbc *db) {
 
@@ -175,7 +176,7 @@ void close_db_file(dbc *db) {
 
 
 /****************************************************************************************
-* Load header if DB file exists
+* Load DB header metadata in RAM (if DB file exists)
 ****************************************************************************************/
 void load_header(dbc *db) {
 
@@ -191,7 +192,7 @@ void load_header(dbc *db) {
 
 
 /****************************************************************************************
-* Check if DB file is created
+* Check if DB file is created or not and set appropriate status
 ****************************************************************************************/
 void set_db_status(dbc *db) {
 
@@ -208,7 +209,7 @@ void set_db_status(dbc *db) {
 
 
 /****************************************************************************************
-* Display System Info: stocked in Header
+* Display System Info: stocked in the DB Header
 ****************************************************************************************/
 void display_system_info(dbc *db) {
 
@@ -250,7 +251,7 @@ void display_system_info(dbc *db) {
 
 
 /****************************************************************************************
-* Create index bloc Person/Lastname into db
+* Update DB header metadata
 ****************************************************************************************/
 void update_hdr(dbc *db) {
 
@@ -260,6 +261,7 @@ void update_hdr(dbc *db) {
     fp_lg = open_lg_file(db);
 
     fseek(fp_db, 0, SEEK_SET);
+    // FIXME fwrite instead ?
     fread(&db->hdr, sizeof(hder), 1, fp_db);
 
     fprintf(fp_lg, "%s Database header updated\n", timestamp());

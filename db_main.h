@@ -122,7 +122,7 @@ typedef unsigned int uint;
 
 
 /***************************************************************************************
-* DB Header
+* DB Header - Metadata
 ****************************************************************************************/
 typedef struct Header {
 
@@ -254,7 +254,7 @@ typedef struct Person {
 
 
 /***************************************************************************************
-* Index Person/Company table
+* Index table: Person by Company ID
 ****************************************************************************************/
 typedef struct I_Person_Company {
 
@@ -265,7 +265,7 @@ typedef struct I_Person_Company {
 
 
 /***************************************************************************************
-* Index Person/Company table
+* Index table: Person by Lastname
 ****************************************************************************************/
 typedef struct I_Person_Lastname {
 
@@ -279,7 +279,7 @@ typedef struct I_Person_Lastname {
 
 
 /***************************************************************************************
-* Sorting table
+* Sorting space used to sort list of I_Person_Company type
 ****************************************************************************************/
 typedef struct Sorting {
 
@@ -290,7 +290,7 @@ typedef struct Sorting {
 
 
 /***************************************************************************************
-* Linked Sorting table
+* Sorting space used to sort list of I_Person_Lastname type
 ****************************************************************************************/
 typedef struct Linked_Sorting {
 
