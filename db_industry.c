@@ -8,10 +8,9 @@
 
 #include "db_main.h"
 
-#define BUF_LEN 200
 
 /****************************************************************************************
-* Loading file db_industry.csv in the db
+* Import file db_industry.csv in the db
 ****************************************************************************************/
 void import_CSV_industry(dbc *db) {
 
@@ -163,7 +162,8 @@ void print_industry(dbc *db) {
 }
 
 /****************************************************************************************
-* Display one Industry record from the buffer
+ * Display one Industry record from the buffer
+ *      id_ind: industry id we want to display
 ****************************************************************************************/
 void rec_industry(dbc *db, int id_ind) {
 

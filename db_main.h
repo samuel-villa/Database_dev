@@ -39,6 +39,9 @@
  *          - Sort linked lists A-Z and Z-A
  *          - Extras
  *
+ *       NOTES:
+ *          - 'db' is a global parameter, all functions use it
+ *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 

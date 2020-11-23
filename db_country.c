@@ -8,10 +8,9 @@
 
 #include "db_main.h"
 
-#define BUF_LEN 200
 
 /****************************************************************************************
-* Loading file db_country.csv in the db
+* Import file db_country.csv in the db
 ****************************************************************************************/
 void import_CSV_country(dbc *db) {
 
@@ -166,7 +165,8 @@ void print_country(dbc *db) {
 }
 
 /****************************************************************************************
-* Display one Country record from the buffer
+ * Display one Country record from the buffer
+ *      id_cty: country id we want to display
 ****************************************************************************************/
 void rec_country(dbc *db, int id_cty) {
 

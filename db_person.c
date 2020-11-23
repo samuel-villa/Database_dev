@@ -8,10 +8,9 @@
 
 #include "db_main.h"
 
-#define BUF_LEN 200
 
 /****************************************************************************************
-* Loading file db_person.csv in the db
+* Import file db_person.csv in the db
 ****************************************************************************************/
 void import_CSV_person(dbc *db) {
 
@@ -203,7 +202,9 @@ void display_single_person(dbc *db, cper per) {
 
 
 /****************************************************************************************
-* Read Person record given its position within DB Person block.
+ * Read Person record given its position within DB Person block.
+ *      index : person position within the Person block
+ *      return: person attributes
 ****************************************************************************************/
 cper read_single_person(dbc *db, int index) {
 
@@ -251,7 +252,7 @@ void search_person_by_id(dbc *db) {
 
 
 /****************************************************************************************
-* Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
+ * Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
 ****************************************************************************************/
 void search_person_by_name(dbc *db) {
 

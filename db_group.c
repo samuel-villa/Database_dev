@@ -8,10 +8,9 @@
 
 #include "db_main.h"
 
-#define BUF_LEN 200
 
 /****************************************************************************************
-* Loading file db_group.csv in the db
+* Import file db_group.csv in the db
 ****************************************************************************************/
 void import_CSV_group(dbc *db) {
 
@@ -165,7 +164,8 @@ void print_group(dbc *db) {
 }
 
 /****************************************************************************************
-* Display one Group record from the buffer
+ * Display one Group record from the buffer
+ *      id_grp: group id we want to display
 ****************************************************************************************/
 void rec_group(dbc *db, int id_grp) {
 

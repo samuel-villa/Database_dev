@@ -1,7 +1,7 @@
 /**********************************************************************************************************************
  * Programmation procedurale 2020 - Dossier: Database Clients V0
  *
- *       Navigation through the program with various menus
+ *       Interaction with the program through various selection menus
  *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
@@ -10,7 +10,8 @@
 
 
 /****************************************************************************************
-* Program main menu
+ * Program main menu: level 0
+ *      os: Operating System used
 ****************************************************************************************/
 void main_menu(dbc *db, int os) {
 
@@ -69,7 +70,8 @@ void main_menu(dbc *db, int os) {
 
 
 /****************************************************************************************
-* Open Database Menu
+ * Open Database Menu: level 1
+ *      os: Operating System used
 ****************************************************************************************/
 void open_db_menu(dbc *db, int os) {
 
@@ -136,7 +138,8 @@ void open_db_menu(dbc *db, int os) {
 
 
 /****************************************************************************************
-* Search in Database Menu
+ * Search in Database Menu: level 2
+ *      os: Operating System used
 ****************************************************************************************/
 void search_menu(dbc *db, int os) {
 
@@ -199,7 +202,8 @@ void search_menu(dbc *db, int os) {
 
 
 /****************************************************************************************
-* Search in Database Menu
+ * Report Menu: level 2
+ *      os: Operating System used
 ****************************************************************************************/
 void report_menu(dbc *db, int os) {
 
@@ -216,17 +220,21 @@ void report_menu(dbc *db, int os) {
         switch (menu_sel) {
             case R_PERS_COMP:
                 printf("create report with search_company_employees('print option')");
+                pause(os);
                 break;
             case R_COMP_GROUP:
                 printf("create report with search_group_companies('print option')");
+                pause(os);
                 break;
             case R_PERS_NAME:
                 printf("create report with search_person_by_name('print option')");
+                pause(os);
                 break;
             case R_BACK:
                 break;
             default:
                 puts("\n\tWrong Selection");
+                pause(os);
                 break;
         }
     }
@@ -235,7 +243,8 @@ void report_menu(dbc *db, int os) {
 
 
 /****************************************************************************************
-* Search in Database Menu
+ * Search Person Menu: level 3
+ *      os: Operating System used
 ****************************************************************************************/
 void search_person_menu(dbc *db, int os) {
 
@@ -251,14 +260,17 @@ void search_person_menu(dbc *db, int os) {
         switch (menu_sel) {
             case 0:
                 search_person_by_id(db);
+                pause(os);
                 break;
             case 1:
                 search_person_by_name(db);
+                pause(os);
                 break;
             case 9:
                 break;
             default:
                 puts("\n\tWrong Selection");
+                pause(os);
                 break;
         }
     }
@@ -267,7 +279,8 @@ void search_person_menu(dbc *db, int os) {
 
 
 /****************************************************************************************
-* Search in Database Menu
+ * Search Company Menu: level 3
+ *      os: Operating System used
 ****************************************************************************************/
 void search_company_menu(dbc *db, int os) {
 
@@ -283,9 +296,11 @@ void search_company_menu(dbc *db, int os) {
         switch (menu_sel) {
             case 0:
                 search_company_by_id(db);
+                pause(os);
                 break;
             case 1:
                 get_comp_employees(db);
+                pause(os);
                 break;
             case 9:
                 break;

@@ -8,10 +8,9 @@
 
 #include "db_main.h"
 
-#define BUF_LEN 200
 
 /****************************************************************************************
-* Loading file db_job.csv in the db
+* Import file db_job.csv in the db
 ****************************************************************************************/
 void import_CSV_job(dbc *db) {
 
@@ -165,7 +164,8 @@ void print_job(dbc *db) {
 }
 
 /****************************************************************************************
-* Display one Job record from the buffer
+ * Display one Job record from the buffer
+ *      id_job: job id we want to display
 ****************************************************************************************/
 void rec_job(dbc *db, int id_job) {
 
