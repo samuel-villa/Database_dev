@@ -61,6 +61,7 @@
 #define SZ_PER 600000
 #define SZ_IPC 600000
 #define SZ_IPL 600000
+#define BUF_LEN 300
 
 
 enum Main_Menu {

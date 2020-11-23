@@ -8,10 +8,8 @@
 
 #include "db_main.h"
 
-#define BUF_LEN 300
-
 /****************************************************************************************
-* Loading file db_company.csv in the db
+* Import file db_company.csv in the DB
 ****************************************************************************************/
 void import_CSV_company(dbc *db) {
 
@@ -180,7 +178,8 @@ void export_CSV_company(dbc *db) {
 
 
 /****************************************************************************************
-* Display one Company record
+ * Display one Company record
+ *      cpy: company element we want to display
 ****************************************************************************************/
 void display_single_company(dbc *db, ccpy cpy) {
 
@@ -206,7 +205,8 @@ void display_single_company(dbc *db, ccpy cpy) {
 
 
 /****************************************************************************************
- Search Company by ID - Binary search by primary key in Company table
+ * Search Company by ID
+ * Binary search by primary key in Company table
 ****************************************************************************************/
 void search_company_by_id(dbc *db) {
 
@@ -234,7 +234,8 @@ void search_company_by_id(dbc *db) {
 
 
 /****************************************************************************************
-* Read Company record given its position nb.
+ * Read Company record given its position nb.
+ *      index: company position within the company table
 ****************************************************************************************/
 ccpy read_single_company(dbc *db, int index) {
 
