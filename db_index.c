@@ -8,9 +8,9 @@
 
 #include "db_main.h"
 
-/****************************************************************************************
-* Create index blocs into db
-****************************************************************************************/
+/******************************************************************************************
+* Create index blocs into the DB and couple Person and Company tables by their foreign key
+******************************************************************************************/
 void create_index(dbc *db) {
 
     printf("\n\tCreating indexes... ");
@@ -34,7 +34,11 @@ void create_index(dbc *db) {
 
 
 /****************************************************************************************
-* Create index bloc Person/Company into db
+ * Set up the index table with Person foreign key 'id_company' by:
+ *      - reading data from the DB and storing it into RAM
+ *      - sort the read data
+ *      - and write it back into DB
+ * This table will contain the offset of the person and its id_company
 ****************************************************************************************/
 void create_index_per_cpy(dbc *db) {
 
@@ -84,7 +88,10 @@ void create_index_per_cpy(dbc *db) {
 
 
 /****************************************************************************************
-* Create index bloc Person/Lastname into db
+ * Set up the index table for Person 'lastname' by collecting lastnames,
+ * storing it into RAM, sort it alphabetically and write it back into DB
+ * This table will contain the lastname of the person, its offset and
+ * another offset pointing to the next element (person) of the list
 ****************************************************************************************/
 void create_index_per_name(dbc *db) {
 
@@ -133,10 +140,12 @@ void create_index_per_name(dbc *db) {
 
 
 
-/****************************************************************************************
-* Binary Search per ID. Split by search type
-* return element position within the db company block
-****************************************************************************************/
+/*****************************************************************************************
+ * Binary Search per ID.
+ *      id    : element ID we want to search
+ *      type  : Company ID or Person ID
+ *      return: the element index/position within the db company block (per_id or per_ln)
+******************************************************************************************/
 int search_binary(dbc *db, int id, int type) {
 
     int size, mid, left=0, right;
@@ -227,8 +236,9 @@ int search_binary(dbc *db, int id, int type) {
 
 
 /****************************************************************************************
-* Binary Search per string.
-* return element position within the DB Person block
+ * Binary Search per person lastname.
+ *      name  : person name we want to search
+ *      return: the element index/position within the db person block
 ****************************************************************************************/
 int search_binary_string(dbc *db, char *name) {
 
@@ -294,7 +304,9 @@ void search_group_companies(dbc *db) {
 
 
 /****************************************************************************************
-* Sorting algorithm used for index creation (inefficient for this project: very slow)
+ * Bubble sort algorithm used for index creation (INEFFICIENT for this project: very slow)
+ *      nr  : nr of elements in the list we want to sort
+ *      type: persons by company ID || persons by lastname
 ****************************************************************************************/
 void sort_bubble_index(dbc *db, int nr, int type) {
 
@@ -324,11 +336,13 @@ void sort_bubble_index(dbc *db, int nr, int type) {
 
 
 /****************************************************************************************
-* Quick Sort algorithm used for index creation
+ * Quick sort algorithm used for index creation
+ *      nr  : nr of elements in the list we want to sort
+ *      type: persons by company ID || persons by lastname
 ****************************************************************************************/
 void quicksort(dbc *db, int first, int last, int type) {
 
-    if (type == SORT_PERS_COMP) {                       // sorting persons by ID company
+    if (type == SORT_PERS_COMP) {                       // sorting persons by company ID
 
         int i, j, pivot;
         t_sort temp;
@@ -391,7 +405,8 @@ void quicksort(dbc *db, int first, int last, int type) {
 
 
 /****************************************************************************************
-* Allocate memory to the sorting table in RAM
+ * Memory allocation in RAM for the list sorting area (person by ID)
+ *      size: nr of elements in the list we want to sort
 ****************************************************************************************/
 void alloc_sort_table(dbc *db, uint size) {
 
@@ -401,7 +416,8 @@ void alloc_sort_table(dbc *db, uint size) {
 
 
 /****************************************************************************************
-* Allocate memory to the linked sorting table in RAM
+ * Memory allocation in RAM for the list sorting area (person by Lastname)
+ *      size: nr of elements in the list we want to sort
 ****************************************************************************************/
 void alloc_link_sort_table(dbc *db, uint size) {
 
@@ -411,7 +427,7 @@ void alloc_link_sort_table(dbc *db, uint size) {
 
 
 /****************************************************************************************
-* Free memory used by the sorting table in RAM
+* Free memory allocated with alloc_sort_table()
 ****************************************************************************************/
 void free_sort_table(dbc *db) {
 
@@ -421,7 +437,7 @@ void free_sort_table(dbc *db) {
 
 
 /****************************************************************************************
-* Free memory used by the sorting table in RAM
+* Free memory allocated with alloc_link_sort_table()
 ****************************************************************************************/
 void free_link_sort_table(dbc *db) {
 
@@ -431,7 +447,9 @@ void free_link_sort_table(dbc *db) {
 
 
 /****************************************************************************************
-* Read Index Person/lastname record given its position within DB Index tipl block.
+ * Read Index Person/lastname record given its position within DB Index tipl block.
+ *      index : element position within the 'person by lastname' db block
+ *      return: tipl element attributes
 ****************************************************************************************/
 tipl read_single_tipl_rec(dbc *db, int index) {
 
@@ -450,7 +468,9 @@ tipl read_single_tipl_rec(dbc *db, int index) {
 
 
 /****************************************************************************************
-* Read Index Person/Company record given its position within DB Index tipc block.
+ * Read Index Person/companyID record given its position within DB Index tipc block.
+ *      index : element position within the 'person by company ID' db block
+ *      return: tipc element attributes
 ****************************************************************************************/
 tipc read_single_tipc_rec(dbc *db, int index) {
 
@@ -469,7 +489,7 @@ tipc read_single_tipc_rec(dbc *db, int index) {
 
 
 /****************************************************************************************
-* Give the list of employees per Company
+* Read data from person/companyID table and store it in RAM
 ****************************************************************************************/
 void load_ipl_in_ram(dbc *db) {
 
@@ -517,7 +537,8 @@ void get_comp_employees(dbc *db) {
 
 
 /****************************************************************************************
-* Display the list of employees of one Company given its ID
+ * Display the list of employees of one Company given its ID:
+ *      comp_id: ID company we want to search
 ****************************************************************************************/
 void list_comp_employees(dbc *db, int comp_id) {
 
@@ -535,7 +556,7 @@ void list_comp_employees(dbc *db, int comp_id) {
     } else if (index == REC_NOT_FOUND) {
         printf("\n\tNo results with Company ID %d\n\n", comp_id);
     } else {
-        cpy = read_single_company(db, index);                              // read cpy at given index
+        cpy = read_single_company(db, index);                              // read cpy at given index and display it
 
         printf("\n\t********************************************************************************\n");
         printf("\n\tCompany name......... %s", cpy.nm_cpy);
@@ -552,7 +573,7 @@ void list_comp_employees(dbc *db, int comp_id) {
 
     for (int i=0; i<db->hdr.nr_per; i++) {
 
-        if (comp_id == db->lsort[i].id) {
+        if (comp_id == db->lsort[i].id) {                                  // for each person having same company ID
 
             memset(&per, 0, sizeof(cper));
             fseek(fp_db, db->lsort[i].off_sort_obj, SEEK_SET);             // go to person offset
@@ -562,14 +583,14 @@ void list_comp_employees(dbc *db, int comp_id) {
             fseek(fp_db, db->lsort[i].off_next, SEEK_SET);                 // get next person offset
             fread(&next_per, sizeof(cper), 1, fp_db);               // read next person
 
-            printf("\n\t%-8d", per.id_per);
+            printf("\n\t%-8d", per.id_per);                                // display this person
             printf(" %15s", per.nm_lst);
             printf(" %15s", per.nm_fst);
             printf(" %40s", db->job[per.id_job].nm_job);
 
             count++;
 
-            if (comp_id == next_per.id_cpy) {                              // if next element should be printed too
+            if (comp_id == next_per.id_cpy) {                              // test if next person should be printed too
                 printf("\n\t%-8d", next_per.id_per);
                 printf(" %15s", next_per.nm_lst);
                 printf(" %15s", next_per.nm_fst);
