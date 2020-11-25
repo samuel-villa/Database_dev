@@ -134,40 +134,47 @@ void create_db(dbc *db) {
     fclose(fp_db);
     fclose(fp_lg);
 
-    printf("\n\tDatabase %s created\n", db->hdr.db_name);
+    printf("\n\tDatabase '%s' created\n", db->hdr.db_name);
 }
 
 
 /****************************************************************************************
-* Opens DB .dat file globally
+* Opens DB .dat and .log files globally
 ****************************************************************************************/
-FILE * open_db_file(dbc *db) {
+void open_db_files(dbc *db) {
 
     FILE *fp_db;
 
     fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
 
-    return fp_db;
-}
+    // with rb+ opening mode the file must be already created
+    // so I open it in wb mode (file is created)
+    // then close it and open it back again in rb+ mode
+    if (fp_db == NULL) {
+        fp_db = fopen("data_db_clients/db_clients.dat", "wb");
+        fclose(fp_db);
+        fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
+    }
 
-
-/****************************************************************************************
-* Opens DB .log file globally
-****************************************************************************************/
-FILE * open_lg_file(dbc *db) {
-
-    FILE *fp_lg;
-
-    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-
-    return fp_lg;
+    if (fp_db) {
+        fread(&db->hdr, 1, sizeof(hder), fp_db);
+        db->fp_db = fp_db;
+        db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
+        db->status = DB_OPEN;
+        ///test
+        load_header(db);
+        strcpy(db->hdr.db_name, "db_clients");
+        fprintf(db->fp_lg, "%s Database '%s' open\n", timestamp(), db->hdr.db_name);
+    } else {
+        printf("Error while opening database\n");
+    }
 }
 
 
 /****************************************************************************************
 * Closes DB files globally
 ****************************************************************************************/
-void close_db_file(dbc *db) {
+void close_db_files(dbc *db) {
 
     fclose(db->fp_db);
     fclose(db->fp_lg);
@@ -180,14 +187,8 @@ void close_db_file(dbc *db) {
 ****************************************************************************************/
 void load_header(dbc *db) {
 
-    FILE *fp_db;
-
-    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-
-    fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);
-
-    fclose(fp_db);
+    fseek(db->fp_db, 0, SEEK_SET);
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);
 }
 
 
@@ -201,7 +202,7 @@ void set_db_status(dbc *db) {
     if ((fp_db = fopen("data_db_clients/db_clients.dat", "rb")) == NULL) {
         db->status = DB_NOT_CREATED;
     } else {
-        load_header(db);
+        //load_header(db); // TODO use this function afterwards in the app structure?
         db->status = DB_CLOSED;
     }
     fclose(fp_db);
@@ -255,17 +256,9 @@ void display_system_info(dbc *db) {
 ****************************************************************************************/
 void update_hdr(dbc *db) {
 
-    FILE *fp_db, *fp_lg;
-
-    fp_db = open_db_file(db);
-    fp_lg = open_lg_file(db);
-
-    fseek(fp_db, 0, SEEK_SET);
+    fseek(db->fp_db, 0, SEEK_SET);
     // FIXME fwrite instead ?
-    fread(&db->hdr, sizeof(hder), 1, fp_db);
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);
 
-    fprintf(fp_lg, "%s Database header updated\n", timestamp());
-
-    fclose(fp_db);
-    fclose(fp_lg);
+    fprintf(db->fp_lg, "%s Database header updated\n", timestamp());
 }

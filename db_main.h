@@ -45,6 +45,13 @@
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
+// FIXME finish to set up global file opening. Still a few bugs when
+// FIXME the file is created and try to list code tables
+    // TODO => rearrange the app structure in order to import all automatically
+
+// FIXME set log traces all over the programe (where missing)
+
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -70,7 +77,7 @@
 enum Main_Menu {
     CREATE_DB,
     OPEN_DB,
-    SYSTEM_INFO,
+    DB_INFO,
     EXIT = 9
 };
 
@@ -79,7 +86,7 @@ enum Open_DB_Menu {
     EXPORT,
     SEARCH,
     REPORT,
-    SYSTEM_INFO_2,
+    DB_INFO_2,
     BACK_TO_MAIN = 9
 };
 
@@ -329,8 +336,8 @@ typedef struct db_client {
 
 /// DB File ///
 void create_db(dbc *db);                                    // create empty DB
-FILE * open_db_file(dbc *db);                               // handles DB file pointer globally
-void close_db_file(dbc *db);                                // closes DB file globally
+void open_db_files(dbc *db);                                // handles DB file pointer globally
+void close_db_files(dbc *db);                               // closes DB file globally
 void load_header(dbc *db);                                  // read file header and load RAM
 void set_db_status(dbc *db);                                // file can be Nonexistent, closed or open
 void display_system_info(dbc *db);                          // display header Info from RAM

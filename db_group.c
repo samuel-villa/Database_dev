@@ -124,32 +124,25 @@ void load_group(dbc *db) {
 
     int i;
     cgrp grp;
-    FILE *fp_db, *fp_lg;
 
-    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-
-    fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
+    fseek(db->fp_db, 0, SEEK_SET);
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);        // Read header
 
     printf("\n\tLoading groups into buffer... ");
 
-    fseek(fp_db, db->hdr.off_grp, SEEK_SET);
+    fseek(db->fp_db, db->hdr.off_grp, SEEK_SET);
 
     for (i=1; i<=db->hdr.nr_grp; i++) {
 
         memset(&grp, 0, sizeof(cgrp));
-        fread(&grp, 1, sizeof(cgrp), fp_db);
+        fread(&grp, 1, sizeof(cgrp), db->fp_db);
 
         db->grp[i] = grp;
     }
 
-    fprintf(fp_lg, "%s Groups loaded into buffer: %d\n", timestamp(), db->hdr.nr_grp);
+    fprintf(db->fp_lg, "%s Groups loaded into buffer: %d\n", timestamp(), db->hdr.nr_grp);
 
-    fclose(fp_db);
-    fclose(fp_lg);
-
-    printf("DONE => Groups loaded: %d\n", db->hdr.nr_grp);
+    printf("DONE => Groups loaded: %d", db->hdr.nr_grp);
 }
 
 /****************************************************************************************

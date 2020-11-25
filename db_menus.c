@@ -18,10 +18,10 @@ void main_menu(dbc *db, int os) {
     int menu_sel = 0;
 
     while (menu_sel != EXIT) {
-        printf("\n\tDATABASE CLIENTS V0\n\n");
+        printf("\n\n\tDATABASE CLIENTS V0\n\n");
         printf("\t%d - Create Empty DB\n", CREATE_DB);
         printf("\t%d - Open DB\n", OPEN_DB);
-        printf("\t%d - System Info\n", SYSTEM_INFO);
+        printf("\t%d - DB Info\n", DB_INFO);
         printf("\t%d - EXIT\n\n", EXIT);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -32,7 +32,7 @@ void main_menu(dbc *db, int os) {
                     printf("\n\tThe program must restart...\n\n");
                     exit(0);
                 } else {
-                    printf("\n\t'%s' is already created. Select 'Open DB'.\n\n", db->hdr.db_name);
+                    printf("\n\tDatabase is already created. Select 'Open DB'.\n\n");
                     pause(os);
                     clear(os);
                 }
@@ -47,7 +47,7 @@ void main_menu(dbc *db, int os) {
                     clear(os);
                 }
                 break;
-            case SYSTEM_INFO:
+            case DB_INFO:
                 if (db->status != DB_NOT_CREATED) {
                     display_system_info(db);
                 } else {
@@ -57,8 +57,7 @@ void main_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case EXIT:
-                fclose(db->fp_db);          // just in case we forget any fclose()
-                fclose(db->fp_lg);
+                close_db_files(db);
                 exit(0);
             default:
                 puts("\n\tWrong Selection");
@@ -76,15 +75,21 @@ void main_menu(dbc *db, int os) {
 void open_db_menu(dbc *db, int os) {
 
     int menu_sel = 0;
-    db->status = DB_OPEN;
+
+    open_db_files(db);
+
+    load_country(db);
+    load_industry(db);
+    load_group(db);
+    load_job(db);
 
     while (menu_sel != BACK_TO_MAIN) {
-        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
-        printf("\t%d - Import File into DB\n", IMPORT);
-        printf("\t%d - Export DB to File\n", EXPORT);
+        printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\t%d - Import Files into DB\n", IMPORT);
+        printf("\t%d - Export DB to Files\n", EXPORT);
         printf("\t%d - Search\n", SEARCH);
         printf("\t%d - Generate Report\n", REPORT);
-        printf("\t%d - System Info\n", SYSTEM_INFO_2);
+        printf("\t%d - DB Info\n", DB_INFO_2);
         printf("\t%d - GO BACK\n\n", BACK_TO_MAIN);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -121,7 +126,7 @@ void open_db_menu(dbc *db, int os) {
                 pause(os);
                 clear(os);
                 break;
-            case SYSTEM_INFO_2:
+            case DB_INFO_2:
                 display_system_info(db);
                 pause(os);
                 clear(os);
@@ -145,13 +150,8 @@ void search_menu(dbc *db, int os) {
 
     int menu_sel = 0;
 
-    load_country(db);
-    load_industry(db);
-    load_group(db);
-    load_job(db);
-
     while (menu_sel != S_BACK) {
-        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - List Countries\n", S_COUNTRY);
         printf("\t%d - List Industries\n", S_INDUSTRY);
         printf("\t%d - List Groups\n", S_GROUP);
@@ -210,7 +210,7 @@ void report_menu(dbc *db, int os) {
     int menu_sel = 0;
 
     while (menu_sel != R_BACK) {
-        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - Employees per Company\n", R_PERS_COMP);
         printf("\t%d - Companies per Group\n", R_COMP_GROUP);
         printf("\t%d - Employees by Partial Lastname\n", R_PERS_NAME);
@@ -251,7 +251,7 @@ void search_person_menu(dbc *db, int os) {
     int menu_sel = 0;
 
     while (menu_sel != 9) {
-        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - Search Person by ID\n", 0);
         printf("\t%d - Search person by Lastname\n", 1);
         printf("\t%d - GO BACK\n\n", 9);
@@ -287,7 +287,7 @@ void search_company_menu(dbc *db, int os) {
     int menu_sel = 0;
 
     while (menu_sel != 9) {
-        printf("\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - Search Company by ID\n", 0);
         printf("\t%d - Get company employees\n", 1);
         printf("\t%d - GO BACK\n\n", 9);

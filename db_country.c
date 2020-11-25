@@ -125,32 +125,25 @@ void load_country(dbc *db) {
 
     int i;
     ccty cty;
-    FILE *fp_db, *fp_lg;
 
-    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-
-    fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
+    fseek(db->fp_db, 0, SEEK_SET);
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);        // Read header
 
     printf("\n\tLoading countries into buffer... ");
 
-    fseek(fp_db, db->hdr.off_cty, SEEK_SET);
+    fseek(db->fp_db, db->hdr.off_cty, SEEK_SET);
 
     for (i=1; i<=db->hdr.nr_cty; i++) {
 
         memset(&cty, 0, sizeof(ccty));
-        fread(&cty, 1, sizeof(ccty), fp_db);
+        fread(&cty, 1, sizeof(ccty), db->fp_db);
 
         db->cty[i] = cty;
     }
 
-    fprintf(fp_lg, "%s Countries loaded into buffer: %d\n", timestamp(), db->hdr.nr_cty);
+    fprintf(db->fp_lg, "%s Countries loaded into buffer: %d\n", timestamp(), db->hdr.nr_cty);
 
-    fclose(fp_db);
-    fclose(fp_lg);
-
-    printf("DONE => Countries loaded: %d\n", db->hdr.nr_cty);
+    printf("DONE => Countries loaded: %d", db->hdr.nr_cty);
 }
 
 /****************************************************************************************

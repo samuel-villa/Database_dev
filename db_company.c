@@ -212,9 +212,6 @@ void search_company_by_id(dbc *db) {
 
     int id, index;
     ccpy cpy;
-    FILE *fp_db;
-
-    fp_db = open_db_file(db);
 
     printf("\n\t--> Enter Company ID: "); scanf("%d", &id); fflush(stdin);
     index = search_binary(db, id, COMP_ID);             // get element index within db file cpy bloc
@@ -227,8 +224,6 @@ void search_company_by_id(dbc *db) {
         cpy = read_single_company(db, index);                // read cpy at given index
         display_single_company(db, cpy);
     }
-
-    fclose(fp_db);
 }
 
 
@@ -240,14 +235,9 @@ void search_company_by_id(dbc *db) {
 ccpy read_single_company(dbc *db, int index) {
 
     ccpy cpy;
-    FILE *fp_db;
 
-    fp_db = open_db_file(db);
-
-    fseek(fp_db, db->hdr.off_cpy + index * sizeof(ccpy), SEEK_SET);
-    fread(&cpy, sizeof(ccpy), 1, fp_db);
-
-    fclose(fp_db);
+    fseek(db->fp_db, db->hdr.off_cpy + index * sizeof(ccpy), SEEK_SET);
+    fread(&cpy, sizeof(ccpy), 1, db->fp_db);
 
     return cpy;
 }

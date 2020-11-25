@@ -122,32 +122,25 @@ void load_industry(dbc *db) {
 
     int i;
     cind ind;
-    FILE *fp_db, *fp_lg;
 
-    fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    fp_lg = fopen("data_db_clients/db_clients.log", "a");
-
-    fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);        // Read header
+    fseek(db->fp_db, 0, SEEK_SET);
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);        // Read header
 
     printf("\n\tLoading industries into buffer... ");
 
-    fseek(fp_db, db->hdr.off_ind, SEEK_SET);
+    fseek(db->fp_db, db->hdr.off_ind, SEEK_SET);
 
     for (i=1; i<=db->hdr.nr_ind; i++) {
 
         memset(&ind, 0, sizeof(cind));
-        fread(&ind, 1, sizeof(cind), fp_db);
+        fread(&ind, 1, sizeof(cind), db->fp_db);
 
         db->ind[i] = ind;
     }
 
-    fprintf(fp_lg, "%s Industries loaded into buffer: %d\n", timestamp(), db->hdr.nr_ind);
+    fprintf(db->fp_lg, "%s Industries loaded into buffer: %d\n", timestamp(), db->hdr.nr_ind);
 
-    fclose(fp_db);
-    fclose(fp_lg);
-
-    printf("DONE => Industries loaded: %d\n", db->hdr.nr_ind);
+    printf("DONE => Industries loaded: %d", db->hdr.nr_ind);
 }
 
 /****************************************************************************************

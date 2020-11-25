@@ -24,10 +24,10 @@ void create_index(dbc *db) {
     free_sort_table(db);
 
     alloc_link_sort_table(db, db->hdr.nr_per);
+    // FIXME
     load_ipl_in_ram(db);
-    free_link_sort_table(db);
 
-    update_hdr(db);
+    //update_hdr(db);
 
     printf("\n\tDONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
 }
@@ -46,9 +46,6 @@ void create_index_per_cpy(dbc *db) {
     uint pt_per;
     cper per;
     tipc ipc;
-
-    db->fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
     printf("\n\t\t* Creating indexes for persons per company... ");
 
@@ -79,9 +76,6 @@ void create_index_per_cpy(dbc *db) {
 
     fprintf(db->fp_lg, "%s Index persons per company created\n", timestamp());
 
-    fclose(db->fp_db);
-    fclose(db->fp_lg);
-
     printf("DONE => Indexes created: %d", db->hdr.nr_ipc);
 }
 
@@ -99,9 +93,6 @@ void create_index_per_name(dbc *db) {
     uint pt_per;
     cper per;
     tipl ipl;
-
-    db->fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
     printf("\n\t\t* Creating indexes for persons by lastname... ");
 
@@ -131,9 +122,6 @@ void create_index_per_name(dbc *db) {
     db->hdr.nr_ipl = i;
 
     fprintf(db->fp_lg, "%s Index persons by lastname created\n", timestamp());
-
-    fclose(db->fp_db);
-    fclose(db->fp_lg);
 
     printf("DONE => Indexes created: %d", db->hdr.nr_ipc);
 }
@@ -454,14 +442,9 @@ void free_link_sort_table(dbc *db) {
 tipl read_single_tipl_rec(dbc *db, int index) {
 
     tipl ipl;
-    FILE *fp_db;
 
-    fp_db = open_db_file(db);
-
-    fseek(fp_db, db->hdr.off_ipl + index * sizeof(tipl), SEEK_SET);
-    fread(&ipl, sizeof(tipl), 1, fp_db);
-
-    fclose(fp_db);
+    fseek(db->fp_db, db->hdr.off_ipl + index * sizeof(tipl), SEEK_SET);
+    fread(&ipl, sizeof(tipl), 1, db->fp_db);
 
     return ipl;
 }
@@ -475,14 +458,9 @@ tipl read_single_tipl_rec(dbc *db, int index) {
 tipc read_single_tipc_rec(dbc *db, int index) {
 
     tipc ipc;
-    FILE *fp_db;
 
-    fp_db = open_db_file(db);
-
-    fseek(fp_db, db->hdr.off_ipc + index * sizeof(tipc), SEEK_SET);
-    fread(&ipc, sizeof(tipc), 1, fp_db);
-
-    fclose(fp_db);
+    fseek(db->fp_db, db->hdr.off_ipc + index * sizeof(tipc), SEEK_SET);
+    fread(&ipc, sizeof(tipc), 1, db->fp_db);
 
     return ipc;
 }
@@ -497,9 +475,6 @@ void load_ipl_in_ram(dbc *db) {
     uint pt_ipc;
     tipc ipc;
     int i;
-
-    db->fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
-    db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
 
     // read data from ipc table and set db->lsort table
     for (i=0; i<db->hdr.nr_per; i++) {
@@ -518,9 +493,6 @@ void load_ipl_in_ram(dbc *db) {
         }
         db->lsort[i].off_next = pt_next;                           // set read data into db->lsort[i]
     }
-
-    fclose(db->fp_db);
-    fclose(db->fp_lg);
 }
 
 
@@ -544,10 +516,7 @@ void list_comp_employees(dbc *db, int comp_id) {
 
     cper per, next_per;
     ccpy cpy;
-    FILE *fp_db;
     int index, count=0;
-
-    fp_db = open_db_file(db);
 
     index = search_binary(db, comp_id, COMP_ID);                      // get element index within db file cpy bloc
 
@@ -576,12 +545,12 @@ void list_comp_employees(dbc *db, int comp_id) {
         if (comp_id == db->lsort[i].id) {                                  // for each person having same company ID
 
             memset(&per, 0, sizeof(cper));
-            fseek(fp_db, db->lsort[i].off_sort_obj, SEEK_SET);             // go to person offset
-            fread(&per, sizeof(cper), 1, fp_db);                    // read current person
+            fseek(db->fp_db, db->lsort[i].off_sort_obj, SEEK_SET);             // go to person offset
+            fread(&per, sizeof(cper), 1, db->fp_db);                    // read current person
 
             memset(&next_per, 0, sizeof(cper));
-            fseek(fp_db, db->lsort[i].off_next, SEEK_SET);                 // get next person offset
-            fread(&next_per, sizeof(cper), 1, fp_db);               // read next person
+            fseek(db->fp_db, db->lsort[i].off_next, SEEK_SET);                 // get next person offset
+            fread(&next_per, sizeof(cper), 1, db->fp_db);               // read next person
 
             printf("\n\t%-8d", per.id_per);                                // display this person
             printf(" %15s", per.nm_lst);
@@ -603,5 +572,4 @@ void list_comp_employees(dbc *db, int comp_id) {
     printf("\n\t--------------------------------------------------------------------------------");
     printf("\n\tEmployees: %d", count);
     printf("\n\n\t********************************************************************************\n");
-    fclose(fp_db);
 }

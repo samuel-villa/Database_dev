@@ -209,14 +209,9 @@ void display_single_person(dbc *db, cper per) {
 cper read_single_person(dbc *db, int index) {
 
     cper per;
-    FILE *fp_db;
 
-    fp_db = open_db_file(db);
-
-    fseek(fp_db, db->hdr.off_per + index * sizeof(cper), SEEK_SET);
-    fread(&per, sizeof(cper), 1, fp_db);
-
-    fclose(fp_db);
+    fseek(db->fp_db, db->hdr.off_per + index * sizeof(cper), SEEK_SET);
+    fread(&per, sizeof(cper), 1, db->fp_db);
 
     return per;
 }
@@ -230,9 +225,6 @@ void search_person_by_id(dbc *db) {
 
     int id, index;
     cper per;
-    FILE *fp_db;
-
-    fp_db = open_db_file(db);
 
     printf("\n\t--> Enter Person ID: "); scanf("%d", &id); fflush(stdin);
     index = search_binary(db, id, PERS_ID);           // get element index within db file per bloc
@@ -245,8 +237,6 @@ void search_person_by_id(dbc *db) {
         per = read_single_person(db, index);               // read per at given index
         display_single_person(db, per);
     }
-
-    fclose(fp_db);
 }
 
 
@@ -260,9 +250,6 @@ void search_person_by_name(dbc *db) {
     char lastname[64];
     cper per;
     tipl ipl;
-    FILE *fp_db;
-
-    fp_db = open_db_file(db);
 
     printf("\n\t--> Enter Person Name: "); scanf("%s", lastname); fflush(stdin);
 
@@ -272,10 +259,8 @@ void search_person_by_name(dbc *db) {
     if (index == REC_NOT_FOUND) {
         printf("\n\tPerson not found\n\n");
     } else {
-        fseek(fp_db, ipl.per_offset, SEEK_SET);         // go to person offset
-        fread(&per, sizeof(cper), 1, fp_db);     // read person
+        fseek(db->fp_db, ipl.per_offset, SEEK_SET);         // go to person offset
+        fread(&per, sizeof(cper), 1, db->fp_db);     // read person
         display_single_person(db, per);
     }
-
-    fclose(fp_db);
 }
