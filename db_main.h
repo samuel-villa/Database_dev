@@ -45,11 +45,7 @@
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
-// FIXME finish to set up global file opening. Still a few bugs when
-// FIXME the file is created and try to list code tables
-    // TODO => rearrange the app structure in order to import all automatically
-
-// FIXME set log traces all over the programe (where missing)
+// TODO set log traces all over the program (where missing)
 
 
 #include <stdio.h>
@@ -110,7 +106,8 @@ enum Report_Menu {
 enum File_Status {
     DB_NOT_CREATED,
     DB_CLOSED,
-    DB_OPEN
+    DB_OPEN_EMPTY,
+    DB_OPEN_LOADED
 };
 
 enum Sort_Type {
@@ -341,7 +338,6 @@ void close_db_files(dbc *db);                               // closes DB file gl
 void load_header(dbc *db);                                  // read file header and load RAM
 void set_db_status(dbc *db);                                // file can be Nonexistent, closed or open
 void display_system_info(dbc *db);                          // display header Info from RAM
-void update_hdr(dbc *db);                                   // write into DB header
 
 /// Country ///
 void import_CSV_country(dbc *db);                           // import data to db file

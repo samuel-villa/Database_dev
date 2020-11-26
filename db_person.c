@@ -196,7 +196,7 @@ void display_single_person(dbc *db, cper per) {
     printf("\n\tDate of creation....... %-80s", per.dt_cre);
     printf("\n\tStocks owned........... %-80d", per.nr_val);
 
-    printf("\n\n***************************************************************************\n");
+    printf("\n\n***************************************************************************\n\n");
 }
 
 

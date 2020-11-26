@@ -21,7 +21,7 @@ void main_menu(dbc *db, int os) {
         printf("\n\n\tDATABASE CLIENTS V0\n\n");
         printf("\t%d - Create Empty DB\n", CREATE_DB);
         printf("\t%d - Open DB\n", OPEN_DB);
-        printf("\t%d - DB Info\n", DB_INFO);
+        //printf("\t%d - DB Info\n", DB_INFO);
         printf("\t%d - EXIT\n\n", EXIT);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -47,15 +47,15 @@ void main_menu(dbc *db, int os) {
                     clear(os);
                 }
                 break;
-            case DB_INFO:
-                if (db->status != DB_NOT_CREATED) {
-                    display_system_info(db);
-                } else {
-                    printf("\n\tFirst you must create the DB. Select 'Create Empty DB'.\n\n");
-                }
-                pause(os);
-                clear(os);
-                break;
+//            case DB_INFO:
+//                if (db->status != DB_NOT_CREATED) {
+//                    display_system_info(db);
+//                } else {
+//                    printf("\n\tFirst you must create the DB. Select 'Create Empty DB'.\n\n");
+//                }
+//                pause(os);
+//                clear(os);
+//                break;
             case EXIT:
                 close_db_files(db);
                 exit(0);
@@ -78,10 +78,15 @@ void open_db_menu(dbc *db, int os) {
 
     open_db_files(db);
 
-    load_country(db);
-    load_industry(db);
-    load_group(db);
-    load_job(db);
+    if (db->status == DB_OPEN_LOADED) {
+        load_header(db);
+        load_country(db);
+        load_industry(db);
+        load_group(db);
+        load_job(db);
+    } else {
+        printf("\n\tFirst you must import data into the database\n");
+    }
 
     while (menu_sel != BACK_TO_MAIN) {
         printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
@@ -102,28 +107,42 @@ void open_db_menu(dbc *db, int os) {
                 import_CSV_company(db);
                 import_CSV_person(db);
                 create_index(db);
+                load_header(db);
+                load_country(db);
+                load_industry(db);
+                load_group(db);
+                load_job(db);
+                db->status = DB_OPEN_LOADED;
                 printf("\n\n");
                 pause(os);
                 clear(os);
                 break;
             case EXPORT:
-                export_CSV_country(db);
-                export_CSV_job(db);
-                export_CSV_industry(db);
-                export_CSV_group(db);
-                export_CSV_company(db);
-                export_CSV_person(db);
-                printf("\n\n");
+                if (db->status == DB_OPEN_LOADED) {
+                    export_CSV_country(db);
+                    export_CSV_job(db);
+                    export_CSV_industry(db);
+                    export_CSV_group(db);
+                    export_CSV_company(db);
+                    export_CSV_person(db);
+                    printf("\n\n");
+                } else {
+                    printf("\n\tFirst you must import data into the database\n\n");
+                }
                 pause(os);
                 clear(os);
                 break;
             case SEARCH:
-                search_menu(db, os);
+                if (db->status == DB_OPEN_LOADED) {
+                    search_menu(db, os);
+                } else {
+                    printf("\n\tFirst you must import data into the database\n\n");
+                    pause(os);
+                }
                 clear(os);
                 break;
             case REPORT:
                 report_menu(db, os);
-                pause(os);
                 clear(os);
                 break;
             case DB_INFO_2:

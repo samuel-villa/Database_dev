@@ -27,8 +27,6 @@ void create_index(dbc *db) {
     // FIXME
     load_ipl_in_ram(db);
 
-    //update_hdr(db);
-
     printf("\n\tDONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
 }
 

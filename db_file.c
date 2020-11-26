@@ -160,13 +160,19 @@ void open_db_files(dbc *db) {
         fread(&db->hdr, 1, sizeof(hder), fp_db);
         db->fp_db = fp_db;
         db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
-        db->status = DB_OPEN;
+        //db->status = DB_OPEN;
         ///test
-        load_header(db);
+        //load_header(db);
         strcpy(db->hdr.db_name, "db_clients");
         fprintf(db->fp_lg, "%s Database '%s' open\n", timestamp(), db->hdr.db_name);
     } else {
         printf("Error while opening database\n");
+    }
+
+    if (db->hdr.nr_cty == 0) {                      // check if data has been already imported
+        db->status = DB_OPEN_EMPTY;
+    } else {
+        db->status = DB_OPEN_LOADED;
     }
 }
 
@@ -189,6 +195,8 @@ void load_header(dbc *db) {
 
     fseek(db->fp_db, 0, SEEK_SET);
     fread(&db->hdr, sizeof(hder), 1, db->fp_db);
+
+    fprintf(db->fp_lg, "%s Database header updated\n", timestamp());
 }
 
 
@@ -199,13 +207,13 @@ void set_db_status(dbc *db) {
 
     FILE *fp_db;
 
+    // check if file exists with 'rb' mode (if file doesn't exist returns NULL)
     if ((fp_db = fopen("data_db_clients/db_clients.dat", "rb")) == NULL) {
         db->status = DB_NOT_CREATED;
     } else {
-        //load_header(db); // TODO use this function afterwards in the app structure?
+        fclose(fp_db);
         db->status = DB_CLOSED;
     }
-    fclose(fp_db);
 }
 
 
@@ -248,17 +256,4 @@ void display_system_info(dbc *db) {
 //    printf("\t* Nb of Persons lastnames indexes: %-8d\n", db->hdr.nr_ipl);
 
     printf("\n\n\t===============================================\n\n");
-}
-
-
-/****************************************************************************************
-* Update DB header metadata
-****************************************************************************************/
-void update_hdr(dbc *db) {
-
-    fseek(db->fp_db, 0, SEEK_SET);
-    // FIXME fwrite instead ?
-    fread(&db->hdr, sizeof(hder), 1, db->fp_db);
-
-    fprintf(db->fp_lg, "%s Database header updated\n", timestamp());
 }

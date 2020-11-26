@@ -199,7 +199,7 @@ void display_single_company(dbc *db, ccpy cpy) {
     printf("\n\tNb of employees...... %-80d", cpy.nr_emp);
     printf("\n\tStock value.......... %-80.2f", cpy.am_val);
 
-    printf("\n\n***************************************************************************\n");
+    printf("\n\n***************************************************************************\n\n");
 }
 
 
