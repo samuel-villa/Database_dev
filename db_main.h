@@ -420,6 +420,11 @@ void list_comp_employees(dbc *db, int comp_id);             // display company a
 
 /// Linked List ///
 node *link_ls_create();                                     // create the doubly linked list
+void link_ls_empty(node *ls);                               // empty the pre-allocated linked list
+void link_ls_delete(node **ls);                             // delete linked list
+node *link_ls_search_cpy_z(node *ls, ccpy cpy);             // search bigger element matching with name entered
+void link_ls_add_before(node *elem, ccpy cpy, cper per);    // add element in the linked list before given element
+void link_ls_list(dbc *db);                                 // display matching elements
 
 // TODO min 21:00...
 

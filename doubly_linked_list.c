@@ -55,7 +55,7 @@ void link_ls_delete(node **ls) {
 
 
 /*****************************************************************************************************
- * Search the bigger element (alphabetically) matching with the name searched
+ * Search the bigger element (alphabetically) matching with the element name
  *      ls : linked list element
  *      cpy: company searched
 *****************************************************************************************************/
@@ -74,7 +74,7 @@ node *link_ls_search_cpy_z(node *ls, ccpy cpy) {
  *      elem: element of the linked list
  *      cpy : company element
 *****************************************************************************************************/
-void link_ls_add_before(node *elem, ccpy cpy) {
+void link_ls_add_before(node *elem, ccpy cpy, cper per) {
 
     node *new_elem = malloc(sizeof(*new_elem));
     if (new_elem != NULL) {
@@ -98,7 +98,7 @@ void link_ls_list(dbc *db) {
     ccpy cpy;
     cper per;
     char cpy_name[BUF_LEN];
-    int found=0, nr=0, len=0;
+    int found, nr, len;
     node *root, *it, *cur;
 
     printf("\n\tEnter partial company name: "); scanf("%s", cpy_name); fflush(stdin);
@@ -125,7 +125,7 @@ void link_ls_list(dbc *db) {
 
         if (found) {
             cur = link_ls_search_cpy_z(root, cpy);
-            link_ls_add_before(cur, cpy);
+            link_ls_add_before(cur, cpy, per);
         }
     } while (cpy.id_cpy);
 
