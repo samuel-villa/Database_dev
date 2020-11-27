@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * Programmation procedurale 2020 - Dossier: Database Clients V0
+ * Programmation procedurale 2020 - Dossier: Database Clients
  *
  *       Indexes table functions, finding results by foreign key
  *
@@ -540,7 +540,7 @@ void list_comp_employees(dbc *db, int comp_id) {
 
     for (int i=0; i<db->hdr.nr_per; i++) {
 
-        if (comp_id == db->lsort[i].id) {                                  // for each person having same company ID
+        if (comp_id == db->lsort[i].id) {                                      // for each person having same company ID
 
             memset(&per, 0, sizeof(cper));
             fseek(db->fp_db, db->lsort[i].off_sort_obj, SEEK_SET);             // go to person offset
@@ -550,14 +550,14 @@ void list_comp_employees(dbc *db, int comp_id) {
             fseek(db->fp_db, db->lsort[i].off_next, SEEK_SET);                 // get next person offset
             fread(&next_per, sizeof(cper), 1, db->fp_db);               // read next person
 
-            printf("\n\t%-8d", per.id_per);                                // display this person
+            printf("\n\t%-8d", per.id_per);                                    // display this person
             printf(" %15s", per.nm_lst);
             printf(" %15s", per.nm_fst);
             printf(" %40s", db->job[per.id_job].nm_job);
 
             count++;
 
-            if (comp_id == next_per.id_cpy) {                              // test if next person should be printed too
+            if (comp_id == next_per.id_cpy) {                                  // test if next person should be printed too
                 printf("\n\t%-8d", next_per.id_per);
                 printf(" %15s", next_per.nm_lst);
                 printf(" %15s", next_per.nm_fst);

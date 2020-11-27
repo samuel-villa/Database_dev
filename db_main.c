@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * Programmation procedurale 2020 - Dossier: Database Clients V0
+ * Programmation procedurale 2020 - Dossier: Database Clients
  *
  *       Main program: Test of all functions
  *

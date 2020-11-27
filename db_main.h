@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * Programmation procedurale 2020 - Dossier: Database Clients V0
+ * Programmation procedurale 2020 - Dossier: Database Clients V2
  *
  *       Requirements:
  *          • La création de la base de données                                                                   OK
@@ -46,6 +46,7 @@
  *********************************************************************************************************************/
 
 // TODO set log traces all over the program (where missing)
+// TODO pagination
 
 
 #include <stdio.h>
@@ -310,6 +311,18 @@ typedef struct Linked_Sorting {
 
 
 /***************************************************************************************
+* Doubly Linked List
+****************************************************************************************/
+typedef struct Doubly_Linked_List {
+
+    cper   per;                         // person element
+    ccpy   cpy;                         // company element
+    struct Doubly_Linked_List *prev;    // points to the list previous element
+    struct Doubly_Linked_List *next;    // points to the list next element
+} node;
+
+
+/***************************************************************************************
 * DB structure
 ****************************************************************************************/
 typedef struct db_client {
@@ -404,6 +417,11 @@ void free_link_sort_table(dbc *db);                         // free RAM for link
 void load_ipl_in_ram(dbc *db);                              // load linked sorted list from ipl table
 void get_comp_employees(dbc *db);                           // request company ID and gives the list of employees
 void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
+
+/// Linked List ///
+node *link_ls_create();                                     // create the doubly linked list
+
+// TODO min 21:00...
 
 /// Menus ///
 void main_menu(dbc *db, int os);                            // First menu when running the program

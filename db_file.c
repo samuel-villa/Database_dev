@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * Programmation procedurale 2020 - Dossier: Database Clients V0
+ * Programmation procedurale 2020 - Dossier: Database Clients
  *
  *       DB file creation
  *
@@ -151,25 +151,26 @@ void open_db_files(dbc *db) {
     // so I open it in wb mode (file is created)
     // then close it and open it back again in rb+ mode
     if (fp_db == NULL) {
+
         fp_db = fopen("data_db_clients/db_clients.dat", "wb");
         fclose(fp_db);
         fp_db = fopen("data_db_clients/db_clients.dat", "rb+");
     }
 
     if (fp_db) {
-        fread(&db->hdr, 1, sizeof(hder), fp_db);
+
+        fread(&db->hdr, 1, sizeof(hder), fp_db);        // load header
+
         db->fp_db = fp_db;
         db->fp_lg = fopen("data_db_clients/db_clients.log", "a");
-        //db->status = DB_OPEN;
-        ///test
-        //load_header(db);
         strcpy(db->hdr.db_name, "db_clients");
         fprintf(db->fp_lg, "%s Database '%s' open\n", timestamp(), db->hdr.db_name);
+
     } else {
         printf("Error while opening database\n");
     }
 
-    if (db->hdr.nr_cty == 0) {                      // check if data has been already imported
+    if (db->hdr.nr_cty == 0) {                               // check if data has been already imported
         db->status = DB_OPEN_EMPTY;
     } else {
         db->status = DB_OPEN_LOADED;
