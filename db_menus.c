@@ -307,17 +307,27 @@ void search_company_menu(dbc *db, int os) {
 
     while (menu_sel != 9) {
         printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
-        printf("\t%d - Search Company by ID\n", 0);
-        printf("\t%d - Get company employees\n", 1);
+        printf("\t%d - Search Company by ID\n", T_CPYID);
+        printf("\t%d - Search Company by name (A-Z)\n", T_CPYNAME_AZ);
+        printf("\t%d - Search Company by name (Z-A)\n", T_CPYNAME_ZA);
+        printf("\t%d - Get company employees\n", T_CPYPER);
         printf("\t%d - GO BACK\n\n", 9);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
         switch (menu_sel) {
-            case 0:
+            case T_CPYID:
                 search_company_by_id(db);
                 pause(os);
                 break;
-            case 1:
+            case T_CPYNAME_AZ:
+                search_company_by_name(db, T_AZ);
+                pause(os);
+                break;
+            case T_CPYNAME_ZA:
+                search_company_by_name(db, T_ZA);
+                pause(os);
+                break;
+            case T_CPYPER:
                 get_comp_employees(db);
                 pause(os);
                 break;

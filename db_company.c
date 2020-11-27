@@ -183,7 +183,7 @@ void export_CSV_company(dbc *db) {
 ****************************************************************************************/
 void display_single_company(dbc *db, ccpy cpy) {
 
-    printf("\n***************************************************************************\n");
+ //   printf("\n***************************************************************************\n");
 
     printf("\n\tID company........... %-80d", cpy.id_cpy);
     printf("\n\tCompany name......... %-80s", cpy.nm_cpy);
@@ -199,7 +199,7 @@ void display_single_company(dbc *db, ccpy cpy) {
     printf("\n\tNb of employees...... %-80d", cpy.nr_emp);
     printf("\n\tStock value.......... %-80.2f", cpy.am_val);
 
-    printf("\n\n***************************************************************************\n\n");
+    printf("\n\n\n***************************************************************************\n\n");
 }
 
 
@@ -227,6 +227,42 @@ void search_company_by_id(dbc *db) {
 }
 
 
+/*****************************************************************************************************
+ * Search the bigger company (alphabetically) matching with the element name
+ *      ls : linked list element
+ *      cpy: company searched
+*****************************************************************************************************/
+node *search_bigger_cpy(node *ls, ccpy cpy) {
+
+    node  *cur;
+
+    for (cur = ls->next; cur != ls && strcmp(cur->cpy.nm_cpy, cpy.nm_cpy) < 0; cur = cur->next );
+
+    return cur;
+}
+
+
+/*****************************************************************************************************
+ * Add company element before the given element within the linked list
+ *      elem: element of the linked list
+ *      cpy : company element
+*****************************************************************************************************/
+void add_cpy_before(node *elem, ccpy cpy, cper per) {
+
+    node *new_elem = malloc(sizeof(*new_elem));
+
+    if (new_elem != NULL) {
+
+        new_elem->cpy = cpy;
+        new_elem->prev = elem->prev;
+        new_elem->next = elem;
+
+        elem->prev->next = new_elem;
+        elem->prev = new_elem;
+    }
+}
+
+
 
 /****************************************************************************************
  * Read Company record given its position nb.
@@ -245,12 +281,55 @@ ccpy read_single_company(dbc *db, int index) {
 
 
 /****************************************************************************************
- Search Company by ID
+ * Display all companies matching with given string. Result can be sorted AtoZ or ZtoA
+ *      type: AtoZ or ZtoA
 ****************************************************************************************/
-// TODO
-void search_company_by_name(dbc *db) {
+void search_company_by_name(dbc *db, int type) {
 
-    printf("*** search company by name ***\n");
-    printf("enter beginning of company name: ...\n");
+    ccpy cpy;
+    cper per;
+    char cpy_name[BUF_LEN];
+    int found, count=0, len;
+    node *root, *it, *cur;
 
+    printf("\n\tEnter partial company name: "); scanf("%s", cpy_name); fflush(stdin);
+    len = strlen(cpy_name);
+
+    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
+    root = link_ls_create();                                        // create an empty doubly linked list
+
+    do {
+        memset(&cpy, 0, sizeof(cpy));
+        fread(&cpy, sizeof(cpy), 1, db->fp_db);
+
+        if (!cpy.id_cpy) {
+            break;
+        }
+        found = 1;
+
+        for(int i=0; i<len; i++) {
+            if (toupper(cpy_name[i]) != toupper(cpy.nm_cpy[i])) {
+                found = 0;
+            }
+        }
+
+        if (found) {
+            cur = search_bigger_cpy(root, cpy);
+            add_cpy_before(cur, cpy, per);
+        }
+    } while (cpy.id_cpy);
+
+    if(type == T_AZ) {                                                  // A-Z
+        for (it = root->next; it != root; it = it->next) {
+            display_single_company(db, it->cpy);
+            count++;
+        }
+    } else {
+        for (it = root->prev; it != root; it = it->prev) {              // Z-A
+            display_single_company(db, it->cpy);
+            count++;
+        }
+    }
+    printf("\n\tCompanies found: %d\n\n", count);
+    link_ls_delete(&root);
 }

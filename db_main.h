@@ -97,6 +97,15 @@ enum Search_Menu {
     S_BACK = 9
 };
 
+enum Search_Type {
+    T_CPYID,
+    T_CPYNAME_AZ,
+    T_CPYNAME_ZA,
+    T_CPYPER,
+    T_AZ,
+    T_ZA,
+};
+
 enum Report_Menu {
     R_PERS_COMP,
     R_COMP_GROUP,
@@ -119,7 +128,7 @@ enum Sort_Type {
 
 enum Binary_Search_Type {
     PERS_ID,
-    COMP_ID,
+    COMP_ID
 };
 
 enum Error_Code {
@@ -385,9 +394,10 @@ void import_CSV_company(dbc *db);                           // import data to db
 void export_CSV_company(dbc *db);                           // export data from db file to csv
 void display_single_company(dbc *db, ccpy cpy);             // display company struct attributes
 void search_company_by_id(dbc *db);                         // generic search function for cpy ID
-void search_company_by_name(dbc *db);                       // TODO BinaryTree:
-                                                            // TODO make it not case sensitive && partial name function
+void search_company_by_name(dbc *db, int type);             // display matching elements
+node *search_bigger_cpy(node *ls, ccpy cpy);                // search company matching with name entered
 ccpy read_single_company(dbc *db, int index);               // read cpy record given its index
+void add_cpy_before(node *elem, ccpy cpy, cper per);        //
 
 /// Person ///
 void import_CSV_person(dbc *db);                            // import data to db file
@@ -422,11 +432,6 @@ void list_comp_employees(dbc *db, int comp_id);             // display company a
 node *link_ls_create();                                     // create the doubly linked list
 void link_ls_empty(node *ls);                               // empty the pre-allocated linked list
 void link_ls_delete(node **ls);                             // delete linked list
-node *link_ls_search_cpy_z(node *ls, ccpy cpy);             // search bigger element matching with name entered
-void link_ls_add_before(node *elem, ccpy cpy, cper per);    // add element in the linked list before given element
-void link_ls_list(dbc *db);                                 // display matching elements
-
-// TODO min 21:00...
 
 /// Menus ///
 void main_menu(dbc *db, int os);                            // First menu when running the program
