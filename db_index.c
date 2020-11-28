@@ -98,6 +98,7 @@ void create_index_per_name(dbc *db) {
     for (i=0; i<db->hdr.nr_per; i++) {
         memset(&per, 0, sizeof(cper));                          // init element
         pt_per = db->hdr.off_per + i * sizeof(cper);            // getting element offset
+
         fseek(db->fp_db, pt_per, SEEK_SET);                     // place cursor at element offset
         fread(&per, sizeof(cper), 1, db->fp_db);         // read element
         strcpy(db->sort[i].ln, per.nm_lst);                     // set read data into db->sort[i]
@@ -110,10 +111,23 @@ void create_index_per_name(dbc *db) {
 
     // write sorted data into db
     for (i=0; i<db->hdr.nr_per; i++) {
-        memset(&ipl, 0, sizeof(tipl));                          // init tipc element to be written
+        memset(&ipl, 0, sizeof(tipl));                          // init tipl element to be written
         strcpy(ipl.tp_rec, "IPL");                              // set element data
         strcpy(ipl.nm_lst, db->sort[i].ln);                     // fill element data from sorted table
         ipl.per_offset = db->sort[i].off_sort_obj;              // fill element data from sorted table
+
+        ///test
+        if(i==0) {
+            ipl.per_offset_l = db->hdr.off_ipl + i * sizeof(tipl);
+            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
+        } else if (i==db->hdr.nr_per) {
+            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
+            ipl.per_offset_r = db->hdr.off_ipl + i * sizeof(tipl);
+        } else {
+            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
+            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
+        }
+
         fwrite(&ipl, sizeof(tipl), 1, db->fp_db);        // write element into db
     }
 
@@ -121,7 +135,7 @@ void create_index_per_name(dbc *db) {
 
     fprintf(db->fp_lg, "%s Index persons by lastname created\n", timestamp());
 
-    printf("DONE => Indexes created: %d", db->hdr.nr_ipc);
+    printf("DONE => Indexes created: %d", db->hdr.nr_ipl);
 }
 
 
@@ -218,6 +232,56 @@ int search_binary(dbc *db, int id, int type) {
     }
     return 0;
 }
+
+
+/*****************************************************************************************
+ * Binary Search per company ID on ipc table.
+ *      id    : person table foreign key company ID
+ *      ipcc  : ipc element
+ *      return: the element index/position within the db ipc block
+******************************************************************************************/
+int search_binary_ipc(dbc *db, int id) {
+
+    int mid, left=0, right;
+    tipc ipc;
+
+    right = db->hdr.nr_cpy - 1;
+    memset(&ipc, 0, sizeof(tipc));
+
+    ipc = read_single_tipc_rec(db, 0);           // check db first element
+    if (id < ipc.id_cpy) {                             // if ID we search < first cpy ID
+        return REC_OUT_RANGE;
+    }
+
+    if (id == ipc.id_cpy) {                            // if ID we search IS the first db element
+        return 0;
+    }
+
+    ipc = read_single_tipc_rec(db, right);             // check db last element
+    if (id > ipc.id_cpy) {                             // if ID we search > last cpy ID
+        return REC_OUT_RANGE;
+    }
+
+    while (right - left > 1) {                         // binary search algorithm
+
+        mid = (right + left) / 2;
+        ipc = read_single_tipc_rec(db, mid);
+
+        if (id <= ipc.id_cpy) {
+            right = mid;
+        } else {
+            left = mid;
+        }
+    }
+    ipc = read_single_tipc_rec(db, right);
+
+    if (id == ipc.id_cpy) {
+        return right;
+    } else {
+        return REC_NOT_FOUND;
+    }
+}
+
 
 
 
@@ -512,18 +576,19 @@ void get_comp_employees(dbc *db) {
 ****************************************************************************************/
 void list_comp_employees(dbc *db, int comp_id) {
 
-    cper per, next_per;
+    cper per;
     ccpy cpy;
+    tipc ipc;
     int index, count=0;
 
-    index = search_binary(db, comp_id, COMP_ID);                      // get element index within db file cpy bloc
+    index = search_binary(db, comp_id, COMP_ID);                  // get cpy index within db file cpy bloc
 
     if (index == REC_OUT_RANGE) {
         printf("\n\tCompany ID %d is out of range\n\n", comp_id);
     } else if (index == REC_NOT_FOUND) {
         printf("\n\tNo results with Company ID %d\n\n", comp_id);
     } else {
-        cpy = read_single_company(db, index);                              // read cpy at given index and display it
+        cpy = read_single_company(db, index);                          // read cpy at given index and display it
 
         printf("\n\t********************************************************************************\n");
         printf("\n\tCompany name......... %s", cpy.nm_cpy);
@@ -531,43 +596,68 @@ void list_comp_employees(dbc *db, int comp_id) {
         printf("\n\tCountry.............. %s", db->cty[cpy.id_cty].nm_cty);
         printf("\n\n\t********************************************************************************\n");
         printf("\n\t*** EMPLOYEES ***\n");
-        printf("\n\t%-8s", "ID");
+        printf("\n\t%8s", "ID");
         printf(" %15s", "Lastname");
         printf(" %15s", "Firstname");
         printf("%40s", "Job");
         printf("\n\t--------------------------------------------------------------------------------");
     }
 
-    for (int i=0; i<db->hdr.nr_per; i++) {
+    index = search_binary_ipc(db, comp_id);
 
-        if (comp_id == db->lsort[i].id) {                                      // for each person having same company ID
+    while (1) {
+        ipc = read_single_tipc_rec(db, index);
 
-            memset(&per, 0, sizeof(cper));
-            fseek(db->fp_db, db->lsort[i].off_sort_obj, SEEK_SET);             // go to person offset
-            fread(&per, sizeof(cper), 1, db->fp_db);                    // read current person
+        if (ipc.id_cpy != cpy.id_cpy) {
+            break;
+        }
 
-            memset(&next_per, 0, sizeof(cper));
-            fseek(db->fp_db, db->lsort[i].off_next, SEEK_SET);                 // get next person offset
-            fread(&next_per, sizeof(cper), 1, db->fp_db);               // read next person
+        fseek(db->fp_db, ipc.per_offset, SEEK_SET);
+        fread(&per, sizeof(cper), 1, db->fp_db);
 
-            printf("\n\t%-8d", per.id_per);                                    // display this person
+        printf("\n\t%8d", per.id_per);
             printf(" %15s", per.nm_lst);
             printf(" %15s", per.nm_fst);
             printf(" %40s", db->job[per.id_job].nm_job);
-
-            count++;
-
-            if (comp_id == next_per.id_cpy) {                                  // test if next person should be printed too
-                printf("\n\t%-8d", next_per.id_per);
-                printf(" %15s", next_per.nm_lst);
-                printf(" %15s", next_per.nm_fst);
-                printf(" %40s", db->job[next_per.id_job].nm_job);
-                i++;
-                count++;
-            }
-        }
+        index++;
+        count++;
     }
+
     printf("\n\t--------------------------------------------------------------------------------");
     printf("\n\tEmployees: %d", count);
     printf("\n\n\t********************************************************************************\n");
+}
+
+
+/****************************************************************************************
+ * Provide the binary tree root of person/lastname index table
+ *      offset: root offset of the ipl table
+ *      size  : total number of elements in ipl table
+****************************************************************************************/
+uint find_ipl_tree_root(dbc *db, uint offset, int size) {
+
+    uint cur, off_l, off_r;
+    int diff = size-1;
+    int left = diff/2;
+    int right = size - left;
+    tipl ipl;
+
+    off_l = offset - left + (left-1)/2;
+    off_r = offset + (right-1)/2 +1;
+    cur = db->hdr.off_ipl + offset * sizeof(tipl);
+
+    fseek(db->fp_db, cur, SEEK_SET);
+    fread(&ipl, sizeof(tipl), 1, db->fp_db);
+
+    if (left > 0) {
+        ipl.per_offset_l = find_ipl_tree_root(db, off_l, left);
+    }
+    if (right > 0) {
+        ipl.per_offset_r = find_ipl_tree_root(db, off_r, right);
+    }
+
+    fseek(db->fp_db, cur, SEEK_SET);
+    fwrite(&ipl, sizeof(tipl), 1, db->fp_db);
+
+    return cur;
 }

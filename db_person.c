@@ -241,26 +241,97 @@ void search_person_by_id(dbc *db) {
 
 
 
+///****************************************************************************************
+// * Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
+//****************************************************************************************/
+//void search_person_by_name(dbc *db) {
+//
+//    int index;
+//    char lastname[64];
+//    cper per;
+//    tipl ipl;
+//
+//    printf("\n\t--> Enter Person Name: "); scanf("%s", lastname); fflush(stdin);
+//
+//    index = search_binary_string(db, lastname);             // index from sorted list (tipl)
+//    ipl = read_single_tipl_rec(db, index);
+//
+//    if (index == REC_NOT_FOUND) {
+//        printf("\n\tPerson not found\n\n");
+//    } else {
+//        fseek(db->fp_db, ipl.per_offset, SEEK_SET);         // go to person offset
+//        fread(&per, sizeof(cper), 1, db->fp_db);     // read person
+//        display_single_person(db, per);
+//    }
+//}
+
+
+/*****************************************************************************************************
+ * Search the bigger person (alphabetically) matching with the element name
+ *      ls : linked list element
+ *      per: person searched
+*****************************************************************************************************/
+node *search_bigger_per(node *ls, tipl ipl) {
+
+    node  *cur;
+
+    for (cur = ls->next; cur != ls && strcmp(cur->ipl.nm_lst, ipl.nm_lst) < 0; cur = cur->next);
+
+    return cur;
+}
+
+
+/*****************************************************************************************************
+ * Add person element before the given element within the linked list
+ *      elem: element of the linked list
+ *      per : person element
+*****************************************************************************************************/
+void add_per_before(node *elem, tipl ipl, ccpy cpy) {
+
+    node *new_elem = malloc(sizeof(*new_elem));
+
+    if (new_elem != NULL) {
+
+        new_elem->ipl = ipl;
+        new_elem->prev = elem->prev;
+        new_elem->next = elem;
+
+        elem->prev->next = new_elem;
+        elem->prev = new_elem;
+    }
+}
+
+
 /****************************************************************************************
  * Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
 ****************************************************************************************/
-void search_person_by_name(dbc *db) {
+void search_person_by_name(dbc *db, uint offset, char *lastname, int type) {
 
-    int index;
-    char lastname[64];
-    cper per;
+    char buf[50];
+    int i;
     tipl ipl;
+    cper per;
 
-    printf("\n\t--> Enter Person Name: "); scanf("%s", lastname); fflush(stdin);
+    if (offset) {
+        fseek(db->fp_db, offset, SEEK_SET);
+        fread(&ipl, sizeof(tipl), 1, db->fp_db);
 
-    index = search_binary_string(db, lastname);         // index from sorted list (tipl)
-    ipl = read_single_tipl_rec(db, index);
+        if (strlen(ipl.nm_lst) > strlen(lastname)) {
+            for (i=0; i < strlen(lastname); i++) {
+                buf[i] = ipl.nm_lst[i];
+            }
+            buf[i] = '\0';
+        } else {
+            strcpy(buf, ipl.nm_lst);
+        }
+        search_person_by_name(db, ipl.per_offset_l, lastname, T_AZ);
 
-    if (index == REC_NOT_FOUND) {
-        printf("\n\tPerson not found\n\n");
-    } else {
-        fseek(db->fp_db, ipl.per_offset, SEEK_SET);         // go to person offset
-        fread(&per, sizeof(cper), 1, db->fp_db);     // read person
-        display_single_person(db, per);
+        if (strcmp(buf, lastname) == 0) {
+            fseek(db->fp_db, ipl.per_offset, SEEK_SET);
+            fread(&per, sizeof(cper), 1, db->fp_db);
+            printf("%d %s %s %s\n", per.id_per, per.nm_civ, per.nm_lst, per.nm_fst);
+        }
+        search_person_by_name(db, ipl.per_offset_r, lastname, T_AZ);
     }
+
 }

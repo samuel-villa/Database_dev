@@ -282,7 +282,7 @@ void search_person_menu(dbc *db, int os) {
                 pause(os);
                 break;
             case 1:
-                search_person_by_name(db);
+                //search_person_by_name(db, T_AZ);
                 pause(os);
                 break;
             case 9:

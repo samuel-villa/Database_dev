@@ -206,7 +206,7 @@ void display_single_company(dbc *db, ccpy cpy) {
 
 /****************************************************************************************
  * Search Company by ID
- * Binary search by primary key in Company table
+ * Binary search (dichotomic) on the primary key in Company table
 ****************************************************************************************/
 void search_company_by_id(dbc *db) {
 
@@ -236,7 +236,7 @@ node *search_bigger_cpy(node *ls, ccpy cpy) {
 
     node  *cur;
 
-    for (cur = ls->next; cur != ls && strcmp(cur->cpy.nm_cpy, cpy.nm_cpy) < 0; cur = cur->next );
+    for (cur = ls->next; cur != ls && strcmp(cur->cpy.nm_cpy, cpy.nm_cpy) < 0; cur = cur->next);
 
     return cur;
 }
@@ -307,29 +307,30 @@ void search_company_by_name(dbc *db, int type) {
         }
         found = 1;
 
-        for(int i=0; i<len; i++) {
+        for(int i=0; i<len; i++) {                                  // test if name match
             if (toupper(cpy_name[i]) != toupper(cpy.nm_cpy[i])) {
                 found = 0;
             }
         }
 
-        if (found) {
+        if (found) {                                                // if match add element to linked list
             cur = search_bigger_cpy(root, cpy);
             add_cpy_before(cur, cpy, per);
         }
     } while (cpy.id_cpy);
 
-    if(type == T_AZ) {                                                  // A-Z
+    if(type == T_AZ) {                                              // display A-Z
         for (it = root->next; it != root; it = it->next) {
             display_single_company(db, it->cpy);
             count++;
         }
     } else {
-        for (it = root->prev; it != root; it = it->prev) {              // Z-A
+        for (it = root->prev; it != root; it = it->prev) {          // display Z-A
             display_single_company(db, it->cpy);
             count++;
         }
     }
     printf("\n\tCompanies found: %d\n\n", count);
+
     link_ls_delete(&root);
 }

@@ -304,6 +304,8 @@ typedef struct Sorting {
     int  id;            // object id to be sorted
     char ln[64];        // used when searching by lastname
     uint off_sort_obj;  // object offset
+    uint off_prev;
+    uint off_next;
 } t_sort;
 
 
@@ -323,6 +325,8 @@ typedef struct Linked_Sorting {
 * Doubly Linked List
 ****************************************************************************************/
 typedef struct Doubly_Linked_List {
+    ///test
+    tipl   ipl;
 
     cper   per;                         // person element
     ccpy   cpy;                         // company element
@@ -397,14 +401,14 @@ void search_company_by_id(dbc *db);                         // generic search fu
 void search_company_by_name(dbc *db, int type);             // display matching elements
 node *search_bigger_cpy(node *ls, ccpy cpy);                // search company matching with name entered
 ccpy read_single_company(dbc *db, int index);               // read cpy record given its index
-void add_cpy_before(node *elem, ccpy cpy, cper per);        //
+void add_cpy_before(node *elem, ccpy cpy, cper per);        // add cpy before the given cpy within the linked list
 
 /// Person ///
 void import_CSV_person(dbc *db);                            // import data to db file
 void export_CSV_person(dbc *db);                            // export data from db file to csv
 void display_single_person(dbc *db, cper per);              // display company struct attributes
 void search_person_by_id(dbc *db);                          // generic search function for cpy ID
-void search_person_by_name(dbc *db);                        // TODO BinaryTree:
+void search_person_by_name(dbc *db, uint offset, char *lastname, int type);              // TODO BinaryTree:
                                                             // TODO make it not case sensitive && partial name function
 cper read_single_person(dbc *db, int index);                // read per record given its index
 
@@ -422,11 +426,13 @@ void search_group_companies(dbc *db);                       // TODO extra
 void alloc_sort_table(dbc *db, uint size);                  // RAM allocation for sort type
 void free_sort_table(dbc *db);                              // free RAM for sort type
 tipl read_single_tipl_rec(dbc *db, int index);              // read ipl record given its index
+tipc read_single_tipc_rec(dbc *db, int index);              // read ipc record given its index
 void alloc_link_sort_table(dbc *db, uint size);             // RAM allocation for linked sort type
 void free_link_sort_table(dbc *db);                         // free RAM for linked sort type
 void load_ipl_in_ram(dbc *db);                              // load linked sorted list from ipl table
 void get_comp_employees(dbc *db);                           // request company ID and gives the list of employees
 void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
+int  search_binary_ipc(dbc *db, int id);                    // binary search per company ID on person table
 
 /// Linked List ///
 node *link_ls_create();                                     // create the doubly linked list
