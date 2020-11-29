@@ -13,10 +13,10 @@
  *          • Au moins un écran permettant d’afficher via une liste chainée en mémoire                            OK
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire                         OK
  *              • Les compagnies appartenant à un groupe donné
- *          • Au moins un écran utilisant un index binaire sur disque dans la recherche
+ *          • Au moins un écran utilisant un index binaire sur disque dans la recherche                           OK
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
- *              • Les personnes dont le nom commence par une chaine donnée
- *          • Les listes chainées pourront être triées ascendant ou descendant
+ *              • Les personnes dont le nom commence par une chaine donnée                                        OK
+ *          • Les listes chainées pourront être triées ascendant ou descendant                                    OK
  *          • Deux rapports répondants aux requêtes précisées ci-dessous
  *
  *       Header file:
@@ -31,16 +31,14 @@
  *          - Display Countries, Industries, Groups and Jobs
  *          - Search companies by ID
  *          - Search persons by ID and/or by lastname
- *          - Display company employees given its ID (linked list in RAM)
+ *          - Display company employees given its ID
  *
  *       Not yet implemented:
- *          - Search person by partial lastname
  *          - Reports
- *          - Sort linked lists A-Z and Z-A
  *          - Extras
  *
  *       NOTES:
- *          - 'db' is a global parameter, all functions use it
+ *          - 'db' is a global parameter, (almost) all functions use it
  *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
@@ -173,8 +171,8 @@ typedef struct Header {
     uint nr_ipc;        // nr of indexes pers/comp
     uint nr_ipl;        // nr of indexes pers/lastname              // 32 bytes
 
-    uint ipl_root;      // root element of the ipl table (used in binary trees)
-    char filler[28];
+    uint ipl_root;      // root element of the ipl table
+    char filler[28];                                                // 32 bytes
 } hder;
 
 
@@ -198,9 +196,9 @@ typedef struct Job {
 
     char tp_rec[8];     // primary key JOB
     int  id_job;        // primary key
-    char nm_lev[32];
-    char nm_dep[32];
-    char nm_job[52];
+    char nm_lev[32];    // level
+    char nm_dep[32];    // department
+    char nm_job[52];    // job
 } cjob;
 
 
@@ -211,8 +209,8 @@ typedef struct Industry {
 
     char tp_rec[8];     // rec type: IND
     int  id_ind;        // primary key
-    char nm_sec[20];
-    char nm_ind[32];
+    char nm_sec[20];    // sector
+    char nm_ind[32];    // industry
 } cind;
 
 
@@ -224,8 +222,8 @@ typedef struct Group {
     char tp_rec[8];     // rec type: GRP
     int  id_grp;        // primary key
     char filler1[20];
-    char nm_grp[60];
-    int  id_cty;
+    char nm_grp[60];    // group
+    int  id_cty;        // country
 } cgrp;
 
 
@@ -306,14 +304,13 @@ typedef struct Sorting {
     int  id;            // object id to be sorted
     char ln[64];        // used when searching by lastname
     uint off_sort_obj;  // object offset
-    uint off_prev;
-    uint off_next;
 } t_sort;
 
 
 /***************************************************************************************
 * Sorting space used to sort list of I_Person_Lastname type
 ****************************************************************************************/
+// TODO struct to delete and all related functions
 typedef struct Linked_Sorting {
 
     int  id;            // object id to be sorted
@@ -327,9 +324,8 @@ typedef struct Linked_Sorting {
 * Doubly Linked List
 ****************************************************************************************/
 typedef struct Doubly_Linked_List {
-    ///test
-    tipl   ipl;
 
+    tipl   ipl;                         // person/lastname element
     cper   per;                         // person element
     ccpy   cpy;                         // company element
     struct Doubly_Linked_List *prev;    // points to the list previous element
@@ -410,9 +406,9 @@ void import_CSV_person(dbc *db);                            // import data to db
 void export_CSV_person(dbc *db);                            // export data from db file to csv
 void display_single_person(dbc *db, cper per);              // display company struct attributes
 void search_person_by_id(dbc *db);                          // generic search function for cpy ID
-void search_person(dbc *db, int type);
-void search_person_by_name(dbc *db, uint offset, char *lastname);              // TODO BinaryTree:
-                                                            // TODO make it not case sensitive && partial name function
+void search_person_by_name(dbc *db);                        // main search person by lastname function
+void fetch_person(dbc *db, uint offset, char *lastname);    // recursive function fetching all matching results
+uint get_person_root(dbc *db, char *name);                  // get binary tree root node matching with given string
 cper read_single_person(dbc *db, int index);                // read per record given its index
 
 /// Generic ///
@@ -437,7 +433,6 @@ void get_comp_employees(dbc *db);                           // request company I
 void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
 int  search_binary_ipc(dbc *db, int id);                    // binary search per company ID on person table
 uint find_ipl_tree_root(dbc *db, uint offset, int size);
-uint get_person_root(dbc *db, char *name);
 
 /// Linked List ///
 node *link_ls_create();                                     // create the doubly linked list

@@ -246,7 +246,7 @@ void report_menu(dbc *db, int os) {
                 pause(os);
                 break;
             case R_PERS_NAME:
-                printf("create report with search_person_by_name('print option')");
+                printf("create report with fetch_person('print option')");
                 pause(os);
                 break;
             case R_BACK:
@@ -282,7 +282,7 @@ void search_person_menu(dbc *db, int os) {
                 pause(os);
                 break;
             case 1:
-                search_person(db, T_AZ);
+                search_person_by_name(db);
                 pause(os);
                 break;
             case 9:

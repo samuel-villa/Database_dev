@@ -171,7 +171,8 @@ void export_CSV_person(dbc *db) {
 
 
 /****************************************************************************************
-* Display one Person record
+ * Display one Person record
+ *      per: person element
 ****************************************************************************************/
 void display_single_person(dbc *db, cper per) {
 
@@ -219,7 +220,7 @@ cper read_single_person(dbc *db, int index) {
 
 
 /****************************************************************************************
- Search Person by ID - Binary search by primary key in Person table
+ Search Person by ID - Binary search by primary key into Person table
 ****************************************************************************************/
 void search_person_by_id(dbc *db) {
 
@@ -240,81 +241,22 @@ void search_person_by_id(dbc *db) {
 }
 
 
-
-///****************************************************************************************
-// * Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
-//****************************************************************************************/
-//void search_person_by_name(dbc *db) {
-//
-//    int index;
-//    char lastname[64];
-//    cper per;
-//    tipl ipl;
-//
-//    printf("\n\t--> Enter Person Name: "); scanf("%s", lastname); fflush(stdin);
-//
-//    index = search_binary_string(db, lastname);             // index from sorted list (tipl)
-//    ipl = read_single_tipl_rec(db, index);
-//
-//    if (index == REC_NOT_FOUND) {
-//        printf("\n\tPerson not found\n\n");
-//    } else {
-//        fseek(db->fp_db, ipl.per_offset, SEEK_SET);         // go to person offset
-//        fread(&per, sizeof(cper), 1, db->fp_db);     // read person
-//        display_single_person(db, per);
-//    }
-//}
-
-
-/*****************************************************************************************************
- * Search the bigger person (alphabetically) matching with the element name
- *      ls : linked list element
- *      per: person searched
-*****************************************************************************************************/
-node *search_bigger_per(node *ls, tipl ipl) {
-
-    node  *cur;
-
-    for (cur = ls->next; cur != ls && strcmp(cur->ipl.nm_lst, ipl.nm_lst) < 0; cur = cur->next);
-
-    return cur;
-}
-
-
-/*****************************************************************************************************
- * Add person element before the given element within the linked list
- *      elem: element of the linked list
- *      per : person element
-*****************************************************************************************************/
-void add_per_before(node *elem, tipl ipl, ccpy cpy) {
-
-    node *new_elem = malloc(sizeof(*new_elem));
-
-    if (new_elem != NULL) {
-
-        new_elem->ipl = ipl;
-        new_elem->prev = elem->prev;
-        new_elem->next = elem;
-
-        elem->prev->next = new_elem;
-        elem->prev = new_elem;
-    }
-}
-
-
 /****************************************************************************************
  * Main search person by lastname function
 ****************************************************************************************/
-void search_person(dbc *db, int type) {
+void search_person_by_name(dbc *db) {
 
     char lastname[50];
     uint per_off;
 
     printf("\n\t--> Enter Person Lastname: "); scanf("%s", lastname); fflush(stdin);
 
-    per_off = get_person_root(db, lastname);        // ok => provide correct root offset (ipl)
+    per_off = get_person_root(db, lastname);
 
-    search_person_by_name(db, per_off, lastname);
+    printf("\n\t%8s\t%-10s %-20s %-20s %-s\n", "id", "civ", "lastname", "firstname", "company");
+    printf("\t-------------------------------------------------------------------------------------------------------\n");
+    fetch_person(db, per_off, lastname);
+    puts("");
 }
 
 
@@ -357,14 +299,17 @@ uint get_person_root(dbc *db, char *name) {
 
 
 /****************************************************************************************
- * Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
+ * Recursive function comparing given string with db and display results
+ *      offset  : binary tree root node of the given string
+ *      lastname: partial lastname provided
 ****************************************************************************************/
-void search_person_by_name(dbc *db, uint offset, char *lastname) {
+void fetch_person(dbc *db, uint offset, char *lastname) {
 
     char buf[50];
-    int i;
+    int i, id, index;
     tipl ipl;
     cper per;
+    ccpy cpy;
 
     if (offset) {
 
@@ -380,14 +325,25 @@ void search_person_by_name(dbc *db, uint offset, char *lastname) {
             strcpy(buf, ipl.nm_lst);
         }
 
-        search_person_by_name(db, ipl.per_offset_l, lastname);               // recursion left cause A-Z
+        fetch_person(db, ipl.per_offset_l, lastname);               // recursion left
 
-        if (strcmp(buf, lastname) == 0) {
+        if (strcmp(buf, lastname) == 0) {                           // if match => display
 
             fseek(db->fp_db, ipl.per_offset, SEEK_SET);
             fread(&per, sizeof(cper), 1, db->fp_db);
-            printf("%d %s %s %s\n", per.id_per, per.nm_civ, per.nm_lst, per.nm_fst);
+
+            id = per.id_cpy;
+            index = search_binary(db, id, COMP_ID);
+            cpy = read_single_company(db, index);                   // get person company
+
+            printf("\t%8d\t%-10s %-20s %-20s %-s\n",
+                   per.id_per,
+                   per.nm_civ,
+                   per.nm_lst,
+                   per.nm_fst,
+                   cpy.nm_cpy);
         }
-        search_person_by_name(db, ipl.per_offset_r, lastname);               // recursion right cause A-Z
+
+        fetch_person(db, ipl.per_offset_r, lastname);               // recursion right
     }
 }

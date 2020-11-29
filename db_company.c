@@ -183,8 +183,6 @@ void export_CSV_company(dbc *db) {
 ****************************************************************************************/
 void display_single_company(dbc *db, ccpy cpy) {
 
- //   printf("\n***************************************************************************\n");
-
     printf("\n\tID company........... %-80d", cpy.id_cpy);
     printf("\n\tCompany name......... %-80s", cpy.nm_cpy);
     printf("\n\tGroup................ %s", db->grp[cpy.id_grp].nm_grp);
@@ -319,7 +317,7 @@ void search_company_by_name(dbc *db, int type) {
         }
     } while (cpy.id_cpy);
 
-    if(type == T_AZ) {                                              // display A-Z
+    if (type == T_AZ) {                                              // display A-Z
         for (it = root->next; it != root; it = it->next) {
             display_single_company(db, it->cpy);
             count++;
