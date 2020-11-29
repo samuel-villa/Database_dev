@@ -320,8 +320,8 @@ void search_person(dbc *db) {
 
 
 /****************************************************************************************
- * Search Company by ID
- * Binary search (dichotomic) on the primary key in Company table
+ * Provide the binary tree root node matching with the given string
+ *      name: given lastname (partial)
 ****************************************************************************************/
 uint get_person_root(dbc *db, char *name) {
 
@@ -334,9 +334,6 @@ uint get_person_root(dbc *db, char *name) {
     len = strlen(name);
 
     while (1) {
-        if (offset==0) {
-            return 0;
-        }
 
         fseek(db->fp_db, offset, SEEK_SET);
         fread(&ipl, sizeof(tipl), 1, db->fp_db);
@@ -389,7 +386,6 @@ void search_person_by_name(dbc *db, uint offset, char *lastname, int type) {
 
         if (strcmp(buf, lastname) == 0) {
 
-            memset(&per, 0, sizeof(cper));
             fseek(db->fp_db, ipl.per_offset, SEEK_SET);
             fread(&per, sizeof(cper), 1, db->fp_db);
             printf("%d %s %s %s\n", per.id_per, per.nm_civ, per.nm_lst, per.nm_fst);

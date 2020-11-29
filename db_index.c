@@ -116,7 +116,6 @@ void create_index_per_name(dbc *db) {
         strcpy(ipl.nm_lst, db->sort[i].ln);                     // fill element data from sorted table
         ipl.per_offset = db->sort[i].off_sort_obj;              // fill element data from sorted table
 
-        ///test
         if(i==0) {
             ipl.per_offset_l = 0;
             ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
@@ -645,7 +644,7 @@ uint find_ipl_tree_root(dbc *db, uint offset, int size) {
     off_l = offset - left + (left-1)/2;
     off_r = offset + (right-1)/2 + 1;
     cur = db->hdr.off_ipl + offset * sizeof(tipl);
-
+//
 //    fseek(db->fp_db, cur, SEEK_SET);
 //    fread(&ipl, sizeof(tipl), 1, db->fp_db);
 //
