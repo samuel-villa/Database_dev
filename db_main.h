@@ -453,3 +453,6 @@ int user_os();                                              // request OS to use
 void pause(int os);                                         // pause screen, a key must be pressed to continue
 void clear(int os);                                         // clear screen
 const char *timestamp();                                    // get current time
+
+/// Reports ///
+void search_company_by_group(dbc *db);

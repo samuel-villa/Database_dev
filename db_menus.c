@@ -236,7 +236,7 @@ void report_menu(dbc *db, int os) {
                 pause(os);
                 break;
             case R_COMP_GROUP:
-                printf("create report with search_group_companies('print option')");
+                search_company_by_group(db);
                 pause(os);
                 break;
             case R_PERS_NAME:
