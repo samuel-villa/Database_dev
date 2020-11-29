@@ -116,16 +116,16 @@ void create_index_per_name(dbc *db) {
         strcpy(ipl.nm_lst, db->sort[i].ln);                     // fill element data from sorted table
         ipl.per_offset = db->sort[i].off_sort_obj;              // fill element data from sorted table
 
-        if(i==0) {
-            ipl.per_offset_l = 0;
-            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
-        } else if (i==db->hdr.nr_per) {
-            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
-            ipl.per_offset_r = 0;
-        } else {
-            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
-            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
-        }
+//        if(i==0) {
+//            ipl.per_offset_l = 0;
+//            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
+//        } else if (i==db->hdr.nr_per) {
+//            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
+//            ipl.per_offset_r = 0;
+//        } else {
+//            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
+//            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
+//        }
 
         fwrite(&ipl, sizeof(tipl), 1, db->fp_db);        // write element into db
     }
@@ -133,6 +133,11 @@ void create_index_per_name(dbc *db) {
     db->hdr.nr_ipl = i;
 
     fprintf(db->fp_lg, "%s Index persons by lastname created\n", timestamp());
+
+    db->hdr.ipl_root = find_ipl_tree_root(db, (db->hdr.nr_per-1)/2, db->hdr.nr_per);
+
+    fseek(db->fp_db, 0, SEEK_SET);
+    fwrite(&db->hdr, sizeof(hder), 1, db->fp_db);
 
     printf("DONE => Indexes created: %d", db->hdr.nr_ipl);
 }
@@ -638,25 +643,25 @@ uint find_ipl_tree_root(dbc *db, uint offset, int size) {
     uint cur, off_l, off_r;
     int diff = size-1;
     int left = diff/2;
-    int right = size - left;
+    int right = diff - left;
     tipl ipl;
 
     off_l = offset - left + (left-1)/2;
     off_r = offset + (right-1)/2 + 1;
     cur = db->hdr.off_ipl + offset * sizeof(tipl);
-//
-//    fseek(db->fp_db, cur, SEEK_SET);
-//    fread(&ipl, sizeof(tipl), 1, db->fp_db);
-//
-//    if (left > 0) {
-//        ipl.per_offset_l = find_ipl_tree_root(db, off_l, left);
-//    }
-//    if (right > 0) {
-//        ipl.per_offset_r = find_ipl_tree_root(db, off_r, right);
-//    }
-//
-//    fseek(db->fp_db, cur, SEEK_SET);
-//    fwrite(&ipl, sizeof(tipl), 1, db->fp_db);
+
+    fseek(db->fp_db, cur, SEEK_SET);
+    fread(&ipl, sizeof(tipl), 1, db->fp_db);
+
+    if (left > 0) {
+        ipl.per_offset_l = find_ipl_tree_root(db, off_l, left);
+    }
+    if (right > 0) {
+        ipl.per_offset_r = find_ipl_tree_root(db, off_r, right);
+    }
+
+    fseek(db->fp_db, cur, SEEK_SET);
+    fwrite(&ipl, sizeof(tipl), 1, db->fp_db);
 
     return cur;
 }

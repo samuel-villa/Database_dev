@@ -272,7 +272,7 @@ void search_person_menu(dbc *db, int os) {
     while (menu_sel != 9) {
         printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
         printf("\t%d - Search Person by ID\n", 0);
-        printf("\t%d - Search person by Lastname\n", 1);
+        printf("\t%d - Search Persons by lastname\n", 1);
         printf("\t%d - GO BACK\n\n", 9);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -282,8 +282,7 @@ void search_person_menu(dbc *db, int os) {
                 pause(os);
                 break;
             case 1:
-                //search_person_by_name(db, );
-                search_person(db);
+                search_person(db, T_AZ);
                 pause(os);
                 break;
             case 9:

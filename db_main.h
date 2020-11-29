@@ -74,7 +74,6 @@
 enum Main_Menu {
     CREATE_DB,
     OPEN_DB,
-    DB_INFO,
     EXIT = 9
 };
 
@@ -173,6 +172,9 @@ typedef struct Header {
     uint nr_per;        // nr of persons
     uint nr_ipc;        // nr of indexes pers/comp
     uint nr_ipl;        // nr of indexes pers/lastname              // 32 bytes
+
+    uint ipl_root;      // root element of the ipl table (used in binary trees)
+    char filler[28];
 } hder;
 
 
@@ -408,7 +410,8 @@ void import_CSV_person(dbc *db);                            // import data to db
 void export_CSV_person(dbc *db);                            // export data from db file to csv
 void display_single_person(dbc *db, cper per);              // display company struct attributes
 void search_person_by_id(dbc *db);                          // generic search function for cpy ID
-void search_person_by_name(dbc *db, uint offset, char *lastname, int type);              // TODO BinaryTree:
+void search_person(dbc *db, int type);
+void search_person_by_name(dbc *db, uint offset, char *lastname);              // TODO BinaryTree:
                                                             // TODO make it not case sensitive && partial name function
 cper read_single_person(dbc *db, int index);                // read per record given its index
 
@@ -435,7 +438,6 @@ void list_comp_employees(dbc *db, int comp_id);             // display company a
 int  search_binary_ipc(dbc *db, int id);                    // binary search per company ID on person table
 uint find_ipl_tree_root(dbc *db, uint offset, int size);
 uint get_person_root(dbc *db, char *name);
-void search_person(dbc *db);
 
 /// Linked List ///
 node *link_ls_create();                                     // create the doubly linked list
