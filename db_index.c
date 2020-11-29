@@ -285,9 +285,7 @@ int search_binary_ipc(dbc *db, int id) {
 ****************************************************************************************/
 int search_binary_string(dbc *db, char *name) {
 
-    // TODO Binary Tree
-    // TODO improve it in order to get ALL persons responding to a given string (name)
-    // TODO set it as NOT case sensitive (upper || lower)
+    // TODO delete it. It has been replaced
 
     int size, mid, left=0, right;
 
