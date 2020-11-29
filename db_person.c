@@ -251,12 +251,16 @@ void search_person_by_name(dbc *db) {
 
     printf("\n\t--> Enter Person Lastname: "); scanf("%s", lastname); fflush(stdin);
 
-    per_off = get_person_root(db, lastname);
+    per_off = get_person_root(db, lastname);                // if no results -> returns 0
 
-    printf("\n\t%8s\t%-10s %-20s %-20s %-s\n", "id", "civ", "lastname", "firstname", "company");
-    printf("\t-------------------------------------------------------------------------------------------------------\n");
-    fetch_person(db, per_off, lastname);
-    puts("");
+    if (per_off != 0) {
+        printf("\n\t%8s\t%-10s %-20s %-20s %-s\n", "id", "civ", "lastname", "firstname", "company");
+        printf("\t-------------------------------------------------------------------------------------------------------\n");
+        fetch_person(db, per_off, lastname);
+        puts("");
+    } else {
+        printf("\n\tNo results found for '%s'", lastname);
+    }
 }
 
 
@@ -268,20 +272,22 @@ uint get_person_root(dbc *db, char *name) {
 
     tipl ipl;
     uint offset;
-    int i, len;
     char cur[50];
 
     offset = db->hdr.ipl_root;
-    len = strlen(name);
 
     while (1) {
+
+        if (!offset) {
+            return 0;
+        }
 
         fseek(db->fp_db, offset, SEEK_SET);
         fread(&ipl, sizeof(tipl), 1, db->fp_db);
 
         memset(cur, 0, sizeof(cur));
 
-        for (i=0; i < len && i < strlen(ipl.nm_lst); i++) {
+        for (int i=0; i < strlen(name) && i < strlen(ipl.nm_lst); i++) {
             cur[i] = ipl.nm_lst[i];
         }
 
