@@ -128,7 +128,6 @@ void create_db(dbc *db) {
     for (i=0; i<SZ_IPL; i++)
         fwrite(&pl, 1, sizeof(tipl), fp_db);
 
-
     fprintf(fp_lg, "%s Database %s created\n", timestamp(), db->hdr.db_name);
 
     fclose(fp_db);
@@ -185,7 +184,6 @@ void close_db_files(dbc *db) {
 
     fclose(db->fp_db);
     fclose(db->fp_lg);
-
 }
 
 
@@ -219,7 +217,7 @@ void set_db_status(dbc *db) {
 
 
 /****************************************************************************************
-* Display System Info: stocked in the DB Header
+* Display System Info stocked in the DB Header
 ****************************************************************************************/
 void display_system_info(dbc *db) {
 

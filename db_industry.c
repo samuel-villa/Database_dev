@@ -124,7 +124,7 @@ void load_industry(dbc *db) {
     cind ind;
 
     fseek(db->fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, db->fp_db);        // Read header
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);
 
     printf("\n\tLoading industries into buffer... ");
 
@@ -156,6 +156,7 @@ void print_industry(dbc *db) {
 
 /****************************************************************************************
  * Display one Industry record from the buffer
+ *
  *      id_ind: industry id we want to display
 ****************************************************************************************/
 void rec_industry(dbc *db, int id_ind) {

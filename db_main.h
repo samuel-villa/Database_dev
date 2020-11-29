@@ -12,7 +12,7 @@
  *              • Une compagnie donnée par sa clé primaire                                                        OK
  *          • Au moins un écran permettant d’afficher via une liste chainée en mémoire                            OK
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire                         OK
- *              • Les compagnies appartenant à un groupe donné
+ *              • Les compagnies appartenant à un groupe donné                                                  TODO
  *          • Au moins un écran utilisant un index binaire sur disque dans la recherche                           OK
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
  *              • Les personnes dont le nom commence par une chaine donnée                                        OK
@@ -28,10 +28,11 @@
  *          - Database creation
  *          - Import data from .csv file
  *          - Export data to .csv file
- *          - Display Countries, Industries, Groups and Jobs
- *          - Search companies by ID
- *          - Search persons by ID and/or by lastname
- *          - Display company employees given its ID
+ *          - Display Countries, Industries, Groups and Jobs (sequential)
+ *          - Search companies and persons by ID (dichotomic)
+ *          - Display company employees given its ID (dichotomic)
+ *          - Search companies by name (linked list in RAM)
+ *          - Search persons by lastname (binary tree on disc)
  *
  *       Not yet implemented:
  *          - Reports
@@ -221,7 +222,7 @@ typedef struct Group {
 
     char tp_rec[8];     // rec type: GRP
     int  id_grp;        // primary key
-    char filler1[20];
+    char filler[20];
     char nm_grp[60];    // group
     int  id_cty;        // country
 } cgrp;
@@ -338,16 +339,16 @@ typedef struct Doubly_Linked_List {
 ****************************************************************************************/
 typedef struct db_client {
 
-    hder    hdr;         // header
-    FILE    *fp_db;      // db file pointer
-    FILE    *fp_lg;      // log file pointer
-    ccty    cty[SZ_CTY]; // buffer country
-    cjob    job[SZ_JOB]; // buffer job
-    cind    ind[SZ_IND]; // buffer industry
-    cgrp    grp[SZ_GRP]; // buffer group
-    int     status;      // db nonexistent, closed or open
-    t_sort  *sort;       // points to list of elements to be sorted
-    t_lsort *lsort;      // points to linked list of elements to be sorted
+    hder    hdr;            // header
+    FILE    *fp_db;         // db file pointer
+    FILE    *fp_lg;         // log file pointer
+    ccty    cty[SZ_CTY];    // buffer country
+    cjob    job[SZ_JOB];    // buffer job
+    cind    ind[SZ_IND];    // buffer industry
+    cgrp    grp[SZ_GRP];    // buffer group
+    int     status;         // db nonexistent, closed or open
+    t_sort  *sort;          // points to list of elements to be sorted
+    t_lsort *lsort;         // points to linked list of elements to be sorted
 } dbc;
 
 
@@ -432,7 +433,7 @@ void load_ipl_in_ram(dbc *db);                              // load linked sorte
 void get_comp_employees(dbc *db);                           // request company ID and gives the list of employees
 void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
 int  search_binary_ipc(dbc *db, int id);                    // binary search per company ID on person table
-uint find_ipl_tree_root(dbc *db, uint offset, int size);
+uint find_ipl_tree_root(dbc *db, uint offset, int size);    // get tree root of ipl index table
 
 /// Linked List ///
 node *link_ls_create();                                     // create the doubly linked list

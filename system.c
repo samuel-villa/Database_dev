@@ -1,7 +1,7 @@
 /**********************************************************************************************************************
  * Programmation procedurale 2020 - Dossier: Database Clients
  *
- *       System Administration
+ *       System Administration functions, this part handles the different OS used
  *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
@@ -44,26 +44,32 @@ int user_os() {
 
 /****************************************************************************************
  * System Pause: used in menus
- * os: user OS
+ *
+ *      os: user OS
 ****************************************************************************************/
 void pause(int os) {
+
     if (os == UNIX) system("read -p \"\tPress [Enter] key to continue...\"");
     else system("pause");
 }
 
 
 /****************************************************************************************
- * Clear Screen: used in menus
- * os: user OS
+ * Clear Screen function used in menus
+ *
+ *      os: user OS
 ****************************************************************************************/
 void clear(int os) {
+
     if (os == UNIX) system("clear");
     else system("cls");
 }
 
 
 /****************************************************************************************
- * Return current time converted into string
+ * Get current timestamp and convert it into string
+ *
+ *      return: current time converted into string
 ****************************************************************************************/
 const char *timestamp() {
 

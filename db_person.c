@@ -172,6 +172,7 @@ void export_CSV_person(dbc *db) {
 
 /****************************************************************************************
  * Display one Person record
+ *
  *      per: person element
 ****************************************************************************************/
 void display_single_person(dbc *db, cper per) {
@@ -204,6 +205,7 @@ void display_single_person(dbc *db, cper per) {
 
 /****************************************************************************************
  * Read Person record given its position within DB Person block.
+ *
  *      index : person position within the Person block
  *      return: person attributes
 ****************************************************************************************/
@@ -242,7 +244,7 @@ void search_person_by_id(dbc *db) {
 
 
 /****************************************************************************************
- * Main search person by lastname function
+ * Main function for search person by lastname
 ****************************************************************************************/
 void search_person_by_name(dbc *db) {
 
@@ -265,8 +267,10 @@ void search_person_by_name(dbc *db) {
 
 
 /****************************************************************************************
- * Provide the binary tree root node matching with the given string
- *      name: given lastname (partial)
+ * Find the binary tree root node matching with the given string
+ *
+ *      name  : given lastname (partial)
+ *      return: root offset of the person name searched
 ****************************************************************************************/
 uint get_person_root(dbc *db, char *name) {
 
@@ -306,6 +310,7 @@ uint get_person_root(dbc *db, char *name) {
 
 /****************************************************************************************
  * Recursive function comparing given string with db and display results
+ *
  *      offset  : binary tree root node of the given string
  *      lastname: partial lastname provided
 ****************************************************************************************/

@@ -11,6 +11,7 @@
 
 /****************************************************************************************
  * Program main menu: level 0
+ *
  *      os: Operating System used
 ****************************************************************************************/
 void main_menu(dbc *db, int os) {
@@ -21,7 +22,6 @@ void main_menu(dbc *db, int os) {
         printf("\n\n\tDATABASE CLIENTS V0\n\n");
         printf("\t%d - Create Empty DB\n", CREATE_DB);
         printf("\t%d - Open DB\n", OPEN_DB);
-        //printf("\t%d - DB Info\n", DB_INFO);
         printf("\t%d - EXIT\n\n", EXIT);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -47,15 +47,6 @@ void main_menu(dbc *db, int os) {
                     clear(os);
                 }
                 break;
-//            case DB_INFO:
-//                if (db->status != DB_NOT_CREATED) {
-//                    display_system_info(db);
-//                } else {
-//                    printf("\n\tFirst you must create the DB. Select 'Create Empty DB'.\n\n");
-//                }
-//                pause(os);
-//                clear(os);
-//                break;
             case EXIT:
                 close_db_files(db);
                 exit(0);
@@ -70,6 +61,7 @@ void main_menu(dbc *db, int os) {
 
 /****************************************************************************************
  * Open Database Menu: level 1
+ *
  *      os: Operating System used
 ****************************************************************************************/
 void open_db_menu(dbc *db, int os) {
@@ -163,6 +155,7 @@ void open_db_menu(dbc *db, int os) {
 
 /****************************************************************************************
  * Search in Database Menu: level 2
+ *
  *      os: Operating System used
 ****************************************************************************************/
 void search_menu(dbc *db, int os) {
@@ -222,6 +215,7 @@ void search_menu(dbc *db, int os) {
 
 /****************************************************************************************
  * Report Menu: level 2
+ *
  *      os: Operating System used
 ****************************************************************************************/
 void report_menu(dbc *db, int os) {
@@ -263,6 +257,7 @@ void report_menu(dbc *db, int os) {
 
 /****************************************************************************************
  * Search Person Menu: level 3
+ *
  *      os: Operating System used
 ****************************************************************************************/
 void search_person_menu(dbc *db, int os) {
@@ -299,6 +294,7 @@ void search_person_menu(dbc *db, int os) {
 
 /****************************************************************************************
  * Search Company Menu: level 3
+ *
  *      os: Operating System used
 ****************************************************************************************/
 void search_company_menu(dbc *db, int os) {

@@ -42,7 +42,7 @@ void import_CSV_job(dbc *db) {
         ptr2 = strtok(NULL,";");
 
         memset(fld, 0, BUF_LEN);
-        strncpy(fld, ptr1, ptr2-ptr1-1);                // use of strncpy cause allows to handle size
+        strncpy(fld, ptr1, ptr2-ptr1-1);                       // use of strncpy cause allows to handle size
         job.id_job = atoi(fld);
         ptr1 = ptr2;
         ptr2 = strtok(NULL,";");
@@ -53,7 +53,7 @@ void import_CSV_job(dbc *db) {
         ptr1 = ptr2;
         strncpy(job.nm_job, ptr1, strlen(ptr1)-1);
 
-        fwrite(&job, 1, sizeof(cjob), fp_db);      // write into file 'fp_db'
+        fwrite(&job, 1, sizeof(cjob), fp_db);             // write into file 'fp_db'
 
         i++;
     }
@@ -61,12 +61,12 @@ void import_CSV_job(dbc *db) {
     fprintf(fp_lg, "%s Jobs imported: %d\n", timestamp(), i);
 
     fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);        // load buffer (db) with 'fp_db'
+    fread(&db->hdr, sizeof(hder), 1, fp_db);            // load buffer (db) with 'fp_db'
 
     db->hdr.nr_job = i;
 
     fseek(fp_db, 0, SEEK_SET);
-    fwrite(&db->hdr, sizeof(hder), 1, fp_db);       // Update Header
+    fwrite(&db->hdr, sizeof(hder), 1, fp_db);           // Update Header
 
     fclose(fp_db);
     fclose(fp_lg);
@@ -128,7 +128,7 @@ void load_job(dbc *db) {
     cjob job;
 
     fseek(db->fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, db->fp_db);        // Read header
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);
 
     printf("\n\tLoading jobs into buffer... ");
 
@@ -158,6 +158,7 @@ void print_job(dbc *db) {
 
 /****************************************************************************************
  * Display one Job record from the buffer
+ *
  *      id_job: job id we want to display
 ****************************************************************************************/
 void rec_job(dbc *db, int id_job) {

@@ -127,7 +127,7 @@ void load_country(dbc *db) {
     ccty cty;
 
     fseek(db->fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, db->fp_db);        // Read header
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);
 
     printf("\n\tLoading countries into buffer... ");
 
@@ -159,6 +159,7 @@ void print_country(dbc *db) {
 
 /****************************************************************************************
  * Display one Country record from the buffer
+ *
  *      id_cty: country id we want to display
 ****************************************************************************************/
 void rec_country(dbc *db, int id_cty) {

@@ -23,10 +23,6 @@ void create_index(dbc *db) {
     create_index_per_name(db);
     free_sort_table(db);
 
-    alloc_link_sort_table(db, db->hdr.nr_per);
-    // FIXME
-    load_ipl_in_ram(db);
-
     printf("\n\tDONE => Indexes created: %d", db->hdr.nr_ipc + db->hdr.nr_ipl);
 }
 
@@ -116,17 +112,6 @@ void create_index_per_name(dbc *db) {
         strcpy(ipl.nm_lst, db->sort[i].ln);                     // fill element data from sorted table
         ipl.per_offset = db->sort[i].off_sort_obj;              // fill element data from sorted table
 
-//        if(i==0) {
-//            ipl.per_offset_l = 0;
-//            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
-//        } else if (i==db->hdr.nr_per) {
-//            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
-//            ipl.per_offset_r = 0;
-//        } else {
-//            ipl.per_offset_l = db->hdr.off_ipl + (i - 1) * sizeof(tipl);
-//            ipl.per_offset_r = db->hdr.off_ipl + (i + 1) * sizeof(tipl);
-//        }
-
         fwrite(&ipl, sizeof(tipl), 1, db->fp_db);        // write element into db
     }
 
@@ -136,6 +121,7 @@ void create_index_per_name(dbc *db) {
 
     db->hdr.ipl_root = find_ipl_tree_root(db, (db->hdr.nr_per-1)/2, db->hdr.nr_per);
 
+    // update the db header
     fseek(db->fp_db, 0, SEEK_SET);
     fwrite(&db->hdr, sizeof(hder), 1, db->fp_db);
 
@@ -145,7 +131,8 @@ void create_index_per_name(dbc *db) {
 
 
 /*****************************************************************************************
- * Binary Search per ID.
+ * Binary Search per ID. Multiplexed for Company ID and Person ID depending on the 'type'
+ *
  *      id    : element ID we want to search
  *      type  : Company ID or Person ID
  *      return: the element index/position within the db company block (per_id or per_ln)
@@ -240,6 +227,7 @@ int search_binary(dbc *db, int id, int type) {
 
 /*****************************************************************************************
  * Binary Search per company ID on ipc table.
+ *
  *      id    : person table foreign key company ID
  *      ipcc  : ipc element
  *      return: the element index/position within the db ipc block
@@ -291,6 +279,7 @@ int search_binary_ipc(dbc *db, int id) {
 
 /****************************************************************************************
  * Binary Search per person lastname.
+ *
  *      name  : person name we want to search
  *      return: the element index/position within the db person block
 ****************************************************************************************/
@@ -359,6 +348,7 @@ void search_group_companies(dbc *db) {
 
 /****************************************************************************************
  * Bubble sort algorithm used for index creation (INEFFICIENT for this project: very slow)
+ *
  *      nr  : nr of elements in the list we want to sort
  *      type: persons by company ID || persons by lastname
 ****************************************************************************************/
@@ -390,7 +380,8 @@ void sort_bubble_index(dbc *db, int nr, int type) {
 
 
 /****************************************************************************************
- * Quick sort algorithm used for index creation
+ * Quick sort algorithm used for index tables creation
+ *
  *      nr  : nr of elements in the list we want to sort
  *      type: persons by company ID || persons by lastname
 ****************************************************************************************/
@@ -460,6 +451,7 @@ void quicksort(dbc *db, int first, int last, int type) {
 
 /****************************************************************************************
  * Memory allocation in RAM for the list sorting area (person by ID)
+ *
  *      size: nr of elements in the list we want to sort
 ****************************************************************************************/
 void alloc_sort_table(dbc *db, uint size) {
@@ -471,6 +463,7 @@ void alloc_sort_table(dbc *db, uint size) {
 
 /****************************************************************************************
  * Memory allocation in RAM for the list sorting area (person by Lastname)
+ *
  *      size: nr of elements in the list we want to sort
 ****************************************************************************************/
 void alloc_link_sort_table(dbc *db, uint size) {
@@ -502,6 +495,7 @@ void free_link_sort_table(dbc *db) {
 
 /****************************************************************************************
  * Read Index Person/lastname record given its position within DB Index tipl block.
+ *
  *      index : element position within the 'person by lastname' db block
  *      return: tipl element attributes
 ****************************************************************************************/
@@ -518,6 +512,7 @@ tipl read_single_tipl_rec(dbc *db, int index) {
 
 /****************************************************************************************
  * Read Index Person/companyID record given its position within DB Index tipc block.
+ *
  *      index : element position within the 'person by company ID' db block
  *      return: tipc element attributes
 ****************************************************************************************/
@@ -563,7 +558,7 @@ void load_ipl_in_ram(dbc *db) {
 
 
 /****************************************************************************************
-* Give the list of employees per Company
+* Give the list of employees per Company given its ID (main function)
 ****************************************************************************************/
 void get_comp_employees(dbc *db) {
 
@@ -576,6 +571,7 @@ void get_comp_employees(dbc *db) {
 
 /****************************************************************************************
  * Display the list of employees of one Company given its ID:
+ *
  *      comp_id: ID company we want to search
 ****************************************************************************************/
 void list_comp_employees(dbc *db, int comp_id) {
@@ -634,9 +630,13 @@ void list_comp_employees(dbc *db, int comp_id) {
 
 
 /****************************************************************************************
- * Provide the binary tree root of person/lastname index table
+ * Provide the binary tree root of person/lastname index table and complete
+ * person/lastname index table by writing the offset left and offset right
+ * for every element of the table.
+ *
  *      offset: root offset of the ipl table
  *      size  : total number of elements in ipl table
+ *      return: tree root of ipl table
 ****************************************************************************************/
 uint find_ipl_tree_root(dbc *db, uint offset, int size) {
 

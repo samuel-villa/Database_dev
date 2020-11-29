@@ -179,6 +179,7 @@ void export_CSV_company(dbc *db) {
 
 /****************************************************************************************
  * Display one Company record
+ *
  *      cpy: company element we want to display
 ****************************************************************************************/
 void display_single_company(dbc *db, ccpy cpy) {
@@ -203,7 +204,6 @@ void display_single_company(dbc *db, ccpy cpy) {
 
 
 /****************************************************************************************
- * Search Company by ID
  * Binary search (dichotomic) on the primary key in Company table
 ****************************************************************************************/
 void search_company_by_id(dbc *db) {
@@ -227,8 +227,10 @@ void search_company_by_id(dbc *db) {
 
 /*****************************************************************************************************
  * Search the bigger company (alphabetically) matching with the element name
- *      ls : linked list element
- *      cpy: company searched
+ *
+ *      ls    : linked list element
+ *      cpy   : company searched
+ *      return: current node within the linked list
 *****************************************************************************************************/
 node *search_bigger_cpy(node *ls, ccpy cpy) {
 
@@ -242,6 +244,7 @@ node *search_bigger_cpy(node *ls, ccpy cpy) {
 
 /*****************************************************************************************************
  * Add company element before the given element within the linked list
+ *
  *      elem: element of the linked list
  *      cpy : company element
 *****************************************************************************************************/
@@ -264,7 +267,9 @@ void add_cpy_before(node *elem, ccpy cpy, cper per) {
 
 /****************************************************************************************
  * Read Company record given its position nb.
- *      index: company position within the company table
+ *
+ *      index : company position within the company table
+ *      return: cpy element
 ****************************************************************************************/
 ccpy read_single_company(dbc *db, int index) {
 
@@ -280,6 +285,7 @@ ccpy read_single_company(dbc *db, int index) {
 
 /****************************************************************************************
  * Display all companies matching with given string. Result can be sorted AtoZ or ZtoA
+ *
  *      type: AtoZ or ZtoA
 ****************************************************************************************/
 void search_company_by_name(dbc *db, int type) {
@@ -317,7 +323,7 @@ void search_company_by_name(dbc *db, int type) {
         }
     } while (cpy.id_cpy);
 
-    if (type == T_AZ) {                                              // display A-Z
+    if (type == T_AZ) {                                             // display A-Z
         for (it = root->next; it != root; it = it->next) {
             display_single_company(db, it->cpy);
             count++;

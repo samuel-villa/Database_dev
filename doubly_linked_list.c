@@ -1,7 +1,7 @@
 /**********************************************************************************************************************
  * Programmation procedurale 2020 - Dossier: Database Clients
  *
- *       Functions related to the doubly linked list created to sort and display elements
+ *       Functions related to the doubly linked list used to sort and display elements
  *       of the person table and/or the company table using their foreign key field
  *
  * Samuel CIULLA - MacOS 10.13
@@ -11,6 +11,7 @@
 
 /*****************************************************************************************************
  * Create doubly linked list, at this point the list is empty so prev and next both point to the root
+ *
  *      return: root pointer
 *****************************************************************************************************/
 node *link_ls_create() {
@@ -27,6 +28,7 @@ node *link_ls_create() {
 
 /*****************************************************************************************************
  * Empty the doubly linked list
+ *
  *      ls: linked list to process
 *****************************************************************************************************/
 void link_ls_empty(node *ls) {
@@ -44,6 +46,7 @@ void link_ls_empty(node *ls) {
 
 /*****************************************************************************************************
  * Delete the doubly linked list
+ *
  *      ls: linked list to delete
 *****************************************************************************************************/
 void link_ls_delete(node **ls) {

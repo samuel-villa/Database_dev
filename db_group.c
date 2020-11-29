@@ -52,7 +52,7 @@ void import_CSV_group(dbc *db) {
         strncpy(fld, ptr1, strlen(ptr1)-1);
         grp.id_cty = atoi(fld);
 
-        fwrite(&grp, 1, sizeof(cgrp), fp_db);      // write into file 'fp_db'
+        fwrite(&grp, 1, sizeof(cgrp), fp_db);         // write into file 'fp_db'
 
         i++;
     }
@@ -126,7 +126,7 @@ void load_group(dbc *db) {
     cgrp grp;
 
     fseek(db->fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, db->fp_db);        // Read header
+    fread(&db->hdr, sizeof(hder), 1, db->fp_db);
 
     printf("\n\tLoading groups into buffer... ");
 
@@ -158,6 +158,7 @@ void print_group(dbc *db) {
 
 /****************************************************************************************
  * Display one Group record from the buffer
+ *
  *      id_grp: group id we want to display
 ****************************************************************************************/
 void rec_group(dbc *db, int id_grp) {
