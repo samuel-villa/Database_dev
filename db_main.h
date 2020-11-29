@@ -433,6 +433,9 @@ void load_ipl_in_ram(dbc *db);                              // load linked sorte
 void get_comp_employees(dbc *db);                           // request company ID and gives the list of employees
 void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
 int  search_binary_ipc(dbc *db, int id);                    // binary search per company ID on person table
+uint find_ipl_tree_root(dbc *db, uint offset, int size);
+uint get_person_root(dbc *db, char *name);
+void search_person(dbc *db);
 
 /// Linked List ///
 node *link_ls_create();                                     // create the doubly linked list

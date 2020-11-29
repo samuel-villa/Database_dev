@@ -303,6 +303,64 @@ void add_per_before(node *elem, tipl ipl, ccpy cpy) {
 
 
 /****************************************************************************************
+ * Search Company by ID
+ * Binary search (dichotomic) on the primary key in Company table
+****************************************************************************************/
+void search_person(dbc *db) {
+
+    char lastname[50];
+    uint per_off;
+
+    printf("\n\t--> Enter Person Lastname: "); scanf("%s", lastname); fflush(stdin);
+
+    per_off = get_person_root(db, lastname);        // ok => provide correct offset (ipl)
+
+    search_person_by_name(db, per_off, lastname, T_AZ);
+}
+
+
+/****************************************************************************************
+ * Search Company by ID
+ * Binary search (dichotomic) on the primary key in Company table
+****************************************************************************************/
+uint get_person_root(dbc *db, char *name) {
+
+    tipl ipl;
+    uint offset;
+    int i, len;
+    char cur[50];
+
+    offset = find_ipl_tree_root(db, (db->hdr.nr_per-1)/2, db->hdr.nr_per);
+    len = strlen(name);
+
+    while (1) {
+        if (offset==0) {
+            return 0;
+        }
+
+        fseek(db->fp_db, offset, SEEK_SET);
+        fread(&ipl, sizeof(tipl), 1, db->fp_db);
+
+        memset(cur, 0, sizeof(cur));
+
+        for (i=0; i < len && i < strlen(ipl.nm_lst); i++) {
+            cur[i] = ipl.nm_lst[i];
+        }
+
+        if (strcmp(name, cur) < 0) {
+            offset = ipl.per_offset_l;
+        } else {
+            if (strcmp(name, cur) > 0) {
+                offset = ipl.per_offset_r;
+            } else {
+                return offset;
+            }
+        }
+    }
+}
+
+
+/****************************************************************************************
  * Search Person by Lastname - Binary search by lastname in I_Person_Lastname table
 ****************************************************************************************/
 void search_person_by_name(dbc *db, uint offset, char *lastname, int type) {
@@ -313,6 +371,7 @@ void search_person_by_name(dbc *db, uint offset, char *lastname, int type) {
     cper per;
 
     if (offset) {
+
         fseek(db->fp_db, offset, SEEK_SET);
         fread(&ipl, sizeof(tipl), 1, db->fp_db);
 
@@ -324,14 +383,17 @@ void search_person_by_name(dbc *db, uint offset, char *lastname, int type) {
         } else {
             strcpy(buf, ipl.nm_lst);
         }
+
+        //FIXME if I delete this line it works fine
         search_person_by_name(db, ipl.per_offset_l, lastname, T_AZ);
 
         if (strcmp(buf, lastname) == 0) {
+
+            memset(&per, 0, sizeof(cper));
             fseek(db->fp_db, ipl.per_offset, SEEK_SET);
             fread(&per, sizeof(cper), 1, db->fp_db);
             printf("%d %s %s %s\n", per.id_per, per.nm_civ, per.nm_lst, per.nm_fst);
         }
         search_person_by_name(db, ipl.per_offset_r, lastname, T_AZ);
     }
-
 }
