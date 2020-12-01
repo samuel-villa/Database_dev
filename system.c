@@ -93,3 +93,30 @@ const char *timestamp() {
 
     return timestamp;
 }
+
+
+/****************************************************************************************
+ * Get current timestamp and convert it into string
+ * Formatted for report file name generation
+ *
+ *      return: current time converted into string
+****************************************************************************************/
+const char *timestamp_report() {
+
+    int day, month, year;
+    char *timestamp;
+
+    timestamp = (char*)malloc(sizeof(char));
+
+    time_t now;
+    time(&now);
+    struct tm *local = localtime(&now);
+
+    day = local->tm_mday;
+    month = local->tm_mon + 1;
+    year = local->tm_year + 1900;
+
+    sprintf(timestamp, "%02d%02d%d", day, month, year);
+
+    return timestamp;
+}

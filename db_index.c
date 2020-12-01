@@ -446,6 +446,39 @@ void quicksort(dbc *db, int first, int last, int type) {
     }
 }
 
+/// test
+void quicksort_test(dbc *db, int first, int last) {
+
+    int i, j, pivot;
+    t_lsort temp;
+
+
+    if (first < last) {
+        pivot = first;
+        i = first;
+        j = last;
+
+        while (i < j) {
+            while (db->lsort[i].id <= db->lsort[pivot].id && i < last)
+                i++;
+            while (db->lsort[j].id > db->lsort[pivot].id)
+                j--;
+            if (i < j) {
+                temp = db->lsort[i];
+                db->lsort[i] = db->lsort[j];
+                db->lsort[j] = temp;
+            }
+        }
+
+        temp = db->lsort[pivot];
+        db->lsort[pivot] = db->lsort[j];
+        db->lsort[j] = temp;
+
+        quicksort_test(db, first, j - 1);
+        quicksort_test(db, j + 1, last);
+    }
+}
+
 
 /****************************************************************************************
  * Memory allocation in RAM for the list sorting area (person by ID)
@@ -528,31 +561,31 @@ tipc read_single_tipc_rec(dbc *db, int index) {
 /****************************************************************************************
 * Read data from person/companyID table and store it in RAM
 ****************************************************************************************/
-void load_ipl_in_ram(dbc *db) {
-
-    uint pt_next;
-    uint pt_ipc;
-    tipc ipc;
-    int i;
-
-    // read data from ipc table and set db->lsort table
-    for (i=0; i<db->hdr.nr_per; i++) {
-
-        memset(&ipc, 0, sizeof(tipc));
-        pt_ipc = db->hdr.off_ipc + i * sizeof(tipc);               // getting element offset
-        fseek(db->fp_db, pt_ipc, SEEK_SET);                        // place cursor at element offset
-        fread(&ipc, sizeof(tipc), 1, db->fp_db);            // read element
-
-        db->lsort[i].id = ipc.id_cpy;                              // set read data into db->lsort[i]
-        db->lsort[i].off_sort_obj = ipc.per_offset;                // set read data into db->lsort[i]
-
-        pt_next = ipc.per_offset + 1*sizeof(cper);                 // getting next element offset
-        if (pt_next >= db->hdr.db_size) {                          // prevent out range
-            pt_next = db->hdr.db_size;
-        }
-        db->lsort[i].off_next = pt_next;                           // set read data into db->lsort[i]
-    }
-}
+//void load_ipl_in_ram(dbc *db) {
+//
+//    uint pt_next;
+//    uint pt_ipc;
+//    tipc ipc;
+//    int i;
+//
+//    // read data from ipc table and set db->lsort table
+//    for (i=0; i<db->hdr.nr_per; i++) {
+//
+//        memset(&ipc, 0, sizeof(tipc));
+//        pt_ipc = db->hdr.off_ipc + i * sizeof(tipc);               // getting element offset
+//        fseek(db->fp_db, pt_ipc, SEEK_SET);                        // place cursor at element offset
+//        fread(&ipc, sizeof(tipc), 1, db->fp_db);            // read element
+//
+//        db->lsort[i].id = ipc.id_cpy;                              // set read data into db->lsort[i]
+//        db->lsort[i].off_sort_obj = ipc.per_offset;                // set read data into db->lsort[i]
+//
+//        pt_next = ipc.per_offset + 1*sizeof(cper);                 // getting next element offset
+//        if (pt_next >= db->hdr.db_size) {                          // prevent out range
+//            pt_next = db->hdr.db_size;
+//        }
+//        db->lsort[i].off_next = pt_next;                           // set read data into db->lsort[i]
+//    }
+//}
 
 
 /****************************************************************************************

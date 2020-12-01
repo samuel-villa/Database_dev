@@ -309,15 +309,14 @@ typedef struct Sorting {
 
 
 /***************************************************************************************
-* Sorting space used to sort list of I_Person_Lastname type
+* Sorting space used to sort companies of a specific group, by country (reports)
 ****************************************************************************************/
 // TODO struct to delete and all related functions
 typedef struct Linked_Sorting {
 
     int  id;            // object id to be sorted
     char ln[64];        // used when searching by lastname
-    uint off_sort_obj;  // object offset
-    uint off_next;      // next object offset
+    ccpy cpy;
 } t_lsort;
 
 
@@ -342,6 +341,7 @@ typedef struct db_client {
     hder    hdr;            // header
     FILE    *fp_db;         // db file pointer
     FILE    *fp_lg;         // log file pointer
+    FILE    *fp_rp;         // report file pointer
     ccty    cty[SZ_CTY];    // buffer country
     cjob    job[SZ_JOB];    // buffer job
     cind    ind[SZ_IND];    // buffer industry
@@ -456,3 +456,5 @@ const char *timestamp();                                    // get current time
 
 /// Reports ///
 void search_company_by_group(dbc *db);
+void create_report_template(dbc *db);
+const char *timestamp_report();

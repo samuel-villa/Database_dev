@@ -297,7 +297,6 @@ void search_company_by_name(dbc *db, int type) {
     node *root, *it, *cur;
 
     printf("\n\tEnter partial company name: "); scanf("%s", cpy_name); fflush(stdin);
-    len = strlen(cpy_name);
 
     fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
     root = link_ls_create();                                        // create an empty doubly linked list
@@ -311,7 +310,7 @@ void search_company_by_name(dbc *db, int type) {
         }
         found = 1;
 
-        for(int i=0; i<len; i++) {                                  // test if name match
+        for(int i=0; i < strlen(cpy_name); i++) {                                  // test if name match
             if (toupper(cpy_name[i]) != toupper(cpy.nm_cpy[i])) {
                 found = 0;
             }
@@ -341,9 +340,7 @@ void search_company_by_name(dbc *db, int type) {
 
 
 /****************************************************************************************
- * Display all companies matching with given string. Result can be sorted AtoZ or ZtoA
  *
- *      type: AtoZ or ZtoA
 ****************************************************************************************/
 void search_company_by_group(dbc *db) {
 
@@ -352,56 +349,60 @@ void search_company_by_group(dbc *db) {
     //  * when we get group ID: search matching companies as here below (LINKED LIST)
     //  * the display companies ordered by their country
 
-    for (int i=0; i<db->hdr.nr_grp; i++) {
-        printf("%d\t%s\n", i, db->grp[i].nm_grp);
+    ccpy cpy;
+    cper per;
+    int group_id;
+    int found, count=0;
+    node *root, *it, *cur;
+
+    printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);
+
+    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
+    root = link_ls_create();                                        // create an empty doubly linked list
+
+    do {
+        memset(&cpy, 0, sizeof(cpy));
+        fread(&cpy, sizeof(cpy), 1, db->fp_db);
+
+        if (!cpy.id_cpy) {
+            break;
+        }
+        found = 1;
+
+        if (group_id != cpy.id_grp) {
+            found = 0;
+        }
+
+        if (found) {                                                // if match add element to linked list
+            cur = search_bigger_cpy(root, cpy);
+            add_cpy_before(cur, cpy, per);
+        }
+    } while (cpy.id_cpy);
+
+
+    // ------ generate report
+
+    // TODO finish this...
+    create_report_template(db);
+
+    for (int c=1; c<=db->hdr.nr_cty; c++) {
+
+        printf("\n-----------------------------------------------------------------------"
+               "-------------------------------------------------------------------------\n");
+        printf("\t%d %s\n\n", db->cty[c].id_cty, db->cty[c].nm_cty);
+
+        for (it = root->next; it != root; it = it->next) {
+
+            if (db->cty[c].id_cty == it->cpy.id_cty) {
+                printf("%8d %-20s\n", it->cpy.id_cpy, it->cpy.nm_cpy);
+                count++;
+            }
+        }
     }
 
+    printf("\n\tCompanies found: %d\n\n", count);
 
-//    ccpy cpy;
-//    cper per;
-//    char grp_name[BUF_LEN];
-//    int found, count=0, len;
-//    node *root, *it, *cur;
-//
-//    printf("\n\tEnter group name: "); scanf("%s", grp_name); fflush(stdin);
-//    len = strlen(grp_name);
-//
-//    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
-//    root = link_ls_create();                                        // create an empty doubly linked list
-//
-//    do {
-//        memset(&cpy, 0, sizeof(cpy));
-//        fread(&cpy, sizeof(cpy), 1, db->fp_db);
-//
-//        if (!cpy.id_cpy) {
-//            break;
-//        }
-//        found = 1;
-//
-//        for(int i=0; i<len; i++) {                                  // test if name match
-//            if (toupper(grp_name[i]) != toupper(cpy.nm_cpy[i])) {
-//                found = 0;
-//            }
-//        }
-//
-//        if (found) {                                                // if match add element to linked list
-//            cur = search_bigger_cpy(root, cpy);
-//            add_cpy_before(cur, cpy, per);
-//        }
-//    } while (cpy.id_cpy);
-//
-//    if (type == T_AZ) {                                             // display A-Z
-//        for (it = root->next; it != root; it = it->next) {
-//            display_single_company(db, it->cpy);
-//            count++;
-//        }
-//    } else {
-//        for (it = root->prev; it != root; it = it->prev) {          // display Z-A
-//            display_single_company(db, it->cpy);
-//            count++;
-//        }
-//    }
-//    printf("\n\tCompanies found: %d\n\n", count);
-//
-//    link_ls_delete(&root);
+    link_ls_delete(&root);
+
+    create_report_template(db);
 }
