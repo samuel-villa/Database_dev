@@ -9,6 +9,7 @@
 #include "db_main.h"
 
 
+
 /****************************************************************************************
  * Program main menu: level 0
  *
@@ -236,7 +237,7 @@ void report_menu(dbc *db, int os) {
                 pause(os);
                 break;
             case R_COMP_GROUP:
-                search_company_by_group(db);
+                report_group_companies(db);
                 pause(os);
                 break;
             case R_PERS_NAME:

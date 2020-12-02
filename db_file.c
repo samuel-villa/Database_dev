@@ -8,6 +8,8 @@
 
 #include "db_main.h"
 
+
+
 /****************************************************************************************
  * DB creation based on SZ_* constants
  * set up the empty db for all tables and the header
@@ -243,23 +245,4 @@ void display_system_info(dbc *db) {
     printf("\t* Nb of Persons                  : %-8d\n", db->hdr.nr_per);
 
     printf("\n\n\t===============================================\n\n");
-}
-
-
-/****************************************************************************************
-* Generate .txt report file with name and date
-****************************************************************************************/
-void create_report_template(dbc *db) {
-
-    char file_path[50], date[50], report[80];
-
-    strcpy(file_path, "data_export/report_");
-    sprintf(report, "%s%s.txt", file_path, timestamp_report());
-
-    db->fp_rp = fopen(report, "w");
-
-    if(db->fp_rp == NULL) {
-        printf("\nUnable to create file.\n");
-        exit(EXIT_FAILURE);
-    }
 }

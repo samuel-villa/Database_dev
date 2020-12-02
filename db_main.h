@@ -17,7 +17,7 @@
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
  *              • Les personnes dont le nom commence par une chaine donnée                                        OK
  *          • Les listes chainées pourront être triées ascendant ou descendant                                    OK
- *          • Deux rapports répondants aux requêtes précisées ci-dessous
+ *          • Deux rapports répondants aux requêtes précisées ci-dessous                                         1/2
  *
  *       Header file:
  *          - definitions
@@ -53,6 +53,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 
 
 /***************************************************************************************
@@ -349,6 +350,7 @@ typedef struct db_client {
     int     status;         // db nonexistent, closed or open
     t_sort  *sort;          // points to list of elements to be sorted
     t_lsort *lsort;         // points to linked list of elements to be sorted
+    char    *user;          // user name inserted when generating reports
 } dbc;
 
 
@@ -455,6 +457,6 @@ void clear(int os);                                         // clear screen
 const char *timestamp();                                    // get current time
 
 /// Reports ///
-void search_company_by_group(dbc *db);
+void report_group_companies(dbc *db);
 void create_report_template(dbc *db);
-const char *timestamp_report();
+const char *timestamp_filename();

@@ -8,6 +8,8 @@
 
 #include "db_main.h"
 
+
+
 /****************************************************************************************
 * Import file db_company.csv in the DB
 ****************************************************************************************/
@@ -336,73 +338,4 @@ void search_company_by_name(dbc *db, int type) {
     printf("\n\tCompanies found: %d\n\n", count);
 
     link_ls_delete(&root);
-}
-
-
-/****************************************************************************************
- *
-****************************************************************************************/
-void search_company_by_group(dbc *db) {
-
-    // TODO FOR REPORTS => "Liste de toutes les compagnies appartenant à un groupe, par pays"
-    //  * find group by name and/or ID SEQUENTIALLY => ex. db->grp[i].nm_grp
-    //  * when we get group ID: search matching companies as here below (LINKED LIST)
-    //  * the display companies ordered by their country
-
-    ccpy cpy;
-    cper per;
-    int group_id;
-    int found, count=0;
-    node *root, *it, *cur;
-
-    printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);
-
-    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
-    root = link_ls_create();                                        // create an empty doubly linked list
-
-    do {
-        memset(&cpy, 0, sizeof(cpy));
-        fread(&cpy, sizeof(cpy), 1, db->fp_db);
-
-        if (!cpy.id_cpy) {
-            break;
-        }
-        found = 1;
-
-        if (group_id != cpy.id_grp) {
-            found = 0;
-        }
-
-        if (found) {                                                // if match add element to linked list
-            cur = search_bigger_cpy(root, cpy);
-            add_cpy_before(cur, cpy, per);
-        }
-    } while (cpy.id_cpy);
-
-
-    // ------ generate report
-
-    // TODO finish this...
-    create_report_template(db);
-
-    for (int c=1; c<=db->hdr.nr_cty; c++) {
-
-        printf("\n-----------------------------------------------------------------------"
-               "-------------------------------------------------------------------------\n");
-        printf("\t%d %s\n\n", db->cty[c].id_cty, db->cty[c].nm_cty);
-
-        for (it = root->next; it != root; it = it->next) {
-
-            if (db->cty[c].id_cty == it->cpy.id_cty) {
-                printf("%8d %-20s\n", it->cpy.id_cpy, it->cpy.nm_cpy);
-                count++;
-            }
-        }
-    }
-
-    printf("\n\tCompanies found: %d\n\n", count);
-
-    link_ls_delete(&root);
-
-    create_report_template(db);
 }

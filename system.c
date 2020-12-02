@@ -8,10 +8,14 @@
 
 #include "db_main.h"
 
+
+
 enum OS {
     UNIX,
     WINDOWS
 };
+
+
 
 /****************************************************************************************
 * Request user OS
@@ -96,12 +100,12 @@ const char *timestamp() {
 
 
 /****************************************************************************************
- * Get current timestamp and convert it into string
- * Formatted for report file name generation
+ * Get current timestamp and convert it into string.
+ * Formatted for file name generation: no spaces or special characters.
  *
  *      return: current time converted into string
 ****************************************************************************************/
-const char *timestamp_report() {
+const char *timestamp_filename() {
 
     int day, month, year;
     char *timestamp;
