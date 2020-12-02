@@ -312,7 +312,7 @@ void search_company_by_name(dbc *db, int type) {
         }
         found = 1;
 
-        for(int i=0; i < strlen(cpy_name); i++) {                                  // test if name match
+        for(int i=0; i < strlen(cpy_name); i++) {                   // test if name match
             if (toupper(cpy_name[i]) != toupper(cpy.nm_cpy[i])) {
                 found = 0;
             }

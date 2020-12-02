@@ -107,7 +107,7 @@ const char *timestamp() {
 ****************************************************************************************/
 const char *timestamp_filename() {
 
-    int day, month, year;
+    int hours, minutes, seconds, day, month, year;
     char *timestamp;
 
     timestamp = (char*)malloc(sizeof(char));
@@ -116,11 +116,14 @@ const char *timestamp_filename() {
     time(&now);
     struct tm *local = localtime(&now);
 
+    hours = local->tm_hour;
+    minutes = local->tm_min;
+    seconds = local->tm_sec;
     day = local->tm_mday;
     month = local->tm_mon + 1;
     year = local->tm_year + 1900;
 
-    sprintf(timestamp, "%02d%02d%d", day, month, year);
+    sprintf(timestamp, "%02d%02d%d_%02d%02d%02d", day, month, year, hours, minutes, seconds);
 
     return timestamp;
 }

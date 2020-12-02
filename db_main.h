@@ -44,7 +44,9 @@
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
-// TODO set log traces all over the program (where missing)
+// TODO reports => search group by name
+// TODO set log traces all over the program (where missing): create function
+// TODO logs for report generation !
 // TODO pagination
 
 
@@ -106,9 +108,8 @@ enum Search_Type {
 };
 
 enum Report_Menu {
-    R_PERS_COMP,
     R_COMP_GROUP,
-    R_PERS_NAME,
+    R_PERS_GROUP,
     R_BACK = 9
 };
 
@@ -455,8 +456,9 @@ int user_os();                                              // request OS to use
 void pause(int os);                                         // pause screen, a key must be pressed to continue
 void clear(int os);                                         // clear screen
 const char *timestamp();                                    // get current time
+const char *timestamp_filename();                           // get current time, filename format
 
 /// Reports ///
-void report_group_companies(dbc *db);
-void create_report_template(dbc *db);
-const char *timestamp_filename();
+void report_template(dbc *db);                              // create report file and generate header
+void report_group_companies(dbc *db);                       // list companies of given group and generate report
+void report_group_persons(dbc *db);                         // count persons of a group, column nm_emp + persons in db

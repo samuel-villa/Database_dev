@@ -201,54 +201,12 @@ void search_menu(dbc *db, int os) {
                 break;
             case S_COMPANY:
                 search_company_menu(db, os);
-                //search_company_by_name(db);
                 clear(os);
                 break;
             case S_BACK:
                 break;
             default:
                 puts("\n\tWrong Selection");
-                break;
-        }
-    }
-}
-
-
-/****************************************************************************************
- * Report Menu: level 2
- *
- *      os: Operating System used
-****************************************************************************************/
-void report_menu(dbc *db, int os) {
-
-    int menu_sel = 0;
-
-    while (menu_sel != R_BACK) {
-        printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
-        printf("\t%d - Employees per Company\n", R_PERS_COMP);
-        printf("\t%d - Companies per Group\n", R_COMP_GROUP);
-        printf("\t%d - Employees by Partial Lastname\n", R_PERS_NAME);
-        printf("\t%d - GO BACK\n\n", R_BACK);
-        printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
-
-        switch (menu_sel) {
-            case R_PERS_COMP:
-                printf("create report with search_company_employees('print option')");
-                pause(os);
-                break;
-            case R_COMP_GROUP:
-                report_group_companies(db);
-                pause(os);
-                break;
-            case R_PERS_NAME:
-                printf("create report with fetch_person('print option')");
-                pause(os);
-                break;
-            case R_BACK:
-                break;
-            default:
-                puts("\n\tWrong Selection");
-                pause(os);
                 break;
         }
     }
@@ -332,6 +290,42 @@ void search_company_menu(dbc *db, int os) {
                 break;
             default:
                 puts("\n\tWrong Selection");
+                break;
+        }
+    }
+}
+
+
+/****************************************************************************************
+ * Report Menu: level 2
+ *
+ *      os: Operating System used
+****************************************************************************************/
+void report_menu(dbc *db, int os) {
+
+    int menu_sel = 0;
+
+    while (menu_sel != R_BACK) {
+        printf("\n\n\tDATABASE CLIENTS V0: '%s' OPEN\n\n", db->hdr.db_name);
+        printf("\t%d - Report: List of Companies per Group (grouped by Country)\n", R_COMP_GROUP);
+        printf("\t%d - Report: Total Number of Employees per Group\n", R_PERS_GROUP);
+        printf("\t%d - GO BACK\n\n", R_BACK);
+        printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
+
+        switch (menu_sel) {
+            case R_COMP_GROUP:
+                report_group_companies(db);
+                pause(os);
+                break;
+            case R_PERS_GROUP:
+                report_group_persons(db);
+                pause(os);
+                break;
+            case R_BACK:
+                break;
+            default:
+                puts("\n\tWrong Selection");
+                pause(os);
                 break;
         }
     }
