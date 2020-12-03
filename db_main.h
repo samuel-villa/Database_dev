@@ -12,7 +12,7 @@
  *              • Une compagnie donnée par sa clé primaire                                                        OK
  *          • Au moins un écran permettant d’afficher via une liste chainée en mémoire                            OK
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire                         OK
- *              • Les compagnies appartenant à un groupe donné                                                  TODO
+ *              • Les compagnies appartenant à un groupe donné                                                    OK
  *          • Au moins un écran utilisant un index binaire sur disque dans la recherche                           OK
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
  *              • Les personnes dont le nom commence par une chaine donnée                                        OK
@@ -29,14 +29,12 @@
  *          - Import data from .csv file
  *          - Export data to .csv file
  *          - Display Countries, Industries, Groups and Jobs (sequential)
- *          - Search companies and persons by ID (dichotomic)
- *          - Display company employees given its ID (dichotomic)
- *          - Search companies by name (linked list in RAM)
- *          - Search persons by lastname (binary tree on disc)
- *
- *       Not yet implemented:
+ *          - Search companies and persons by ID             (dichotomic)
+ *          - Display company employees given its ID         (dichotomic)
+ *          - Search companies by name                       (linked list in RAM)
+ *          - Search companies belonging to a given group    (linked list in RAM)
+ *          - Search persons by lastname                     (binary tree on disc)
  *          - Reports
- *          - Extras
  *
  *       NOTES:
  *          - 'db' is a global parameter, (almost) all functions use it
@@ -44,11 +42,7 @@
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
-// TODO set log traces all over the program (where missing): create function
-// TODO logs for report generation !
-// TODO reports => search group by name
 // TODO pagination
-
 
 #include <stdio.h>
 #include <ctype.h>
@@ -391,7 +385,7 @@ void search_company_by_name(dbc *db, int type);             // display matching 
 void search_companies_by_group(dbc *db);                    // list all companies belonging to a given group
 node *search_bigger_cpy(node *ls, ccpy cpy);                // search company matching with name entered
 ccpy read_single_company(dbc *db, int index);               // read cpy record given its index
-void add_cpy_before(node *elem, ccpy cpy, cper per);        // add cpy before the given cpy within the linked list
+void add_cpy_before(node *elem, ccpy cpy);                  // add cpy before the given cpy within the linked list
 
 /// Person ///
 void import_CSV_person(dbc *db);                            // import data to db file

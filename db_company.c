@@ -250,7 +250,7 @@ node *search_bigger_cpy(node *ls, ccpy cpy) {
  *      elem: element of the linked list
  *      cpy : company element
 *****************************************************************************************************/
-void add_cpy_before(node *elem, ccpy cpy, cper per) {
+void add_cpy_before(node *elem, ccpy cpy) {
 
     node *new_elem = malloc(sizeof(*new_elem));
 
@@ -293,9 +293,8 @@ ccpy read_single_company(dbc *db, int index) {
 void search_company_by_name(dbc *db, int type) {
 
     ccpy cpy;
-    cper per;
     char cpy_name[BUF_LEN];
-    int found, count=0, len;
+    int found, count=0;
     node *root, *it, *cur;
 
     printf("\n\tEnter partial company name: "); scanf("%s", cpy_name); fflush(stdin);
@@ -320,7 +319,7 @@ void search_company_by_name(dbc *db, int type) {
 
         if (found) {                                                // if match add element to linked list
             cur = search_bigger_cpy(root, cpy);
-            add_cpy_before(cur, cpy, per);
+            add_cpy_before(cur, cpy);
         }
     } while (cpy.id_cpy);
 
@@ -335,6 +334,61 @@ void search_company_by_name(dbc *db, int type) {
             count++;
         }
     }
+    printf("\n\tCompanies found: %d\n\n", count);
+
+    link_ls_delete(&root);
+}
+
+
+/****************************************************************************************
+ * Search companies matching with given group ID and display results
+****************************************************************************************/
+void search_companies_by_group(dbc *db) {
+
+    ccpy cpy;
+    int group_id;
+    int found, count=0;
+    node *root, *it, *cur;
+
+    printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);
+
+    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
+    root = link_ls_create();                                        // create an empty doubly linked list
+
+    do {                                                            // search for matching elements
+        memset(&cpy, 0, sizeof(cpy));
+        fread(&cpy, sizeof(cpy), 1, db->fp_db);
+
+        if (!cpy.id_cpy) {
+            break;
+        }
+        found = 1;
+
+        if (group_id != cpy.id_grp) {
+            found = 0;
+        }
+
+        if (found) {                                                // if match add element to linked list
+            cur = search_bigger_cpy(root, cpy);
+            add_cpy_before(cur, cpy);
+        }
+    } while (cpy.id_cpy);
+
+    printf("\n\t********************************************************************************\n");
+    printf("\tGroup '%s'\n", db->grp[group_id].nm_grp);
+    printf("\n\t%8s | %-50s | %-20s", "ID", "Company name", "Country");
+    printf("\n\t--------------------------------------------------------------------------------");
+
+    for (it = root->next; it != root; it = it->next) {              // display results
+        printf("\n\t%8d | %-50s | %-20s",
+               it->cpy.id_cpy,
+               it->cpy.nm_cpy,
+               db->cty[it->cpy.id_cty].nm_cty);
+        count++;
+    }
+
+    printf("\n\t--------------------------------------------------------------------------------");
+
     printf("\n\tCompanies found: %d\n\n", count);
 
     link_ls_delete(&root);

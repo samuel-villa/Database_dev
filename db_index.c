@@ -278,59 +278,6 @@ int search_binary_ipc(dbc *db, int id) {
 
 
 /****************************************************************************************
- * Search companies matching with given group ID and display results
-****************************************************************************************/
-void search_companies_by_group(dbc *db) {
-
-    ccpy cpy;
-    cper per;
-    int group_id;
-    int found, count=0;
-    node *root, *it, *cur;
-
-    printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);
-
-    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
-    root = link_ls_create();                                        // create an empty doubly linked list
-
-    do {                                                            // search for matching elements
-        memset(&cpy, 0, sizeof(cpy));
-        fread(&cpy, sizeof(cpy), 1, db->fp_db);
-
-        if (!cpy.id_cpy) {
-            break;
-        }
-        found = 1;
-
-        if (group_id != cpy.id_grp) {
-            found = 0;
-        }
-
-        if (found) {                                                // if match add element to linked list
-            cur = search_bigger_cpy(root, cpy);
-            add_cpy_before(cur, cpy, per);
-        }
-    } while (cpy.id_cpy);
-
-    printf("\n\t********************************************************************************\n");
-    printf("\tGroup '%s'\n", db->grp[group_id].nm_grp);
-    printf("\n\t%8s | %-50s | %-20s", "ID", "Company name", "Country");
-    printf("\n\t--------------------------------------------------------------------------------");
-
-    for (it = root->next; it != root; it = it->next) {              // display results
-        printf("\n\t%8d | %-50s | %-20s", it->cpy.id_cpy, it->cpy.nm_cpy, db->cty[it->cpy.id_cty].nm_cty);
-        count++;
-    }
-
-    printf("\n\t--------------------------------------------------------------------------------");
-
-    printf("\n\tCompanies found: %d\n", count);
-
-    link_ls_delete(&root);
-}
-
-
-/****************************************************************************************
  * Quick sort algorithm used for index tables creation
  *
  *      nr  : nr of elements in the list we want to sort
@@ -529,7 +476,7 @@ void list_comp_employees(dbc *db, int comp_id) {
 
 
 /****************************************************************************************
- * Provide the binary tree root of person/lastname index table and complete
+ * Provide the binary tree root of person/lastname index table AND complete
  * person/lastname index table by writing the offset left and offset right
  * for every element of the table.
  *
