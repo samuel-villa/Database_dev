@@ -24,9 +24,10 @@ void report_template(dbc *db) {
 
     if(db->fp_rp == NULL) {
         printf("\nUnable to create file.\n");
-        exit(EXIT_FAILURE);
+        return;
     }
 
+    // header
     fprintf(db->fp_rp, "%s REPORT %50s\n", timestamp(), db->user);
     fprintf(db->fp_rp, "--------------------------------------------------------------------------------\n");
 }
@@ -94,6 +95,8 @@ void report_group_companies(dbc *db) {
 
     fclose(db->fp_rp);
 
+    fprintf(db->fp_lg, "%s Report generated: companies per group\n", timestamp());
+
     link_ls_delete(&root);
 }
 
@@ -157,6 +160,8 @@ void report_group_persons(dbc *db) {
     fprintf(db->fp_rp, "\n\t- Number of employees known in the database: %d\n\n", total_db_per);
 
     fclose(db->fp_rp);
+
+    fprintf(db->fp_lg, "%s Report generated: number of employees per group\n", timestamp());
 
     link_ls_delete(&root);
 }
