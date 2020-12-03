@@ -137,6 +137,7 @@ void report_group_persons(dbc *db) {
         total_nr_emp += it->cpy.nr_emp;
 
         index = search_binary_ipc(db, it->cpy.id_cpy);              // calculate total employees present into db
+
         while (1) {
             ipc = read_single_tipc_rec(db, index);
 

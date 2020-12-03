@@ -239,7 +239,7 @@ int search_binary_ipc(dbc *db, int id) {
     int mid, left=0, right;
     tipc ipc;
 
-    right = db->hdr.nr_cpy - 1;
+    right = db->hdr.nr_per - 1;
     memset(&ipc, 0, sizeof(tipc));
 
     ipc = read_single_tipc_rec(db, 0);           // check db first element
