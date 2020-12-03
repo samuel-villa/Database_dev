@@ -277,105 +277,56 @@ int search_binary_ipc(dbc *db, int id) {
 }
 
 
-
-
 /****************************************************************************************
- * Binary Search per person lastname.
- *
- *      name  : person name we want to search
- *      return: the element index/position within the db person block
+ * Search companies matching with given group ID and display results
 ****************************************************************************************/
-int search_binary_string(dbc *db, char *name) {
+void search_companies_by_group(dbc *db) {
 
-    // TODO delete it. It has been replaced
+    ccpy cpy;
+    cper per;
+    int group_id;
+    int found, count=0;
+    node *root, *it, *cur;
 
-    int size, mid, left=0, right;
+    printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);
 
-    tipl elm;
-    size = sizeof(tipl);
-    right = db->hdr.nr_per - 1;
-    memset(&elm, 0, size);
+    fseek(db->fp_db, db->hdr.off_cpy, SEEK_SET);
+    root = link_ls_create();                                        // create an empty doubly linked list
 
-    elm = read_single_tipl_rec(db, 0);           // check db first element
-    if (strcmp(name, elm.nm_lst) < 0) {                // if ID we search
-        return REC_OUT_RANGE;
-    }
+    do {                                                            // search for matching elements
+        memset(&cpy, 0, sizeof(cpy));
+        fread(&cpy, sizeof(cpy), 1, db->fp_db);
 
-    if (strcmp(name, elm.nm_lst) == 0) {               // if match (if ID we search is the first db element)
-        return 0;
-    }
-
-    elm = read_single_tipl_rec(db, right);             // check db last element
-    if (strcmp(name, elm.nm_lst) > 0) {
-        return REC_OUT_RANGE;
-    }
-
-    while (right - left > 1) {
-
-        mid = (right + left) / 2;
-        elm = read_single_tipl_rec(db, mid);
-
-        if (strcmp(name, elm.nm_lst) <= 0) {
-            right = mid;
-        } else {
-            left = mid;
+        if (!cpy.id_cpy) {
+            break;
         }
-    }
-    elm = read_single_tipl_rec(db, right);
+        found = 1;
 
-    if(strcmp(name, elm.nm_lst) == 0) {
-        return right;
-    } else {
-        return REC_NOT_FOUND;
-    }
-}
-
-
-/****************************************************************************************
-* Give the list of companies per Group
-****************************************************************************************/
-// TODO extra
-void search_group_companies(dbc *db) {
-
-    printf("*** search group companies ***\n");
-    printf("enter group name: ...\n");
-    printf("OR\n");
-    printf("enter group ID: ...\n");
-
-    /// print option to generate report ***
-}
-
-
-/****************************************************************************************
- * Bubble sort algorithm used for index creation (INEFFICIENT for this project: very slow)
- *
- *      nr  : nr of elements in the list we want to sort
- *      type: persons by company ID || persons by lastname
-****************************************************************************************/
-void sort_bubble_index(dbc *db, int nr, int type) {
-
-    if (type == SORT_PERS_COMP) {
-
-        int j, k=0, t=0;
-        int unordered=1, bigger=0;
-        t_sort tmp;
-
-        while (unordered) {
-            unordered = 0;
-            k++;
-            for (j=0; j<nr-k; j++) {
-
-                bigger = db->sort[j].id > db->sort[j+1].id;
-
-                if (bigger) {
-                    tmp = db->sort[j+1];
-                    db->sort[j+1] = db->sort[j];
-                    db->sort[j] = tmp;
-                    unordered = 1;
-                }
-            }
+        if (group_id != cpy.id_grp) {
+            found = 0;
         }
+
+        if (found) {                                                // if match add element to linked list
+            cur = search_bigger_cpy(root, cpy);
+            add_cpy_before(cur, cpy, per);
+        }
+    } while (cpy.id_cpy);
+
+    printf("\n\t********************************************************************************\n");
+    printf("\tGroup '%s'\n", db->grp[group_id].nm_grp);
+    printf("\n\t%8s | %-50s | %-20s", "ID", "Company name", "Country");
+    printf("\n\t--------------------------------------------------------------------------------");
+
+    for (it = root->next; it != root; it = it->next) {              // display results
+        printf("\n\t%8d | %-50s | %-20s", it->cpy.id_cpy, it->cpy.nm_cpy, db->cty[it->cpy.id_cty].nm_cty);
+        count++;
     }
+
+    printf("\n\t--------------------------------------------------------------------------------");
+
+    printf("\n\tCompanies found: %d\n", count);
+
+    link_ls_delete(&root);
 }
 
 
@@ -448,39 +399,6 @@ void quicksort(dbc *db, int first, int last, int type) {
     }
 }
 
-/// test
-void quicksort_test(dbc *db, int first, int last) {
-
-    int i, j, pivot;
-    t_lsort temp;
-
-
-    if (first < last) {
-        pivot = first;
-        i = first;
-        j = last;
-
-        while (i < j) {
-            while (db->lsort[i].id <= db->lsort[pivot].id && i < last)
-                i++;
-            while (db->lsort[j].id > db->lsort[pivot].id)
-                j--;
-            if (i < j) {
-                temp = db->lsort[i];
-                db->lsort[i] = db->lsort[j];
-                db->lsort[j] = temp;
-            }
-        }
-
-        temp = db->lsort[pivot];
-        db->lsort[pivot] = db->lsort[j];
-        db->lsort[j] = temp;
-
-        quicksort_test(db, first, j - 1);
-        quicksort_test(db, j + 1, last);
-    }
-}
-
 
 /****************************************************************************************
  * Memory allocation in RAM for the list sorting area (person by ID)
@@ -495,34 +413,12 @@ void alloc_sort_table(dbc *db, uint size) {
 
 
 /****************************************************************************************
- * Memory allocation in RAM for the list sorting area (person by Lastname)
- *
- *      size: nr of elements in the list we want to sort
-****************************************************************************************/
-void alloc_link_sort_table(dbc *db, uint size) {
-
-    db->lsort = (t_lsort*)malloc(size * sizeof(t_lsort));
-    memset(db->lsort, 0, size * sizeof(t_lsort));
-}
-
-
-/****************************************************************************************
 * Free memory allocated with alloc_sort_table()
 ****************************************************************************************/
 void free_sort_table(dbc *db) {
 
     if (db->sort)
         free(db->sort);
-}
-
-
-/****************************************************************************************
-* Free memory allocated with alloc_link_sort_table()
-****************************************************************************************/
-void free_link_sort_table(dbc *db) {
-
-    if (db->lsort)
-        free(db->lsort);
 }
 
 
@@ -558,36 +454,6 @@ tipc read_single_tipc_rec(dbc *db, int index) {
 
     return ipc;
 }
-
-
-/****************************************************************************************
-* Read data from person/companyID table and store it in RAM
-****************************************************************************************/
-//void load_ipl_in_ram(dbc *db) {
-//
-//    uint pt_next;
-//    uint pt_ipc;
-//    tipc ipc;
-//    int i;
-//
-//    // read data from ipc table and set db->lsort table
-//    for (i=0; i<db->hdr.nr_per; i++) {
-//
-//        memset(&ipc, 0, sizeof(tipc));
-//        pt_ipc = db->hdr.off_ipc + i * sizeof(tipc);               // getting element offset
-//        fseek(db->fp_db, pt_ipc, SEEK_SET);                        // place cursor at element offset
-//        fread(&ipc, sizeof(tipc), 1, db->fp_db);            // read element
-//
-//        db->lsort[i].id = ipc.id_cpy;                              // set read data into db->lsort[i]
-//        db->lsort[i].off_sort_obj = ipc.per_offset;                // set read data into db->lsort[i]
-//
-//        pt_next = ipc.per_offset + 1*sizeof(cper);                 // getting next element offset
-//        if (pt_next >= db->hdr.db_size) {                          // prevent out range
-//            pt_next = db->hdr.db_size;
-//        }
-//        db->lsort[i].off_next = pt_next;                           // set read data into db->lsort[i]
-//    }
-//}
 
 
 /****************************************************************************************

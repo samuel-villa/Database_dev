@@ -265,7 +265,8 @@ void search_company_menu(dbc *db, int os) {
         printf("\t%d - Search Company by ID\n", T_CPYID);
         printf("\t%d - Search Company by name (A-Z)\n", T_CPYNAME_AZ);
         printf("\t%d - Search Company by name (Z-A)\n", T_CPYNAME_ZA);
-        printf("\t%d - Get company employees\n", T_CPYPER);
+        printf("\t%d - Search Companies by Group\n", T_CPYGRP);
+        printf("\t%d - Get Company Employees\n", T_CPYPER);
         printf("\t%d - GO BACK\n\n", 9);
         printf("\t--> SELECT AN OPTION: "); scanf("%d", &menu_sel); fflush(stdin);
 
@@ -280,6 +281,10 @@ void search_company_menu(dbc *db, int os) {
                 break;
             case T_CPYNAME_ZA:
                 search_company_by_name(db, T_ZA);
+                pause(os);
+                break;
+            case T_CPYGRP:
+                search_companies_by_group(db);
                 pause(os);
                 break;
             case T_CPYPER:

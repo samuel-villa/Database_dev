@@ -17,7 +17,7 @@
  *              • Les personnes travaillant pour une compagnie donnée par sa clé primaire
  *              • Les personnes dont le nom commence par une chaine donnée                                        OK
  *          • Les listes chainées pourront être triées ascendant ou descendant                                    OK
- *          • Deux rapports répondants aux requêtes précisées ci-dessous                                         1/2
+ *          • Deux rapports répondants aux requêtes précisées ci-dessous                                          OK
  *
  *       Header file:
  *          - definitions
@@ -44,9 +44,9 @@
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
-// TODO reports => search group by name
 // TODO set log traces all over the program (where missing): create function
 // TODO logs for report generation !
+// TODO reports => search group by name
 // TODO pagination
 
 
@@ -103,6 +103,7 @@ enum Search_Type {
     T_CPYNAME_AZ,
     T_CPYNAME_ZA,
     T_CPYPER,
+    T_CPYGRP,
     T_AZ,
     T_ZA,
 };
@@ -122,7 +123,6 @@ enum File_Status {
 
 enum Sort_Type {
     SORT_PERS_COMP,
-    SORT_COMP_GROUP,
     SORT_PERS_NAME
 };
 
@@ -311,18 +311,6 @@ typedef struct Sorting {
 
 
 /***************************************************************************************
-* Sorting space used to sort companies of a specific group, by country (reports)
-****************************************************************************************/
-// TODO struct to delete and all related functions
-typedef struct Linked_Sorting {
-
-    int  id;            // object id to be sorted
-    char ln[64];        // used when searching by lastname
-    ccpy cpy;
-} t_lsort;
-
-
-/***************************************************************************************
 * Doubly Linked List
 ****************************************************************************************/
 typedef struct Doubly_Linked_List {
@@ -350,7 +338,6 @@ typedef struct db_client {
     cgrp    grp[SZ_GRP];    // buffer group
     int     status;         // db nonexistent, closed or open
     t_sort  *sort;          // points to list of elements to be sorted
-    t_lsort *lsort;         // points to linked list of elements to be sorted
     char    *user;          // user name inserted when generating reports
 } dbc;
 
@@ -401,6 +388,7 @@ void export_CSV_company(dbc *db);                           // export data from 
 void display_single_company(dbc *db, ccpy cpy);             // display company struct attributes
 void search_company_by_id(dbc *db);                         // generic search function for cpy ID
 void search_company_by_name(dbc *db, int type);             // display matching elements
+void search_companies_by_group(dbc *db);                    // list all companies belonging to a given group
 node *search_bigger_cpy(node *ls, ccpy cpy);                // search company matching with name entered
 ccpy read_single_company(dbc *db, int index);               // read cpy record given its index
 void add_cpy_before(node *elem, ccpy cpy, cper per);        // add cpy before the given cpy within the linked list
@@ -417,22 +405,16 @@ cper read_single_person(dbc *db, int index);                // read per record g
 
 /// Generic ///
 int search_binary(dbc *db, int id, int type);               // multiplexed for pers/id and company/id
-int search_binary_string(dbc *db, char *name);              // binary search of person lastname
 
 /// Index ///
-void sort_bubble_index(dbc *db, int nr, int type);          // bubble sort (inefficient in this project, very slow)
 void quicksort(dbc *db, int first, int last, int type);     // best sort solution for this project
 void create_index_per_cpy(dbc *db);                         // creates db bloc of tipc elements
 void create_index_per_name(dbc *db);                        // creates db bloc of tipl elements
 void create_index(dbc *db);                                 // calls the two previous functions
-void search_group_companies(dbc *db);                       // TODO extra
 void alloc_sort_table(dbc *db, uint size);                  // RAM allocation for sort type
 void free_sort_table(dbc *db);                              // free RAM for sort type
 tipl read_single_tipl_rec(dbc *db, int index);              // read ipl record given its index
 tipc read_single_tipc_rec(dbc *db, int index);              // read ipc record given its index
-void alloc_link_sort_table(dbc *db, uint size);             // RAM allocation for linked sort type
-void free_link_sort_table(dbc *db);                         // free RAM for linked sort type
-void load_ipl_in_ram(dbc *db);                              // load linked sorted list from ipl table
 void get_comp_employees(dbc *db);                           // request company ID and gives the list of employees
 void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
 int  search_binary_ipc(dbc *db, int id);                    // binary search per company ID on person table
