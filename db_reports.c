@@ -103,18 +103,10 @@ void report_group_companies(dbc *db) {
 ****************************************************************************************/
 void report_group_persons(dbc *db) {
 
-    // TODO "Nombre de personnes par groupe (somme des nr_emp) et nombre de
-    //       personnes connues dans la DB (comptage des records personnes liés au groupe)"
-    //          nr_emp: company table
-    //          id_cpy: person table
-    //  ==> for companies in group
-    //      ==> sum nr_emp
-    //      ==> count persons with matching id_cpy
-
     ccpy cpy;
     cper per;
-    int group_id;
-    int found, count=0;
+    tipc ipc;
+    int group_id, found, index, total_nr_emp=0, total_db_per=0;
     node *root, *it, *cur;
 
     printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);
@@ -141,30 +133,29 @@ void report_group_persons(dbc *db) {
         }
     } while (cpy.id_cpy);
 
-//    report_template(db);                                     // generate report
-//
-//    fprintf(db->fp_rp, "\n\n\nList of all companies belonging to the group '%s'\n\n", db->grp[group_id].nm_grp);
-//
-//    for (int c=1; c<=db->hdr.nr_cty; c++) {
-//
-//        fprintf(db->fp_rp, "\n\n********************************************************************************\n");
-//        fprintf(db->fp_rp, "\n\t\t\t\t\t%d - %s\n\n", db->cty[c].id_cty, db->cty[c].nm_cty);
-//        fprintf(db->fp_rp, "%8s | %-40s | %-32s\n", "ID", "COMPANY NAME", "CITY");
-//
-//        for (it = root->next; it != root; it = it->next) {
-//
-//            if (db->cty[c].id_cty == it->cpy.id_cty) {
-//                fprintf(db->fp_rp, "--------------------------------------------------------------------------------\n");
-//                fprintf(db->fp_rp, "%8d | %-40s | %-32s\n", it->cpy.id_cpy, it->cpy.nm_cpy, it->cpy.nm_cit);
-//                count++;
-//            }
-//        }
-//    }
-//
-//    fprintf(db->fp_rp, "\n\n********************************************************************************\n\n");
-//    fprintf(db->fp_rp, "\t-> Total Number of Companies: %d\n\n", count);
-//
-//    fclose(db->fp_rp);
+    for (it = root->next; it != root; it = it->next) {              // calculate total nr_emp of given group
+        total_nr_emp += it->cpy.nr_emp;
+
+        index = search_binary_ipc(db, it->cpy.id_cpy);              // calculate total employees present into db
+        while (1) {
+            ipc = read_single_tipc_rec(db, index);
+
+            if (ipc.id_cpy != it->cpy.id_cpy) {
+                break;
+            }
+            total_db_per++;
+            index++;
+        }
+    }
+
+    report_template(db);                                           // generate report
+
+    fprintf(db->fp_rp, "\n\n\nGroup '%s'", db->grp[group_id].nm_grp);
+    fprintf(db->fp_rp, "\n--------------------------------------------------------------------------------\n");
+    fprintf(db->fp_rp, "\n\t- %-43s%d", "Total number of employees: ", total_nr_emp);
+    fprintf(db->fp_rp, "\n\t- Number of employees known in the database: %d\n\n", total_db_per);
+
+    fclose(db->fp_rp);
 
     link_ls_delete(&root);
 }
