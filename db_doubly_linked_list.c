@@ -1,8 +1,8 @@
 /**********************************************************************************************************************
  * Programmation procedurale 2020 - Dossier: Database Clients
  *
- *       Functions related to the doubly linked list used to sort and display elements
- *       of the person table and/or the company table using their foreign key field
+ *       Functions related to the doubly linked list
+ *       creation (memory allocation) and deletion (memory free) in two steps.
  *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/

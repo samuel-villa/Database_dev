@@ -41,7 +41,6 @@ void report_template(dbc *db) {
 void report_group_companies(dbc *db) {
 
     ccpy cpy;
-    cper per;
     int group_id;
     int found, count=0;
     node *root, *it, *cur;
@@ -66,7 +65,7 @@ void report_group_companies(dbc *db) {
 
         if (found) {                                                // if match add element to linked list
             cur = search_bigger_cpy(root, cpy);
-            add_cpy_before(cur, cpy, per);
+            add_cpy_before(cur, cpy);
         }
     } while (cpy.id_cpy);
 
@@ -76,7 +75,7 @@ void report_group_companies(dbc *db) {
 
     for (int c=1; c<=db->hdr.nr_cty; c++) {
 
-        fprintf(db->fp_rp, "\n\n********************************************************************************\n");
+        fprintf(db->fp_rp, "\n\n================================================================================\n");
         fprintf(db->fp_rp, "\n\t\t\t\t\t%d - %s\n\n", db->cty[c].id_cty, db->cty[c].nm_cty);
         fprintf(db->fp_rp, "%8s | %-40s | %-32s\n", "ID", "COMPANY NAME", "CITY");
 
@@ -90,7 +89,7 @@ void report_group_companies(dbc *db) {
         }
     }
 
-    fprintf(db->fp_rp, "\n\n********************************************************************************\n\n");
+    fprintf(db->fp_rp, "\n\n================================================================================\n\n");
     fprintf(db->fp_rp, "\t-> Total Number of Companies: %d\n\n", count);
 
     fclose(db->fp_rp);
@@ -107,7 +106,6 @@ void report_group_companies(dbc *db) {
 void report_group_persons(dbc *db) {
 
     ccpy cpy;
-    cper per;
     tipc ipc;
     int group_id, found, index, total_nr_emp=0, total_db_per=0;
     node *root, *it, *cur;
@@ -132,7 +130,7 @@ void report_group_persons(dbc *db) {
 
         if (found) {                                                // if match add element to linked list
             cur = search_bigger_cpy(root, cpy);
-            add_cpy_before(cur, cpy, per);
+            add_cpy_before(cur, cpy);
         }
     } while (cpy.id_cpy);
 

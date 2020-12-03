@@ -135,7 +135,12 @@ void open_db_menu(dbc *db, int os) {
                 clear(os);
                 break;
             case REPORT:
-                report_menu(db, os);
+                if (db->status == DB_OPEN_LOADED) {
+                    report_menu(db, os);
+                } else {
+                    printf("\n\tFirst you must import data into the database\n\n");
+                    pause(os);
+                }
                 clear(os);
                 break;
             case DB_INFO_2:

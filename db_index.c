@@ -370,23 +370,6 @@ void free_sort_table(dbc *db) {
 
 
 /****************************************************************************************
- * Read Index Person/lastname record given its position within DB Index tipl block.
- *
- *      index : element position within the 'person by lastname' db block
- *      return: tipl element attributes
-****************************************************************************************/
-tipl read_single_tipl_rec(dbc *db, int index) {
-
-    tipl ipl;
-
-    fseek(db->fp_db, db->hdr.off_ipl + index * sizeof(tipl), SEEK_SET);
-    fread(&ipl, sizeof(tipl), 1, db->fp_db);
-
-    return ipl;
-}
-
-
-/****************************************************************************************
  * Read Index Person/companyID record given its position within DB Index tipc block.
  *
  *      index : element position within the 'person by company ID' db block

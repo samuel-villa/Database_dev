@@ -43,6 +43,7 @@
  *********************************************************************************************************************/
 
 // TODO pagination
+// FIXME solve malloc problem when doing 2 consecutive reports
 
 #include <stdio.h>
 #include <ctype.h>
@@ -309,8 +310,6 @@ typedef struct Sorting {
 ****************************************************************************************/
 typedef struct Doubly_Linked_List {
 
-    tipl   ipl;                         // person/lastname element
-    cper   per;                         // person element
     ccpy   cpy;                         // company element
     struct Doubly_Linked_List *prev;    // points to the list previous element
     struct Doubly_Linked_List *next;    // points to the list next element

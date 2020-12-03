@@ -184,7 +184,7 @@ void display_single_person(dbc *db, cper per) {
     index = search_binary(db, id, COMP_ID);
     cpy = read_single_company(db, index);
 
-    printf("\n***************************************************************************\n");
+    printf("\n\t================================================================================\n");
 
     printf("\n\tID person.............. %-80d", per.id_per);
     printf("\n\tTitle.................. %-80s", per.nm_civ);
@@ -199,7 +199,7 @@ void display_single_person(dbc *db, cper per) {
     printf("\n\tDate of creation....... %-80s", per.dt_cre);
     printf("\n\tStocks owned........... %-80d", per.nr_val);
 
-    printf("\n\n***************************************************************************\n\n");
+    printf("\n\t================================================================================\n\n");
 }
 
 
