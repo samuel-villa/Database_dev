@@ -419,17 +419,14 @@ void list_comp_employees(dbc *db, int comp_id) {
     } else {
         cpy = read_single_company(db, index);                          // read cpy at given index and display it
 
-        printf("\n\t********************************************************************************\n");
+        printf("\n\t=================================================================================================\n");
         printf("\n\tCompany name......... %s", cpy.nm_cpy);
         printf("\n\tID company........... %-d", cpy.id_cpy);
         printf("\n\tCountry.............. %s", db->cty[cpy.id_cty].nm_cty);
-        printf("\n\n\t********************************************************************************\n");
-        printf("\n\t*** EMPLOYEES ***\n");
-        printf("\n\t%8s", "ID");
-        printf(" %15s", "Lastname");
-        printf(" %15s", "Firstname");
-        printf("%40s", "Job");
-        printf("\n\t--------------------------------------------------------------------------------");
+        printf("\n\n\t=================================================================================================\n");
+        printf("\n\t< EMPLOYEES >\n");
+        printf("\n\t%8s | %-20s | %-20s | %40s", "ID", "Lastname", "Firstname", "Job ");
+        printf("\n\t-------------------------------------------------------------------------------------------------");
     }
 
     index = search_binary_ipc(db, comp_id);
@@ -444,17 +441,15 @@ void list_comp_employees(dbc *db, int comp_id) {
         fseek(db->fp_db, ipc.per_offset, SEEK_SET);
         fread(&per, sizeof(cper), 1, db->fp_db);
 
-        printf("\n\t%8d", per.id_per);
-            printf(" %15s", per.nm_lst);
-            printf(" %15s", per.nm_fst);
-            printf(" %40s", db->job[per.id_job].nm_job);
+        printf("\n\t%8d | %-20s | %-20s | %40s", per.id_per, per.nm_lst, per.nm_fst, db->job[per.id_job].nm_job);
+
         index++;
         count++;
     }
 
-    printf("\n\t--------------------------------------------------------------------------------");
+    printf("\n\t-------------------------------------------------------------------------------------------------");
     printf("\n\tEmployees: %d", count);
-    printf("\n\n\t********************************************************************************\n");
+    printf("\n\n\t=================================================================================================\n");
 }
 
 
