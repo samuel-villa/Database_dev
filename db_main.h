@@ -36,14 +36,18 @@
  *          - Search persons by lastname                     (binary tree on disc)
  *          - Reports
  *
+ *       Improvements from V1:
+ *          - Binary Tree implementation
+ *          - Linked List functions correction
+ *          - Reports implementation
+ *          - Improved comments clarity and visibility
+ *
  *       NOTES:
  *          - 'db' is a global parameter, (almost) all functions use it
  *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
 
-// TODO pagination
-// FIXME solve malloc problem when doing 2 consecutive reports
 
 #include <stdio.h>
 #include <ctype.h>
@@ -396,9 +400,6 @@ void fetch_person(dbc *db, uint offset, char *lastname);    // recursive functio
 uint get_person_root(dbc *db, char *name);                  // get binary tree root node matching with given string
 cper read_single_person(dbc *db, int index);                // read per record given its index
 
-/// Generic ///
-int search_binary(dbc *db, int id, int type);               // multiplexed for pers/id and company/id
-
 /// Index ///
 void quicksort(dbc *db, int first, int last, int type);     // best sort solution for this project
 void create_index_per_cpy(dbc *db);                         // creates db bloc of tipc elements
@@ -406,12 +407,12 @@ void create_index_per_name(dbc *db);                        // creates db bloc o
 void create_index(dbc *db);                                 // calls the two previous functions
 void alloc_sort_table(dbc *db, uint size);                  // RAM allocation for sort type
 void free_sort_table(dbc *db);                              // free RAM for sort type
-tipl read_single_tipl_rec(dbc *db, int index);              // read ipl record given its index
 tipc read_single_tipc_rec(dbc *db, int index);              // read ipc record given its index
 void get_comp_employees(dbc *db);                           // request company ID and gives the list of employees
 void list_comp_employees(dbc *db, int comp_id);             // display company and list of employees given its ID
 int  search_binary_ipc(dbc *db, int id);                    // binary search per company ID on person table
 uint find_ipl_tree_root(dbc *db, uint offset, int size);    // get tree root of ipl index table
+int search_binary(dbc *db, int id, int type);               // multiplexed for pers/id and company/id
 
 /// Linked List ///
 node *link_ls_create();                                     // create the doubly linked list

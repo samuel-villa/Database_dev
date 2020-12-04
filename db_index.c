@@ -1,7 +1,7 @@
 /**********************************************************************************************************************
  * Programmation procedurale 2020 - Dossier: Database Clients
  *
- *       Indexes table functions, finding results by foreign key
+ *       Indexes table functions, finding results using table foreign key
  *
  * Samuel CIULLA - MacOS 10.13
  *********************************************************************************************************************/
