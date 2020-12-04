@@ -101,8 +101,8 @@ enum Search_Type {
     T_CPYID,
     T_CPYNAME_AZ,
     T_CPYNAME_ZA,
-    T_CPYPER,
     T_CPYGRP,
+    T_CPYPER,
     T_AZ,
     T_ZA,
 };
