@@ -18,7 +18,6 @@ int main() {
 
     int os;
     dbc db;
-    strcpy(db.user, "Samuel CIULLA");
 
     os = user_os();
     set_db_status(&db);

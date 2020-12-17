@@ -335,7 +335,6 @@ typedef struct db_client {
     cgrp    grp[SZ_GRP];    // buffer group
     int     status;         // db nonexistent, closed or open
     t_sort  *sort;          // points to list of elements to be sorted
-    char    *user;          // user name inserted when generating reports
 } dbc;
 
 

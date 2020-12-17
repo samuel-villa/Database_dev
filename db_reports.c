@@ -28,7 +28,7 @@ void report_template(dbc *db) {
     }
 
     // header
-    fprintf(db->fp_rp, "%s REPORT %50s\n", timestamp(), db->user);
+    fprintf(db->fp_rp, "%s REPORT %50s\n", timestamp(), "Samuel CIULLA");
     fprintf(db->fp_rp, "--------------------------------------------------------------------------------\n");
 }
 
@@ -75,7 +75,6 @@ void report_group_companies(dbc *db) {
 
     for (int c=1; c<=db->hdr.nr_cty; c++) {
 
-        fprintf(db->fp_rp, "\n\n================================================================================\n");
         fprintf(db->fp_rp, "\n\t\t\t\t\t%d - %s\n\n", db->cty[c].id_cty, db->cty[c].nm_cty);
         fprintf(db->fp_rp, "%8s | %-40s | %-32s\n", "ID", "COMPANY NAME", "CITY");
 
