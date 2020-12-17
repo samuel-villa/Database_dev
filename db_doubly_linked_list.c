@@ -10,7 +10,6 @@
 #include "db_main.h"
 
 
-
 /*****************************************************************************************************
  * Create doubly linked list, at this point the list is empty so prev and next both point to the root
  *
