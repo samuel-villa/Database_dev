@@ -16,8 +16,7 @@
 void import_CSV_industry(dbc *db) {
 
     int i=0;
-    char line[BUF_LEN];
-    char fld[BUF_LEN];
+    char line[BUF_LEN], fld[BUF_LEN];
     char *ptr1, *ptr2;
     cind ind;
     FILE *fpi, *fp_db, *fp_lg;

@@ -10,7 +10,6 @@
 #include "db_main.h"
 
 
-
 /****************************************************************************************
 * Main program
 ****************************************************************************************/
@@ -19,8 +18,8 @@ int main() {
     int os;
     dbc db;
 
-    os = user_os();
-    set_db_status(&db);
+    os = user_os();               // OS requested for better user interaction
+    set_db_status(&db);           // check if db has been created and set proper status
     main_menu(&db, os);
 
     return 0;

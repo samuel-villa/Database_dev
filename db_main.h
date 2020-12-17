@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * Programmation procedurale 2020 - Dossier: Database Clients V2
+ * Programmation procedurale 2020 - Dossier: Database Clients V3
  *
  *       Requirements:
  *          • La création de la base de données                                                                   OK
@@ -36,10 +36,7 @@
  *          - Search persons by lastname                     (binary tree on disc)
  *          - Reports
  *
- *       Improvements from V1:
- *          - Binary Tree implementation
- *          - Linked List functions correction
- *          - Reports implementation
+ *       Improvements from V2:
  *          - Improved comments clarity and visibility
  *
  *       NOTES:

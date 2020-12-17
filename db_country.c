@@ -16,8 +16,7 @@
 void import_CSV_country(dbc *db) {
 
     int i=0;
-    char line[BUF_LEN];
-    char fld[BUF_LEN];
+    char line[BUF_LEN], fld[BUF_LEN];
     char *ptr1, *ptr2;
     ccty cty;
     FILE *fpi, *fp_db, *fp_lg;
@@ -43,7 +42,7 @@ void import_CSV_country(dbc *db) {
         ptr2 = strtok(NULL,";");
 
         memset(fld, 0, BUF_LEN);
-        strncpy(fld, ptr1, ptr2-ptr1-1);                // use of strncpy cause allows to handle size
+        strncpy(fld, ptr1, ptr2-ptr1-1);                       // use of strncpy cause allows to handle size
         cty.id_cty = atoi(fld);
         ptr1 = ptr2;
         ptr2 = strtok(NULL,";");
@@ -54,7 +53,7 @@ void import_CSV_country(dbc *db) {
         ptr1 = ptr2;
         strncpy(cty.cd_iso, ptr1, strlen(ptr1)-1);
 
-        fwrite(&cty, 1, sizeof(ccty), fp_db);      // write into file 'fp_db'
+        fwrite(&cty, 1, sizeof(ccty), fp_db);             // write into file 'fp_db'
 
         i++;
     }
@@ -62,12 +61,12 @@ void import_CSV_country(dbc *db) {
     fprintf(fp_lg, "%s Countries imported: %d\n", timestamp(), i);
 
     fseek(fp_db, 0, SEEK_SET);
-    fread(&db->hdr, sizeof(hder), 1, fp_db);        // load buffer (db) with 'fp_db'
+    fread(&db->hdr, sizeof(hder), 1, fp_db);            // load buffer (db) with 'fp_db'
 
     db->hdr.nr_cty = i;
 
     fseek(fp_db, 0, SEEK_SET);
-    fwrite(&db->hdr, sizeof(hder), 1, fp_db);       // Update Header
+    fwrite(&db->hdr, sizeof(hder), 1, fp_db);           // Update Header
 
     fclose(fp_db);
     fclose(fp_lg);
@@ -77,6 +76,8 @@ void import_CSV_country(dbc *db) {
 
     return ;
 }
+
+
 
 /****************************************************************************************
 * Export table Country to csv file
@@ -119,6 +120,8 @@ void export_CSV_country(dbc *db) {
     return;
 }
 
+
+
 /****************************************************************************************
 * Load Country table into the buffer
 ****************************************************************************************/
@@ -147,6 +150,8 @@ void load_country(dbc *db) {
     printf("DONE => Countries loaded: %d", db->hdr.nr_cty);
 }
 
+
+
 /****************************************************************************************
 * List and display Country table from the buffer
 ****************************************************************************************/
@@ -157,6 +162,8 @@ void print_country(dbc *db) {
     }
     puts("");
 }
+
+
 
 /****************************************************************************************
  * Display one Country record from the buffer

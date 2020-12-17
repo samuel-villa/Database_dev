@@ -27,7 +27,7 @@ void report_template(dbc *db) {
         return;
     }
 
-    // header
+    // document header
     fprintf(db->fp_rp, "%s REPORT %50s\n", timestamp(), "Samuel CIULLA");
     fprintf(db->fp_rp, "--------------------------------------------------------------------------------\n");
 }
@@ -41,8 +41,7 @@ void report_template(dbc *db) {
 void report_group_companies(dbc *db) {
 
     ccpy cpy;
-    int group_id;
-    int found, count=0;
+    int group_id, found, count=0;
     node *root, *it, *cur;
 
     printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);
@@ -69,12 +68,11 @@ void report_group_companies(dbc *db) {
         }
     } while (cpy.id_cpy);
 
-    report_template(db);                                     // generate report
+    report_template(db);                                            // generate report
 
     fprintf(db->fp_rp, "\n\n\nList of all companies belonging to the group '%s'\n\n", db->grp[group_id].nm_grp);
 
     for (int c=1; c<=db->hdr.nr_cty; c++) {
-
         fprintf(db->fp_rp, "\n\t\t\t\t\t%d - %s\n\n", db->cty[c].id_cty, db->cty[c].nm_cty);
         fprintf(db->fp_rp, "%8s | %-40s | %-32s\n", "ID", "COMPANY NAME", "CITY");
 
@@ -90,7 +88,6 @@ void report_group_companies(dbc *db) {
 
     fprintf(db->fp_rp, "\n\n================================================================================\n\n");
     fprintf(db->fp_rp, "\t-> Total Number of Companies: %d\n\n", count);
-
     fclose(db->fp_rp);
 
     fprintf(db->fp_lg, "%s Report generated: companies per group\n", timestamp());
@@ -155,7 +152,6 @@ void report_group_persons(dbc *db) {
     fprintf(db->fp_rp, "\n--------------------------------------------------------------------------------\n");
     fprintf(db->fp_rp, "\n\t- %-43s%d", "Total number of employees: ", total_nr_emp);
     fprintf(db->fp_rp, "\n\t- Number of employees known in the database: %d\n\n", total_db_per);
-
     fclose(db->fp_rp);
 
     fprintf(db->fp_lg, "%s Report generated: number of employees per group\n", timestamp());

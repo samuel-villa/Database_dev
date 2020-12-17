@@ -11,13 +11,13 @@
 
 
 /****************************************************************************************
-* Import file db_person.csv in the db
+ * Import file db_person.csv in the db
+ * Read serialized data, deserialize it and populate db with processed data
 ****************************************************************************************/
 void import_CSV_person(dbc *db) {
 
     int i=0;
-    char line[BUF_LEN];
-    char fld[BUF_LEN];
+    char line[BUF_LEN], fld[BUF_LEN];
     char *ptr1, *ptr2;
     cper per;
     FILE *fpi, *fp_db, *fp_lg;
@@ -179,8 +179,9 @@ void export_CSV_person(dbc *db) {
 void display_single_person(dbc *db, cper per) {
 
     ccpy cpy;
-    int index, id = per.id_cpy;
+    int index, id;
 
+    id = per.id_cpy;
     index = search_binary(db, id, COMP_ID);
     cpy = read_single_company(db, index);
 

@@ -11,13 +11,13 @@
 
 
 /****************************************************************************************
-* Import file db_company.csv in the DB
+ * Import file db_company.csv in the DB
+ * Read serialized data, deserialize it and populate db with processed data
 ****************************************************************************************/
 void import_CSV_company(dbc *db) {
 
     int i=0;
-    char line[BUF_LEN];
-    char fld[BUF_LEN];
+    char line[BUF_LEN], fld[BUF_LEN];
     char *ptr1, *ptr2;
     ccpy cpy;
     FILE *fpi, *fp_db, *fp_lg;
@@ -346,8 +346,7 @@ void search_company_by_name(dbc *db, int type) {
 void search_companies_by_group(dbc *db) {
 
     ccpy cpy;
-    int group_id;
-    int found, count=0;
+    int group_id, found, count=0;
     node *root, *it, *cur;
 
     printf("\n\tEnter group ID: "); scanf("%d", &group_id); fflush(stdin);

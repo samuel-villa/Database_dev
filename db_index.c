@@ -231,7 +231,6 @@ int search_binary(dbc *db, int id, int type) {
  * Binary Search per company ID on ipc table.
  *
  *      id    : person table foreign key company ID
- *      ipcc  : ipc element
  *      return: the element index/position within the db ipc block
 ******************************************************************************************/
 int search_binary_ipc(dbc *db, int id) {
@@ -278,17 +277,20 @@ int search_binary_ipc(dbc *db, int id) {
 
 
 /****************************************************************************************
- * Quick sort algorithm used for index tables creation
+ * Quick sort algorithm used for index tables creation.
+ * Multiplexed for 'persons sorted by company id' and 'persons sorted by lastname'
+ * depending on the 'type'
  *
- *      nr  : nr of elements in the list we want to sort
+ *      first: first element of the list
+ *      last : last element of the list
  *      type: persons by company ID || persons by lastname
 ****************************************************************************************/
 void quicksort(dbc *db, int first, int last, int type) {
 
-    if (type == SORT_PERS_COMP) {                       // sorting persons by company ID
+    int i, j, pivot;
+    t_sort temp;
 
-        int i, j, pivot;
-        t_sort temp;
+    if (type == SORT_PERS_COMP) {                       // sorting persons by company ID
 
         if (first < last) {
             pivot = first;
@@ -316,9 +318,6 @@ void quicksort(dbc *db, int first, int last, int type) {
         }
 
     } else if (type == SORT_PERS_NAME) {                // sorting persons by lastname
-
-        int i, j, pivot;
-        t_sort temp;
 
         if (first < last) {
             pivot = first;
@@ -348,7 +347,7 @@ void quicksort(dbc *db, int first, int last, int type) {
 
 
 /****************************************************************************************
- * Memory allocation in RAM for the list sorting area (person by ID)
+ * Memory allocation in RAM for the list sorting area
  *
  *      size: nr of elements in the list we want to sort
 ****************************************************************************************/
@@ -465,9 +464,7 @@ void list_comp_employees(dbc *db, int comp_id) {
 uint find_ipl_tree_root(dbc *db, uint offset, int size) {
 
     uint cur, off_l, off_r;
-    int diff = size-1;
-    int left = diff/2;
-    int right = diff - left;
+    int diff = size-1, left = diff/2, right = diff - left;
     tipl ipl;
 
     off_l = offset - left + (left-1)/2;
