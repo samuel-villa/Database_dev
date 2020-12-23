@@ -290,7 +290,7 @@ typedef struct I_Person_Lastname {
     uint per_offset;    // person offset
     uint per_offset_l;  // person offset
     uint per_offset_r;  // person offset
-    char fill[12];
+    char filler[12];
     char nm_lst[64];    // lastname of this person
 } tipl;
 
