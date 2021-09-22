@@ -1,9 +1,9 @@
-# Database_dev
+# Database Development
 Database developed in C
 
 Procedural Programming school project aiming to create a database from scratch in console mode.
 
-## Program features
+## Features
 * Create a new database
 * Import data from .csv file
 * Export data to .csv file
